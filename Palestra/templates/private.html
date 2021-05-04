@@ -1,0 +1,14 @@
+<html>
+    <h1>Progetto di Basi di Dati</h1>
+    <body>
+        Benvenuto nell'area riservata! Sei l'utente {{ user }}! <br/>
+        <ul>
+            {% for u in users %}
+            <li> {{ u }} </li>
+            {% endfor %}
+        </ul>
+        <form action="/logout">
+            Disconnetti:<input type="submit">
+        </form>
+    </body>
+</html>
