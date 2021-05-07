@@ -15,7 +15,6 @@ from sqlalchemy.orm import relationship, relation, sessionmaker
 #other-import
 from werkzeug.utils import redirect
 
-
 ################################################################
 
 
@@ -135,7 +134,7 @@ class Subscriber(db.Model):
     abbonamento = Column(Integer, ForeignKey(Subscription.id), nullable=False)
     dataInizioAbbonamento = Column(Date)
     dataFineAbbonamento = Column(Date)
-    user = relationship(User, uselist=False)
+    client = relationship(Client, uselist=False)
     abbonato = relationship(Subscription, uselist=False)
 
     def __init__(self, id, abbonamento, dataInizioAbbonamento, dataFineAbbonamento):
@@ -152,7 +151,7 @@ class NotSubscriber(db.Model):
     __tablename__ = 'nonabbonati'
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
-    user = relationship(User, uselist=False)
+    client = relationship(Client, uselist=False)
 
     def __init__(self, id):
         self.id = id
@@ -341,14 +340,17 @@ class Reservation(db.Model):
 def home():
     return render_template("base.html")
 
-@app.route('/create')
+@app.route('/signup')
+def signup():
+    return render_template("signup.html")
+
+@app.route('/create', methods =['GET', 'POST'])
 def create_user():
-    #codice inserimento
-    utente1 = User("prova", "prova", "bepi", "bresaola", "bepibres@bepi.com", "2000-01-01")
+    user = User(request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
     #utente1 = User(100, "ciao", "diaasd", "sdk", "c", "bepibres@bepi.com", "2000-07-01")
-    session.add(utente1)
+    session.add(user)
     session.commit()
-    return None
+    return render_template("conferma.html")
 
 
 
