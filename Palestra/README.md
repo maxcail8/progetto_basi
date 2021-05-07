@@ -1,3 +1,6 @@
+# Developed by
+Massimo Cailotto, Matteo Minardi, Daniele Pavan
+
 # Settaggio parametri applicazione
 
 # Run applicazione
