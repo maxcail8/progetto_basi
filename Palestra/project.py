@@ -25,6 +25,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhos
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+#Gestione login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 #Sessione
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -338,11 +342,33 @@ class Reservation(db.Model):
 #Test inserimento utente
 @app.route('/')
 def home():
-    return render_template("base.html")
+    return render_template("index.html")
 
 @app.route('/signup')
 def signup():
     return render_template("signup.html")
+
+@app.route('/login')
+def login():
+    return render_template("login.html")
+
+@app.route('/logout')
+@login_required
+def logout():
+	logout_user()
+	return redirect(url_for('index'))
+
+@app.route('/private')
+def private():
+    if current_user.is_authenticated:
+        return render_template("private.html")
+    return render_template("login.html")
+
+@login_manager.user_loader
+def load_user(user_id):
+    rs = session.query(User.id, User.email, User.password).filter(User.id == user_id)
+    user = r5.one()
+    return User(user.id, user.email, user.password)
 
 @app.route('/create', methods =['GET', 'POST'])
 def create_user():
