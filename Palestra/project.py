@@ -338,45 +338,95 @@ class Reservation(db.Model):
     def __repr__(self):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
 
-#Route
-#Test inserimento utente
+#Functions
+def get_user_by_email(email):
+    #rs = session.query(User).filter_by(email=request.form['user'])
+    rs = session.query(User).filter_by(email=request.form.get('user'))
+    user = rs.one()
+    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+
+#self, username, password, nome, cognome, email, dataNascita):
+#Routes
 @app.route('/')
 def home():
-    return render_template("index.html")
+    if current_user.is_authenticated:
+        return render_template("private.html")
+    return render_template("base.html")
 
 @app.route('/signup')
 def signup():
     return render_template("signup.html")
 
-@app.route('/login')
+@app.route('/login', methods =['GET', 'POST'])
 def login():
-    return render_template("login.html")
+    if request.method == 'POST':
+        conn = engine.connect()
+        #rs = conn.execute('SELECT password FROM utenti WHERE email = ?', [request.form['user']])
+        rs = conn.execute('SELECT password FROM utenti WHERE email = ?', request.form.get('user'))
+        #rs = session.query(User.password).filter_by(email=[request.form['user']])
+        #rs = session.query(User.password).filter_by(email=request.form.get('user'))
+        real_pwd = rs.fetchone()
+        conn.close()
+
+        if(real_pwd is not None):
+            #if request.form['pass'] == real_pwd['utenti_password']:
+            if request.form.get('pass') == real_pwd['password']:
+                user = get_user_by_email(request.form.get('user'))
+                login_user(user) # chiamata a Flask - Login
+                return redirect(url_for('private'))
+            else:
+                return redirect(url_for('home'))
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('home'))
+    '''    
+    if request.method == 'POST':
+        p_email = request.form['user']
+        p_password = request.form['password']
+        rs = session.query(User.password).filter_by(email=p_email)
+        #conn = engine.connect()
+        #rs = conn.execute('SELECT pwd FROM Users WHERE email = ?', [request.form['user']])
+        real_pwd = rs.one()
+        #conn.close()
+
+        if(real_pwd is not None):
+            if p_password == real_pwd['password']:
+                user = get_user_by_email(p_email)
+                login_user(user) # chiamata a Flask - Login
+                return redirect(url_for('private'))
+            else:
+                return redirect(url_for('home'))
+        else:
+            return redirect(url_for('home'))
+    else:
+        return redirect(url_for('home'))
+    '''
+
+@app.route('/private')
+@login_required
+def private():
+    resp = make_response(render_template("private.html", current_user = current_user))
+    return resp
+
+@login_manager.user_loader
+def load_user(user_id):
+    rs = session.query(User.id, User.email, User.password).filter(User.id == user_id)
+    user = rs.one()
+    return User(user.id, user.email, user.password)
+
+@app.route('/create', methods =['GET', 'POST'])
+def create_user():
+    user = User(request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
+    session.add(user)
+    session.commit()
+    return render_template("conferma.html")
 
 @app.route('/logout')
 @login_required
 def logout():
 	logout_user()
 	return redirect(url_for('index'))
-
-@app.route('/private')
-def private():
-    if current_user.is_authenticated:
-        return render_template("private.html")
-    return render_template("login.html")
-
-@login_manager.user_loader
-def load_user(user_id):
-    rs = session.query(User.id, User.email, User.password).filter(User.id == user_id)
-    user = r5.one()
-    return User(user.id, user.email, user.password)
-
-@app.route('/create', methods =['GET', 'POST'])
-def create_user():
-    user = User(request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
-    #utente1 = User(100, "ciao", "diaasd", "sdk", "c", "bepibres@bepi.com", "2000-07-01")
-    session.add(user)
-    session.commit()
-    return render_template("conferma.html")
 
 
 

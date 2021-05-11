@@ -4,14 +4,14 @@
     </head>
     <h1>Progetto di Basi di Dati</h1>
     <body>
-        Benvenuto nell'area riservata! Sei l'utente {{ user }}! <br/>
-        <ul>
-            {% for u in users %}
-            <li> {{ u }} </li>
-            {% endfor %}
-        </ul>
+        {% if current_user.is_authenticated %}
+        Benvenuto nell'area riservata! Sei l'utente {{ current_user }}! <br/>
+        {% else %}
+        Per essere benvenuto devi essere autenticato
+        {% endif %}
+        
         <form action="/logout">
             Disconnetti:<input type="submit">
         </form>
     </body>
-</html>
+</html> 
