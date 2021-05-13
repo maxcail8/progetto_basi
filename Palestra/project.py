@@ -16,8 +16,6 @@ from sqlalchemy.orm import relationship, relation, sessionmaker
 from werkzeug.utils import redirect
 
 ################################################################
-
-
 #Parametri applicazione
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/progetto_palestra', echo=True)
@@ -39,7 +37,7 @@ Base = declarative_base()
 
 #Dichiarazione Classi-Tabelle
 
-class User(db.Model):
+class User(UserMixin):
     __tablename__ = 'utenti'
 
     id = Column(Integer, primary_key=True)
@@ -357,20 +355,28 @@ def home():
 def signup():
     return render_template("signup.html")
 
+#user_loader
+@login_manager.user_loader
+def load_user(user_id):
+    rs = session.query(User).filter_by(id=user_id)
+    user = rs.one()
+    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        conn = engine.connect()
+        #conn = engine.connect()
         #rs = conn.execute('SELECT password FROM utenti WHERE email = ?', [request.form['user']])
-        rs = conn.execute('SELECT password FROM utenti WHERE email = ?', request.form.get('user'))
+        #rs = conn.execute('SELECT password FROM utenti WHERE email = ?', request.form.get('user'))
         #rs = session.query(User.password).filter_by(email=[request.form['user']])
-        #rs = session.query(User.password).filter_by(email=request.form.get('user'))
-        real_pwd = rs.fetchone()
-        conn.close()
+        rs = session.query(User.password).filter_by(email=request.form.get('user'))
+        #real_pwd = rs.fetchone()
+        real_pwd = rs.one()
+        #conn.close()
 
         if(real_pwd is not None):
             #if request.form['pass'] == real_pwd['utenti_password']:
-            if request.form.get('pass') == real_pwd['password']:
+            if request.form.get('pass') == real_pwd['utenti_password']:
                 user = get_user_by_email(request.form.get('user'))
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
@@ -408,12 +414,6 @@ def login():
 def private():
     resp = make_response(render_template("private.html", current_user = current_user))
     return resp
-
-@login_manager.user_loader
-def load_user(user_id):
-    rs = session.query(User.id, User.email, User.password).filter(User.id == user_id)
-    user = rs.one()
-    return User(user.id, user.email, user.password)
 
 @app.route('/create', methods =['GET', 'POST'])
 def create_user():
