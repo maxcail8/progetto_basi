@@ -1,3 +1,5 @@
+import sys
+
 import sqlalchemy
 import enum
 
@@ -23,6 +25,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhos
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
+#Secret key
+app.config['SECRET_KEY'] = 'secret8'
+
 #Gestione login
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -30,7 +35,6 @@ login_manager.init_app(app)
 #Sessione
 Session = sessionmaker(bind=engine)
 session = Session()
-
 ################################################################
 Base = declarative_base()
 ################################################################
@@ -60,7 +64,7 @@ class User(UserMixin):
     def __repr__(self):
         return "<User(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.username, self.nome, self.cognome, self.email)
 
-class Trainer(db.Model):
+class Trainer(UserMixin):
     __tablename__ = 'istruttori'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -73,7 +77,7 @@ class Trainer(db.Model):
         return "<Trainer(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Other(db.Model):
+class Other(UserMixin):
     __tablename__ = 'altri'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -86,7 +90,7 @@ class Other(db.Model):
         return "<Other(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Client(db.Model):
+class Client(UserMixin):
     __tablename__ = 'clienti'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -125,7 +129,7 @@ class Subscription(db.Model):
         return "<Subscription(type = {0}, costo = {1})>".format(self.tipo, self.costo)
 
 
-class Subscriber(db.Model):
+class Subscriber(UserMixin):
     __tablename__ = 'abbonati'
     __table_args__ = (
         CheckConstraint('"dataFineAbbonamento" > "dataInizioAbbonamento"'),
@@ -149,7 +153,7 @@ class Subscriber(db.Model):
         return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class NotSubscriber(db.Model):
+class NotSubscriber(UserMixin):
     __tablename__ = 'nonabbonati'
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
@@ -336,11 +340,31 @@ class Reservation(db.Model):
     def __repr__(self):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
 
+
 #Functions
 def get_user_by_email(email):
-    #rs = session.query(User).filter_by(email=request.form['user'])
-    rs = session.query(User).filter_by(email=request.form.get('user'))
-    user = rs.one()
+    conn = engine.connect()
+    p_query = "SELECT * FROM utenti WHERE email = %s"
+    user = conn.engine.execute(p_query, email).first()
+    conn.close()
+    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+
+#user_loader
+'''
+@login_manager.user_loader
+def load_user(user_id):
+    conn = engine.connect()
+    p_query = "SELECT * FROM utenti WHERE id = %s"
+    user = conn.engine.execute(p_query, user_id).first()
+    conn.close()
+    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+'''
+@login_manager.user_loader
+def load_user(user_id):
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
+    user = rs.fetchone()
+    conn.close()
     return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 
 #self, username, password, nome, cognome, email, dataNascita):
@@ -355,59 +379,33 @@ def home():
 def signup():
     return render_template("signup.html")
 
-#user_loader
-@login_manager.user_loader
-def load_user(user_id):
-    rs = session.query(User).filter_by(id=user_id)
-    user = rs.one()
-    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
-
 @app.route('/login', methods =['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        #conn = engine.connect()
-        #rs = conn.execute('SELECT password FROM utenti WHERE email = ?', [request.form['user']])
-        #rs = conn.execute('SELECT password FROM utenti WHERE email = ?', request.form.get('user'))
-        #rs = session.query(User.password).filter_by(email=[request.form['user']])
-        rs = session.query(User.password).filter_by(email=request.form.get('user'))
-        #real_pwd = rs.fetchone()
-        real_pwd = rs.one()
-        #conn.close()
-
-        if(real_pwd is not None):
-            #if request.form['pass'] == real_pwd['utenti_password']:
-            if request.form.get('pass') == real_pwd['utenti_password']:
-                user = get_user_by_email(request.form.get('user'))
-                login_user(user) # chiamata a Flask - Login
-                return redirect(url_for('private'))
-            else:
-                return redirect(url_for('home'))
-        else:
-            return redirect(url_for('home'))
-    else:
-        return redirect(url_for('home'))
-    '''    
-    if request.method == 'POST':
         p_email = request.form['user']
-        p_password = request.form['password']
-        rs = session.query(User.password).filter_by(email=p_email)
-        #conn = engine.connect()
-        #rs = conn.execute('SELECT pwd FROM Users WHERE email = ?', [request.form['user']])
-        real_pwd = rs.one()
-        #conn.close()
+        p_pass = request.form['pass']
+        conn = engine.connect()
+        p_query = "SELECT password AS password FROM utenti WHERE email = %s"
+        real_pwd = conn.engine.execute(p_query, p_email).first()
+        conn.close()
 
         if(real_pwd is not None):
-            if p_password == real_pwd['password']:
-                user = get_user_by_email(p_email)
+            #if request.form['pass'] == real_pwd['password']:
+            print(p_pass)
+            print(" -> ")
+            print(real_pwd['password'])
+            if p_pass == real_pwd['password']:
+                user = get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
+                sys.stdout.write("ciao mamma")
                 return redirect(url_for('home'))
         else:
+            sys.stdout.write("ciao papa")
             return redirect(url_for('home'))
     else:
         return redirect(url_for('home'))
-    '''
 
 @app.route('/private')
 @login_required
@@ -426,81 +424,4 @@ def create_user():
 @login_required
 def logout():
 	logout_user()
-	return redirect(url_for('index'))
-
-
-
-'''
-class User(UserMixin):
-    # costruttore di classe
-    def __init__(self, id_, email, pwd):
-        self.id = id_
-        self.email = email
-        self.pwd = pwd
-
-def get_user_by_email(email):
-    conn = engine.connect()
-    rs = conn.execute('SELECT * FROM Users WHERE email = ?', email)
-    user = rs.fetchone()
-    conn.close()
-    return User(user.id, user.email, user.pwd)
-
-@login_manager.user_loader
-def load_user(user_id):
-    user = User.query.get(user_id)
-    if user:
-        return DbUser(user)
-    else:
-        return None
-
-@login_manager.user_loader # attenzione a questo!
-def load_user(user_id):
-    conn = engine.connect()
-    rs = conn.execute('SELECT * FROM Users WHERE id = ?', user_id)
-    user = rs.fetchone()
-    conn.close()
-    return User(user.id, user.email, user.pwd)
-
-@app.route('/')
-def home():
-    # current_user identifica l'utente attuale
-    # utente anonimo prima dell'autenticazione
-    if current_user.is_authenticated:
-        return redirect(url_for('private'))
-    return render_template("base.html")
-
-@app.route('/login', methods =['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        conn = engine.connect()
-        rs = conn.execute('SELECT pwd FROM Users WHERE email = ?', [request.form['user']])
-        real_pwd = rs.fetchone()
-        conn.close()
-
-        if(real_pwd is not None):
-            if request.form['pass'] == real_pwd['pwd']:
-                user = get_user_by_email(request.form['user'])
-                login_user(user) # chiamata a Flask - Login
-                return redirect(url_for('private'))
-            else:
-                return redirect(url_for('home'))
-        else:
-            return redirect(url_for('home'))
-    else:
-        return redirect(url_for('home'))
-        
-@app.route('/private')
-@login_required # richiede autenticazione
-def private():
-    conn = engine.connect()
-    users = conn.execute('SELECT * FROM Users')
-    resp = make_response(render_template("private.html", users = users))
-    conn.close()
-    return resp
-
-@app.route('/logout')
-@login_required # richiede autenticazione
-def logout():
-    logout_user() #chiamata a Flask - Login
-    return redirect(url_for('home'))
-'''
+	return redirect(url_for('home'))
