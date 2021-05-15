@@ -53,7 +53,8 @@ class User(UserMixin):
     dataNascita = Column(Date)
 
     #primary key progressiva
-    def __init__(self, username, password, nome, cognome, email, dataNascita):
+    def __init__(self, id, username, password, nome, cognome, email, dataNascita):
+        self.id = id
         self.username = username
         self.password = password
         self.nome = nome
@@ -362,17 +363,18 @@ def load_user(user_id):
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
+    # rs = conn.execute('SELECT * FROM utenti WHERE id = ?' , user_id)
     rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
     user = rs.fetchone()
     conn.close()
-    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+    return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 
 #self, username, password, nome, cognome, email, dataNascita):
 #Routes
 @app.route('/')
 def home():
     if current_user.is_authenticated:
-        return render_template("private.html")
+        return redirect(url_for('private'))
     return render_template("base.html")
 
 @app.route('/signup')
