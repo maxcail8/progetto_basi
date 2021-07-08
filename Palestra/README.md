@@ -1,5 +1,5 @@
 # Developed by
-Massimo Cailotto, Matteo Minardi, Daniele Pavan
+Massimo Cailotto, Matteo Minardi
 
 # Settaggio parametri applicazione
 
@@ -11,5 +11,6 @@ Run `flask run` per eseguire l'applicazione. Navigare a `http://localhost:5000/`
 # Modifiche DataBase postgresSQL
 # Installazioni ....
 Run `flask db init` solo la prima volta, per la creazione della directory migrations.
-Run `flask db stamp head`, `flask db migrate` per visualizzare le modifiche che verranno effettuate.
+Run `flask db stamp head` +
+Run `flask db migrate` per visualizzare le modifiche che verranno effettuate.
 Infine run `flask db upgrade` per confermare le modifiche che verranno effettuate sul database.

@@ -26,7 +26,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #Secret key
-app.config['SECRET_KEY'] = 'secret8'
+#app.config['SECRET_KEY'] = 'secret11'
+app.secret_key = 'secret13'
 
 #Gestione login
 login_manager = LoginManager()
@@ -53,7 +54,8 @@ class User(UserMixin):
     dataNascita = Column(Date)
 
     #primary key progressiva
-    def __init__(self, username, password, nome, cognome, email, dataNascita):
+    def __init__(self, id, username, password, nome, cognome, email, dataNascita):
+        self.id = id
         self.username = username
         self.password = password
         self.nome = nome
@@ -121,7 +123,8 @@ class Subscription(db.Model):
     tipo = Column(Enum(AbbonamentoT))
     costo = Column(REAL)
 
-    def __init__(self, tipo, costo):
+    def __init__(self, id, tipo, costo):
+        self.id = id
         self.tipo = tipo
         self.costo = costo
 
@@ -176,7 +179,8 @@ class Room(db.Model):
     dimensione = Column(Integer)
 
     #primary key progressiva
-    def __init__(self, dimensione):
+    def __init__(self, id, dimensione):
+        self.id = id
         self.dimensione = dimensione
 
     def __repr__(self):
@@ -215,7 +219,8 @@ class Course(db.Model):
     room = relationship(Room, uselist=False)
 
     #primary key progressiva
-    def __init__(self, nome, iscrittiMax, istruttore, stanza):
+    def __init__(self, id, nome, iscrittiMax, istruttore, stanza):
+        self.id = id
         self.nome = nome
         self.iscrittiMax = iscrittiMax
         self.istruttore = istruttore
@@ -234,7 +239,8 @@ class Session(db.Model):
     course = relationship(Course, uselist=False)
 
     #primary key progressiva
-    def __init__(self, corso, dataSeduta):
+    def __init__(self, id,  corso, dataSeduta):
+        self.id = id
         self.corso = corso
         self.dataSeduta = dataSeduta
         
@@ -283,7 +289,8 @@ class Slot(db.Model):
     oraFine = Column(DateTime)
     date = relationship(Day, uselist=False)
 
-    def __init__(self, personeMax, giorno, oraInizio, oraFine):
+    def __init__(self, id, personeMax, giorno, oraInizio, oraFine):
+        self.id = id
         self.personeMax = personeMax
         self.giorno = giorno
         self.oraInizio = oraInizio
@@ -347,9 +354,18 @@ def get_user_by_email(email):
     p_query = "SELECT * FROM utenti WHERE email = %s"
     user = conn.engine.execute(p_query, email).first()
     conn.close()
-    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+    return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 
 #user_loader
+'''
+@login_manager.user_loader # attenzione a questo!
+def load_user(user_id):
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM utenti WHERE id = ?', user_id)
+    user = rs.fetchone()
+    conn.close()
+    return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+'''
 '''
 @login_manager.user_loader
 def load_user(user_id):
@@ -357,15 +373,16 @@ def load_user(user_id):
     p_query = "SELECT * FROM utenti WHERE id = %s"
     user = conn.engine.execute(p_query, user_id).first()
     conn.close()
-    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+    return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 '''
+
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
     rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
     user = rs.fetchone()
     conn.close()
-    return User(user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+    return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 
 #self, username, password, nome, cognome, email, dataNascita):
 #Routes
@@ -396,6 +413,10 @@ def login():
             print(real_pwd['password'])
             if p_pass == real_pwd['password']:
                 user = get_user_by_email(request.form['user'])
+                print("id")
+                print(user.id)
+                print("username: " + user.username)
+                print("password: " + user.password)
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
@@ -415,7 +436,7 @@ def private():
 
 @app.route('/create', methods =['GET', 'POST'])
 def create_user():
-    user = User(request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
+    user = User(request.form['id'] ,request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
     session.add(user)
     session.commit()
     return render_template("conferma.html")
