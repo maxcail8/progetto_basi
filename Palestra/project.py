@@ -379,6 +379,7 @@ def load_user(user_id):
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
+    # rs = conn.execute('SELECT * FROM utenti WHERE id = ?' , user_id)
     rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
     user = rs.fetchone()
     conn.close()
@@ -389,7 +390,7 @@ def load_user(user_id):
 @app.route('/')
 def home():
     if current_user.is_authenticated:
-        return render_template("private.html")
+        return redirect(url_for('private'))
     return render_template("base.html")
 
 @app.route('/signup')
