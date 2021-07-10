@@ -27,7 +27,7 @@ migrate = Migrate(app, db)
 
 #Secret key
 #app.config['SECRET_KEY'] = 'secret11'
-app.secret_key = 'secret13'
+app.secret_key = 'secret14'
 
 #Gestione login
 login_manager = LoginManager()
@@ -42,10 +42,10 @@ Base = declarative_base()
 
 #Dichiarazione Classi-Tabelle
 
-class User(UserMixin):
+class User(UserMixin, Base):
     __tablename__ = 'utenti'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String)
     password = Column(String)
     nome = Column(String)
@@ -64,9 +64,9 @@ class User(UserMixin):
         self.dataNascita = dataNascita
 
     def __repr__(self):
-        return "<User(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.username, self.nome, self.cognome, self.email)
+        return "<User(id = {0}, username = {1}, nome= {2}, cognome = {3}, email = {4})>".format(self.id, self.username, self.nome, self.cognome, self.email)
 
-class Trainer(UserMixin):
+class Trainer(UserMixin, Base):
     __tablename__ = 'istruttori'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -79,7 +79,7 @@ class Trainer(UserMixin):
         return "<Trainer(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Other(UserMixin):
+class Other(UserMixin, Base):
     __tablename__ = 'altri'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -92,7 +92,7 @@ class Other(UserMixin):
         return "<Other(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Client(UserMixin):
+class Client(UserMixin, Base):
     __tablename__ = 'clienti'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -113,7 +113,7 @@ class AbbonamentoT(enum.Enum):
 #insert: (t.insert(), {"value": MyEnum.two})
 #sqlalchemy.exc.ArgumentError: 'SchemaItem' object, such as a 'Column' or a 'Constraint' expected, got <enum 'AbbonamentoT'>
 
-class Subscription(db.Model):
+class Subscription(db.Model, Base):
     __tablename__ = 'abbonamenti'
     __table_args__ = (
         CheckConstraint('"costo" > 0'),
@@ -132,7 +132,7 @@ class Subscription(db.Model):
         return "<Subscription(type = {0}, costo = {1})>".format(self.tipo, self.costo)
 
 
-class Subscriber(UserMixin):
+class Subscriber(UserMixin, Base):
     __tablename__ = 'abbonati'
     __table_args__ = (
         CheckConstraint('"dataFineAbbonamento" > "dataInizioAbbonamento"'),
@@ -156,7 +156,7 @@ class Subscriber(UserMixin):
         return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class NotSubscriber(UserMixin):
+class NotSubscriber(UserMixin, Base):
     __tablename__ = 'nonabbonati'
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
@@ -169,7 +169,7 @@ class NotSubscriber(UserMixin):
         return "<NotSubscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Room(db.Model):
+class Room(db.Model, Base):
     __tablename__ = 'stanze'
     __table_args__ = (
         CheckConstraint('"dimensione" > 0'),
@@ -187,7 +187,7 @@ class Room(db.Model):
         return "<Room(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
 
 
-class WeightRoom(db.Model):
+class WeightRoom(db.Model, Base):
     __tablename__ = 'salepesi'
     __table_args__ = (
         CheckConstraint('"dimensione" > 0'),
@@ -204,7 +204,7 @@ class WeightRoom(db.Model):
         return "<WeightRoom(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
 
 
-class Course(db.Model):
+class Course(db.Model, Base):
     __tablename__ = 'corsi'
     __table_args__ = (
         CheckConstraint('"iscrittiMax" > 0'),
@@ -230,7 +230,7 @@ class Course(db.Model):
         return "<Course(id = {0}, nome = {1}, iscrittiMax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittiMax, self.istruttore, self.stanza)
 
 
-class Session(db.Model):
+class Sitting(db.Model, Base):
     __tablename__ = 'sedute'
 
     id = Column(Integer, primary_key=True)
@@ -248,13 +248,13 @@ class Session(db.Model):
         return "<Session(id = {0}, corso = {1}, dataSeduta = {2})>".format(self.id, self.corso, self.dataSeduta)
 
 
-class SubscriberSession(db.Model):
+class SubscriberSession(db.Model, Base):
     __tablename__ = 'abbonatisedute'
 
     abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
-    seduta = Column(Integer, ForeignKey(Session.id, ondelete='cascade'), primary_key=True)
+    seduta = Column(Integer, ForeignKey(Sitting.id, ondelete='cascade'), primary_key=True)
     subscriber = relationship(Subscriber, uselist=False)
-    session = relationship(Session, uselist=False)
+    sitting = relationship(Sitting, uselist=False)
 
     def __init__(self, abbonato, seduta):
         self.abbonato = abbonato
@@ -264,7 +264,7 @@ class SubscriberSession(db.Model):
         return "<SubScriberSession(abbonato = {0}, seduta = {1})>".format(self.abbonato, self.seduta)
 
 
-class Day(db.Model):
+class Day(db.Model, Base):
     __tablename__ = 'giorni'
 
     data = Column(Date, primary_key=True)
@@ -276,7 +276,7 @@ class Day(db.Model):
         return "<Day(data = {0})>".format(self.data)
 
 
-class Slot(db.Model):
+class Slot(db.Model, Base):
     __tablename__ = 'slot'
     __table_args__ = (
         CheckConstraint('"oraFine"> "oraInizio"'),
@@ -300,7 +300,7 @@ class Slot(db.Model):
         return "<Slot(id = {0}, personeMax = {1}, giorno = {2}, oraInizio = {3}, oraFine = {4})>".format(self.id, self.personeMax, self.giorno, self.oraInizio, self.oraFine)
 
 
-class CourseSlot(db.Model):
+class CourseSlot(db.Model, Base):
     __tablename__ = 'corsislot'
 
     corso = Column(Integer, ForeignKey(Course.id, ondelete='cascade'), primary_key=True)
@@ -316,7 +316,7 @@ class CourseSlot(db.Model):
         return "<CourseSlot(corso = {0}, slot = {1})>".format(self.corso, self.slot)
 
 
-class WeightRoomSlot(db.Model):
+class WeightRoomSlot(db.Model, Base):
     __tablename__ = 'salepesislot'
 
     salaPesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
@@ -332,7 +332,7 @@ class WeightRoomSlot(db.Model):
         return "<WeightRoomSlot(sala = {0}, slot = {1})>".format(self.salaPesi, self.slot)
 
 
-class Reservation(db.Model):
+class Reservation(db.Model, Base):
     __tablename__ = 'prenotazioni'
 
     abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
@@ -355,6 +355,17 @@ def get_user_by_email(email):
     user = conn.engine.execute(p_query, email).first()
     conn.close()
     return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
+
+#Funzione per autoincrementare id tramite query
+def get_id_increment():
+    conn = engine.connect()
+    p_query = "SELECT * FROM utenti ORDER BY id DESC"
+    user = conn.engine.execute(p_query).first()
+    conn.close()
+    if(user is not None):
+        return user.id + 1
+    else:
+        return 0
 
 #user_loader
 '''
@@ -408,15 +419,8 @@ def login():
 
         if(real_pwd is not None):
             #if request.form['pass'] == real_pwd['password']:
-            print(p_pass)
-            print(" -> ")
-            print(real_pwd['password'])
             if p_pass == real_pwd['password']:
                 user = get_user_by_email(request.form['user'])
-                print("id")
-                print(user.id)
-                print("username: " + user.username)
-                print("password: " + user.password)
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
@@ -436,7 +440,9 @@ def private():
 
 @app.route('/create', methods =['GET', 'POST'])
 def create_user():
-    user = User(request.form['id'] ,request.form['username'], request.form['password'], request.form['nome'], request.form['cognome'], request.form['email'], request.form['dataNascita'])
+    new_id = get_id_increment()
+    user = User(id=new_id ,username=request.form['username'], password=request.form['password'], nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], dataNascita=request.form['dataNascita'])
+    print(user)
     session.add(user)
     session.commit()
     return render_template("conferma.html")
