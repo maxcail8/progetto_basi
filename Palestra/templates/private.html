@@ -6,6 +6,8 @@
     <body>
         {% if current_user.is_authenticated %}
         Benvenuto nell'area riservata! Sei l'utente {{ current_user }}! <br/>
+        <form action="/calendar">
+        </form>
         {% else %}
         Per essere benvenuto devi essere autenticato
         {% endif %}

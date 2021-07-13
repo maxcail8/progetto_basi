@@ -102,7 +102,7 @@ class Client(UserMixin, Base):
         self.id = id
 
     def __repr__(self):
-        return "<Client(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
+        return "<Client(id = {1})>".format(self.id)
 
 
 class AbbonamentoT(enum.Enum):
@@ -387,6 +387,7 @@ def load_user(user_id):
     return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 '''
 
+
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
@@ -395,17 +396,18 @@ def load_user(user_id):
     conn.close()
     return User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.dataNascita)
 
+
 #self, username, password, nome, cognome, email, dataNascita):
 #Routes
 @app.route('/')
 def home():
-    if current_user.is_authenticated:
-        return render_template("private.html")
-    return render_template("base.html")
+    return render_template("index.html")
+
 
 @app.route('/signup')
 def signup():
     return render_template("signup.html")
+
 
 @app.route('/login', methods =['GET', 'POST'])
 def login():
@@ -432,20 +434,48 @@ def login():
     else:
         return redirect(url_for('home'))
 
+
+@app.route('/reserved_private')
+def reserved():
+    if current_user.is_authenticated:
+        return private()
+    return render_template("base.html")
+
+
+@app.route('/reserved_calendar')
+def reserved_calendar():
+    if current_user.is_authenticated:
+        return calendar()
+    return render_template("base.html")
+
+
 @app.route('/private')
 @login_required
 def private():
-    resp = make_response(render_template("private.html", current_user = current_user))
+    resp = make_response(render_template("private.html", current_user=current_user))
     return resp
 
-@app.route('/create', methods =['GET', 'POST'])
+
+@app.route('/calendar')
+@login_required
+def calendar():
+    resp = make_response(render_template("calendar.html", current_user=current_user))
+    return resp
+
+
+@app.route('/create', methods=['GET', 'POST'])
 def create_user():
     new_id = get_id_increment()
-    user = User(id=new_id ,username=request.form['username'], password=request.form['password'], nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], dataNascita=request.form['dataNascita'])
+    user = User(id=new_id, username=request.form['username'], password=request.form['password'], nome=request.form['nome'],
+                cognome=request.form['cognome'], email=request.form['email'], dataNascita=request.form['dataNascita'])
+    client = Client(id=new_id)
     print(user)
+    print(client)
     session.add(user)
+    session.add(client)
     session.commit()
     return render_template("conferma.html")
+
 
 @app.route('/logout')
 @login_required

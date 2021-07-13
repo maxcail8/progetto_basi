@@ -1,0 +1,17 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap/bootstrap-grid.min.css">
+    </head>
+    <h1>Progetto di Basi di Dati</h1>
+    <body>
+        {% if current_user.is_authenticated %}
+        Benvenuto nel calendario! Sei l'utente {{ current_user }}! <br/>
+        {% else %}
+        Per essere nel calendario devi essere autenticato
+        {% endif %}
+        
+        <form action="/logout">
+            Disconnetti:<input type="submit">
+        </form>
+    </body>
+</html> 
