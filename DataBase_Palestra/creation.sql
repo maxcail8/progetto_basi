@@ -9,6 +9,7 @@ CREATE TABLE Utenti(
 	password VARCHAR(16),
 	nome VARCHAR(100),
 	cognome VARCHAR(100),
+	email VARCHAR(100),
 	dataNascita DATE CHECK (dataNascita < CURRENT_DATE)
 );
 
@@ -31,16 +32,16 @@ CREATE TABLE Clienti(
 );
 
 --Abbonamenti
-CREATE TYPE abbonamento_t AS ENUM ('sala_pesi', 'corsi', 'completo', 'prova');
 CREATE TABLE Abbonamenti( --controllare
-	tipo abbonamento_t PRIMARY KEY,
+	id INT PRIMARY KEY,
+	tipo VARCHAR(10),
 	costo REAL CHECK(costo > 0)
 );
 
 --Abbonati
 CREATE TABLE Abbonati(
 	id INT PRIMARY KEY,
-	abbonamento abbonamento_t NOT NULL,
+	abbonamento INT NOT NULL,
 	dataInizioAbbonamento DATE,
 	dataFineAbbonamento DATE,
 	FOREIGN KEY(id) REFERENCES Clienti,

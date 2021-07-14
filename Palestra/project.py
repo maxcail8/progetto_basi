@@ -18,6 +18,9 @@ from sqlalchemy.orm import relationship, relation, sessionmaker
 from werkzeug.utils import redirect
 
 ################################################################
+#Variabili e costanti globali
+first_id_client = 100
+
 #Parametri applicazione
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/progetto_palestra', echo=True)
@@ -42,7 +45,8 @@ Base = declarative_base()
 
 #Dichiarazione Classi-Tabelle
 
-class User(UserMixin, Base):
+
+class User(Base, UserMixin):
     __tablename__ = 'utenti'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -66,7 +70,8 @@ class User(UserMixin, Base):
     def __repr__(self):
         return "<User(id = {0}, username = {1}, nome= {2}, cognome = {3}, email = {4})>".format(self.id, self.username, self.nome, self.cognome, self.email)
 
-class Trainer(UserMixin, Base):
+
+class Trainer(Base):
     __tablename__ = 'istruttori'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -79,7 +84,7 @@ class Trainer(UserMixin, Base):
         return "<Trainer(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Other(UserMixin, Base):
+class Other(Base):
     __tablename__ = 'altri'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -92,7 +97,7 @@ class Other(UserMixin, Base):
         return "<Other(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Client(UserMixin, Base):
+class Client(Base):
     __tablename__ = 'clienti'
 
     id = Column(Integer, ForeignKey(User.id, ondelete='cascade'), primary_key=True)
@@ -102,25 +107,17 @@ class Client(UserMixin, Base):
         self.id = id
 
     def __repr__(self):
-        return "<Client(id = {1})>".format(self.id)
+        return "<Client(id = {0})>".format(self.id)
 
 
-class AbbonamentoT(enum.Enum):
-    one = "sala_pesi"
-    two = "corsi"
-    three = "completo"
-    four = "prova"
-#insert: (t.insert(), {"value": MyEnum.two})
-#sqlalchemy.exc.ArgumentError: 'SchemaItem' object, such as a 'Column' or a 'Constraint' expected, got <enum 'AbbonamentoT'>
-
-class Subscription(db.Model, Base):
+class Subscription(Base):
     __tablename__ = 'abbonamenti'
     __table_args__ = (
         CheckConstraint('"costo" > 0'),
     )
 
     id = Column(Integer, primary_key=True) #aggiunta provvisoria id
-    tipo = Column(Enum(AbbonamentoT))
+    tipo = Column(String)
     costo = Column(REAL)
 
     def __init__(self, id, tipo, costo):
@@ -132,7 +129,7 @@ class Subscription(db.Model, Base):
         return "<Subscription(type = {0}, costo = {1})>".format(self.tipo, self.costo)
 
 
-class Subscriber(UserMixin, Base):
+class Subscriber(Base):
     __tablename__ = 'abbonati'
     __table_args__ = (
         CheckConstraint('"dataFineAbbonamento" > "dataInizioAbbonamento"'),
@@ -156,7 +153,7 @@ class Subscriber(UserMixin, Base):
         return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class NotSubscriber(UserMixin, Base):
+class NotSubscriber(Base):
     __tablename__ = 'nonabbonati'
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
@@ -169,7 +166,7 @@ class NotSubscriber(UserMixin, Base):
         return "<NotSubscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
-class Room(db.Model, Base):
+class Room(Base):
     __tablename__ = 'stanze'
     __table_args__ = (
         CheckConstraint('"dimensione" > 0'),
@@ -187,7 +184,7 @@ class Room(db.Model, Base):
         return "<Room(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
 
 
-class WeightRoom(db.Model, Base):
+class WeightRoom(Base):
     __tablename__ = 'salepesi'
     __table_args__ = (
         CheckConstraint('"dimensione" > 0'),
@@ -204,7 +201,7 @@ class WeightRoom(db.Model, Base):
         return "<WeightRoom(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
 
 
-class Course(db.Model, Base):
+class Course(Base):
     __tablename__ = 'corsi'
     __table_args__ = (
         CheckConstraint('"iscrittiMax" > 0'),
@@ -230,7 +227,7 @@ class Course(db.Model, Base):
         return "<Course(id = {0}, nome = {1}, iscrittiMax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittiMax, self.istruttore, self.stanza)
 
 
-class Sitting(db.Model, Base):
+class Sitting(Base):
     __tablename__ = 'sedute'
 
     id = Column(Integer, primary_key=True)
@@ -248,7 +245,7 @@ class Sitting(db.Model, Base):
         return "<Session(id = {0}, corso = {1}, dataSeduta = {2})>".format(self.id, self.corso, self.dataSeduta)
 
 
-class SubscriberSession(db.Model, Base):
+class SubscriberSession(Base):
     __tablename__ = 'abbonatisedute'
 
     abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
@@ -264,7 +261,7 @@ class SubscriberSession(db.Model, Base):
         return "<SubScriberSession(abbonato = {0}, seduta = {1})>".format(self.abbonato, self.seduta)
 
 
-class Day(db.Model, Base):
+class Day(Base):
     __tablename__ = 'giorni'
 
     data = Column(Date, primary_key=True)
@@ -276,7 +273,7 @@ class Day(db.Model, Base):
         return "<Day(data = {0})>".format(self.data)
 
 
-class Slot(db.Model, Base):
+class Slot(Base):
     __tablename__ = 'slot'
     __table_args__ = (
         CheckConstraint('"oraFine"> "oraInizio"'),
@@ -300,7 +297,7 @@ class Slot(db.Model, Base):
         return "<Slot(id = {0}, personeMax = {1}, giorno = {2}, oraInizio = {3}, oraFine = {4})>".format(self.id, self.personeMax, self.giorno, self.oraInizio, self.oraFine)
 
 
-class CourseSlot(db.Model, Base):
+class CourseSlot(Base):
     __tablename__ = 'corsislot'
 
     corso = Column(Integer, ForeignKey(Course.id, ondelete='cascade'), primary_key=True)
@@ -316,7 +313,7 @@ class CourseSlot(db.Model, Base):
         return "<CourseSlot(corso = {0}, slot = {1})>".format(self.corso, self.slot)
 
 
-class WeightRoomSlot(db.Model, Base):
+class WeightRoomSlot(Base):
     __tablename__ = 'salepesislot'
 
     salaPesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
@@ -332,7 +329,7 @@ class WeightRoomSlot(db.Model, Base):
         return "<WeightRoomSlot(sala = {0}, slot = {1})>".format(self.salaPesi, self.slot)
 
 
-class Reservation(db.Model, Base):
+class Reservation(Base):
     __tablename__ = 'prenotazioni'
 
     abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
@@ -365,7 +362,7 @@ def get_id_increment():
     if(user is not None):
         return user.id + 1
     else:
-        return 0
+        return first_id_client
 
 #user_loader
 '''
