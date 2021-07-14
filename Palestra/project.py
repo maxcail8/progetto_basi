@@ -127,7 +127,7 @@ def login():
 def reserved():
     if current_user.is_authenticated:
         return private()
-    return render_template("base.html")
+    return render_template("signin.html")
 
 
 @app.route('/private')

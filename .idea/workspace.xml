@@ -3,8 +3,31 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/population.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/population.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-grid.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-grid.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-grid.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-grid.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-reboot.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-reboot.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-reboot.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap-reboot.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/bootstrap.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.bundle.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.bundle.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.bundle.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/bootstrap/js/bootstrap.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/css/w3.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/signin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/signin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/signup.html" afterDir="false" />
     </list>
     <list id="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" name="Changes by matte" comment="" />
     <option name="SHOW_DIALOG" value="false" />

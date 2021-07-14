@@ -8,31 +8,98 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Base</title>
-        <!--<link rel="stylesheet" href="css/w3.css">-->
+        <title>Sign in</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
+
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*ont-family: 'Courier New', Courier, monospace;*/
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                text-align: center;
+            }
+
+            #sezione0{
+                width: 100%;
+            }
+
+            #sezione0 div{
+                width: 40%;
+                display: block;
+                margin: 0 auto;
+            }
+
+            #sezione0 div input[type="text"], input[type="password"]{
+                width: 100%;
+                border: 0.1px solid black;
+                padding: 10px;
+                margin-top: 10px;
+                font-size: 12pt;
+            }
+
+            #sezione0 input[type="submit"]{
+                width: 20%;
+                display: block;
+                margin: 0 auto;
+                margin-top: 30px;
+                padding: 10px 20px 10px 20px;
+                border-radius: 5px;
+                font-size: 20pt;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="submit"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 div a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+        </style>
     </head>
     <body>
-        <h1>Progetto di Basi di Dati</h1>
+        <h1>Login palestra</h1> 
+        
+        <section id="sezione0" class="clearfix">
+            <form action="/login" method="POST">
             
-        Per proseguire bisogna prima autenticarsi 
-        <br>
+                <div>
+                    <input type="text" value="" name="user" placeholder="Email">
+                </div>
+               
+                <div>
+                    <input type="password" value="" name="pass" placeholder="Password">
+                </div>
+                
+                <input type="submit" value="Login">
 
-        <form class="w3-container" action="/login" method="POST">
-            
-            <p>
-                Email: <input class="w3-input" type="text" value="" name="user">
-            </p>
-           
-            <p>
-                Password: <input class="w3-input" type="password" value="" name="pass">
-            </p>
-            
-            <p>
-                <a href="signup">Crea un nuovo utente.</a>
-            </p>
-            
-            <input type="submit" value="Login">
-        </form>
+                <div>
+                    <a href="signup">Sei nuovo? Registrati qui.</a>
+                </div>
+            </form>
+        </section>
     </body>
 </html>
