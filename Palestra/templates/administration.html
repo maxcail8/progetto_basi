@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="css/bootstrap/bootstrap-grid.min.css">
+    </head>
+    <h1>Progetto di Basi di Dati</h1>
+    <body>
+        {% if current_user.is_authenticated %}
+        Benvenuto nell'area di amministrazione!!!!!!!!!!! Sei l'utente {{ current_user }}! <br/>
+        <form action="/calendar">
+        </form>
+        {% else %}
+        Per essere benvenuto devi essere autenticato
+        {% endif %}
+        
+        <form action="/logout">
+            Disconnetti:<input type="submit">
+        </form>
+    </body>
+</html> 

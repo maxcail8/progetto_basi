@@ -1,14 +1,17 @@
 --istruttori
 
-INSERT INTO utenti VALUES (0, 'maxcail8', 'p', 'Massimo', 'Cailotto', 'max@palestra.it', DATE '2000-01-07');
-INSERT INTO istruttori VALUES (0);
-
-INSERT INTO utenti VALUES (1, 'matteomin', 'p', 'Matteo', 'Minardi', 'matte@palestra.it', DATE '2000-10-04');
+INSERT INTO utenti VALUES (1, 'maxcail8', 'p', 'Massimo', 'Cailotto', 'max@palestra.it', DATE '2000-01-07');
 INSERT INTO istruttori VALUES (1);
 
+INSERT INTO utenti VALUES (2, 'matteomin', 'p', 'Matteo', 'Minardi', 'matte@palestra.it', DATE '2000-10-04');
+INSERT INTO istruttori VALUES (2);
+
 --altri
-INSERT INTO utenti VALUES (2, 'antonio', 'p', 'Antonio', 'Marenguzzo', 'anto@palestra.it', DATE '1900-04-01');
-INSERT INTO altri VALUES (2);
+INSERT INTO utenti VALUES (0, 'admin', 'admin', 'admin', 'admin', 'admin@palestra.it', DATE '1000-01-01');
+INSERT INTO altri VALUES (0);
+
+INSERT INTO utenti VALUES (3, 'antonio', 'p', 'Antonio', 'Marenguzzo', 'anto@palestra.it', DATE '1900-04-01');
+INSERT INTO altri VALUES (3);
 
 --clienti X
 
@@ -36,10 +39,10 @@ INSERT INTO salepesi VALUES (1, 80);
 
 
 --corsi
-INSERT INTO corsi VALUES (0, 'pilates', 10, 1, 0);
-INSERT INTO corsi VALUES (1, 'yoga', 20, 0, 1);
-INSERT INTO corsi VALUES (2, 'crossfit', 30, 1, 2);
-INSERT INTO corsi VALUES (3, 'power-lifting', 30, 0, 3);
+INSERT INTO corsi VALUES (0, 'pilates', 10, 2, 0);
+INSERT INTO corsi VALUES (1, 'yoga', 20, 1, 1);
+INSERT INTO corsi VALUES (2, 'crossfit', 30, 2, 2);
+INSERT INTO corsi VALUES (3, 'power-lifting', 30, 1, 3);
 
 
 --sedute (SUBITO O DOPO)
@@ -49,6 +52,13 @@ INSERT INTO corsi VALUES (3, 'power-lifting', 30, 0, 3);
 
 
 --giorni (SUBITO)
+INSERT INTO giorni VALUES (DATE '2021-08-01')
+INSERT INTO giorni VALUES (DATE '2021-08-02')
+INSERT INTO giorni VALUES (DATE '2021-08-03')
+INSERT INTO giorni VALUES (DATE '2021-08-04')
+INSERT INTO giorni VALUES (DATE '2021-08-05')
+INSERT INTO giorni VALUES (DATE '2021-08-06')
+INSERT INTO giorni VALUES (DATE '2021-08-07')
 
 
 --slot (SUBITO)
@@ -64,4 +74,13 @@ INSERT INTO corsi VALUES (3, 'power-lifting', 30, 0, 3);
 
 
 --
-
+/*
+delete from corsi;
+delete from salepesi;
+delete from stanze;
+delete from abbonamenti;
+delete from altri;
+delete from istruttori;
+delete from clienti;
+delete from utenti;
+*/
