@@ -30,6 +30,10 @@
 
             h1{
                 text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
             }
 
             #sezione0{
@@ -47,6 +51,10 @@
                 box-sizing: border-box;
                 display: inline-block;
                 width: 70%;
+            }
+
+            #divCheck{
+                margin-top: 10px;
             }
 
             #sezione0 section label{
@@ -86,6 +94,14 @@
                 display: block;
                 margin: 0 auto;
                 margin-top: 10px;
+            }
+
+            #span0{
+                padding-left: 5%;
+            }
+
+            #span0 select{
+                border: 1px solid black;
             }
         </style>
     </head>
@@ -145,6 +161,22 @@
                         </div>
                     </section>
 
+                    <section>
+                        <label>Abbonamento: </label>
+                        <div id="divCheck">
+                            <input id="abbonamento" type="checkbox" onchange="ControllaCheck()">Abbonati
+                            <span id="span0" style="visibility: hidden;">
+                                <select id="select0" name="abbonamento">
+                                    <option value="" disabled selected>Seleziona abbonamento</option>
+                                    <option value="sala_pesi">Sala pesi</option>
+                                    <option value="corsi">Corsi</option>
+                                    <option value="completo">Completo</option>
+                                    <option value="prova">Prova</option>
+                                </select>
+                            </span>
+                        </div>
+                    </section>
+
                     <input id="sub0" class="button" type="button" value="Conferma" onclick="ControllaConferma()">
                 </section>
             </form>
@@ -153,6 +185,8 @@
     <script>
         var form0 = document.getElementById("form0");
         var pulsante = document.getElementById("sub0");
+        var span0 = document.getElementById("span0");
+
         var txtNome = document.getElementById("nome");
         var txtCognome = document.getElementById("cognome");
         var txtData = document.getElementById("data");
@@ -160,6 +194,8 @@
         var txtUsername = document.getElementById("username");
         var txtPwd = document.getElementById("pwd");
         var txtConf = document.getElementById("conf");
+        var cbxAbbonamento = document.getElementById("abbonamento");
+        var selectAbbonamento = document.getElementById("select0");
 
         function ControllaConferma(){
             if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaPwd()){
@@ -190,6 +226,15 @@
 
         function ControllaPwd(){
             return txtPwd.value.trim() == txtConf.value.trim();
+        }
+
+        function ControllaCheck(){
+            if(cbxAbbonamento.checked)
+                span0.style.visibility = "visible";
+            else{
+                span0.style.visibility = "hidden";
+                selectAbbonamento.value = "";
+            }
         }
     </script>
 </html>

@@ -77,16 +77,19 @@ class Subscription(Base):
     __tablename__ = 'abbonamenti'
     __table_args__ = (
         CheckConstraint('"costo" > 0'),
+        CheckConstraint('"durata" > 0')
     )
 
     id = Column(Integer, primary_key=True)  # aggiunta provvisoria id
     tipo = Column(String)
     costo = Column(REAL)
+    durata = Column(Integer)
 
-    def __init__(self, id, tipo, costo):
+    def __init__(self, id, tipo, costo, durata):
         self.id = id
         self.tipo = tipo
         self.costo = costo
+        self.durata = durata
 
     def __repr__(self):
         return "<Subscription(type = {0}, costo = {1})>".format(self.tipo, self.costo)
@@ -95,22 +98,22 @@ class Subscription(Base):
 class Subscriber(Base):
     __tablename__ = 'abbonati'
     __table_args__ = (
-        CheckConstraint('"dataFineAbbonamento" > "dataInizioAbbonamento"'),
+        CheckConstraint('"datafineabbonamento" > "datainizioabbonamento"'),
     )
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
     # abbonamento = Column(AbbonamentoT, ForeignKey(Subscription.tipo), nullable=False)
     abbonamento = Column(Integer, ForeignKey(Subscription.id), nullable=False)
-    dataInizioAbbonamento = Column(Date)
-    dataFineAbbonamento = Column(Date)
+    datainizioabbonamento = Column(Date)
+    datafineabbonamento = Column(Date)
     client = relationship(Client, uselist=False)
     abbonato = relationship(Subscription, uselist=False)
 
-    def __init__(self, id, abbonamento, dataInizioAbbonamento, dataFineAbbonamento):
+    def __init__(self, id, abbonamento, datainizioabbonamento, datafineabbonamento):
         self.id = id
         self.abbonamento = abbonamento
-        self.dataInizioAbbonamento = dataInizioAbbonamento
-        self.dataFineAbbonamento = dataFineAbbonamento
+        self.datainizioabbonamento = datainizioabbonamento
+        self.datafineabbonamento = datafineabbonamento
 
     def __repr__(self):
         return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
@@ -167,27 +170,27 @@ class WeightRoom(Base):
 class Course(Base):
     __tablename__ = 'corsi'
     __table_args__ = (
-        CheckConstraint('"iscrittiMax" > 0'),
+        CheckConstraint('"iscrittimax" > 0'),
     )
 
     id = Column(Integer, primary_key=True)
     nome = Column(String)
-    iscrittiMax = Column(Integer)
+    iscrittimax = Column(Integer)
     istruttore = Column(Integer, ForeignKey(Trainer.id), nullable=False)
     stanza = Column(Integer, ForeignKey(Room.id, ondelete='cascade'), nullable=False)
     trainer = relationship(Trainer, uselist=False)
     room = relationship(Room, uselist=False)
 
     # primary key progressiva
-    def __init__(self, id, nome, iscrittiMax, istruttore, stanza):
+    def __init__(self, id, nome, iscrittimax, istruttore, stanza):
         self.id = id
         self.nome = nome
-        self.iscrittiMax = iscrittiMax
+        self.iscrittimax = iscrittimax
         self.istruttore = istruttore
         self.stanza = stanza
 
     def __repr__(self):
-        return "<Course(id = {0}, nome = {1}, iscrittiMax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittiMax, self.istruttore, self.stanza)
+        return "<Course(id = {0}, nome = {1}, iscrittimax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittimax, self.istruttore, self.stanza)
 
 
 class Sitting(Base):
@@ -195,17 +198,17 @@ class Sitting(Base):
 
     id = Column(Integer, primary_key=True)
     corso = Column(Integer, ForeignKey(Course.id, ondelete='cascade'), nullable=False)
-    dataSeduta = Column(DateTime)
+    dataseduta = Column(DateTime)
     course = relationship(Course, uselist=False)
 
     # primary key progressiva
-    def __init__(self, id, corso, dataSeduta):
+    def __init__(self, id, corso, dataseduta):
         self.id = id
         self.corso = corso
-        self.dataSeduta = dataSeduta
+        self.dataseduta = dataseduta
 
     def __repr__(self):
-        return "<Session(id = {0}, corso = {1}, dataSeduta = {2})>".format(self.id, self.corso, self.dataSeduta)
+        return "<Session(id = {0}, corso = {1}, dataseduta = {2})>".format(self.id, self.corso, self.dataseduta)
 
 
 class SubscriberSession(Base):
@@ -239,25 +242,25 @@ class Day(Base):
 class Slot(Base):
     __tablename__ = 'slot'
     __table_args__ = (
-        CheckConstraint('"oraFine"> "oraInizio"'),
+        CheckConstraint('"orafine"> "orainizio"'),
     )
 
     id = Column(Integer, primary_key=True)
-    personeMax = Column(Integer)
+    personemax = Column(Integer)
     giorno = Column(Date, ForeignKey(Day.data, ondelete='cascade'), nullable=False)
-    oraInizio = Column(DateTime)
-    oraFine = Column(DateTime)
+    orainizio = Column(DateTime)
+    orafine = Column(DateTime)
     date = relationship(Day, uselist=False)
 
-    def __init__(self, id, personeMax, giorno, oraInizio, oraFine):
+    def __init__(self, id, personemax, giorno, orainizio, orafine):
         self.id = id
-        self.personeMax = personeMax
+        self.personemax = personemax
         self.giorno = giorno
-        self.oraInizio = oraInizio
-        self.oraFine = oraFine
+        self.orainizio = orainizio
+        self.orafine = orafine
 
     def __repr__(self):
-        return "<Slot(id = {0}, personeMax = {1}, giorno = {2}, oraInizio = {3}, oraFine = {4})>".format(self.id, self.personeMax, self.giorno, self.oraInizio, self.oraFine)
+        return "<Slot(id = {0}, personemax = {1}, giorno = {2}, orainizio = {3}, orafine = {4})>".format(self.id, self.personemax, self.giorno, self.orainizio, self.orafine)
 
 
 class CourseSlot(Base):

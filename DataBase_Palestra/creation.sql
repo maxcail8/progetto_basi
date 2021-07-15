@@ -3,7 +3,7 @@
 --Creazione
 
 --Utenti
-CREATE TABLE Utenti(
+CREATE TABLE utenti(
 	id INT PRIMARY KEY,
 	username VARCHAR(50),
 	password VARCHAR(16),
@@ -14,126 +14,127 @@ CREATE TABLE Utenti(
 );
 
 --Istruttori
-CREATE TABLE Istruttori(
+CREATE TABLE istruttori(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES Utenti
+	FOREIGN KEY(id) REFERENCES utenti
 );
 
 --Altri
-CREATE TABLE Altri(
+CREATE TABLE altri(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES Utenti
+	FOREIGN KEY(id) REFERENCES utenti
 );
 
 --Clienti
-CREATE TABLE Clienti(
+CREATE TABLE clienti(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES Utenti
+	FOREIGN KEY(id) REFERENCES utenti
 );
 
 --Abbonamenti
-CREATE TABLE Abbonamenti( --controllare
+CREATE TABLE abbonamenti( --controllare
 	id INT PRIMARY KEY,
 	tipo VARCHAR(10),
 	costo REAL CHECK(costo > 0)
+	durata INT CHECK(durata > 0) --giorni di durata
 );
 
 --Abbonati
-CREATE TABLE Abbonati(
+CREATE TABLE abbonati(
 	id INT PRIMARY KEY,
 	abbonamento INT NOT NULL,
-	dataInizioAbbonamento DATE,
-	dataFineAbbonamento DATE,
+	datainizioabbonamento DATE,
+	datafineabbonamento DATE,
 	FOREIGN KEY(id) REFERENCES Clienti,
-	FOREIGN KEY(abbonamento) REFERENCES Abbonamenti,
-	CHECK (dataFineAbbonamento > dataInizioAbbonamento)
+	FOREIGN KEY(abbonamento) REFERENCES abbonamenti,
+	CHECK (datafineabbonamento > datainizioabbonamento)
 );
 
 --NonAbbonati
-CREATE TABLE NonAbbonati(
+CREATE TABLE nonabbonati(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES Clienti
+	FOREIGN KEY(id) REFERENCES clienti
 );
 
 --Stanze
-CREATE TABLE Stanze(
+CREATE TABLE stanze(
 	id INT PRIMARY KEY,
 	dimensione INT CHECK(dimensione > 0) --metri quadri
 );
 
 --SalePesi
-CREATE TABLE SalePesi(
+CREATE TABLE salepesi(
 	id INT PRIMARY KEY,
 	dimensione INT CHECK(dimensione > 0) --metri quadri
 );
 
 --Corsi
-CREATE TABLE Corsi(
+CREATE TABLE corsi(
 	id INT PRIMARY KEY,
 	nome VARCHAR(100),
-	iscrittiMax INT CHECK(iscrittiMax > 0),
+	iscrittimax INT CHECK(iscrittimax > 0),
 	istruttore INT NOT NULL,
 	stanza INT NOT NULL,
-	FOREIGN KEY(istruttore) REFERENCES Istruttori,
-	FOREIGN KEY(stanza) REFERENCES Stanze
+	FOREIGN KEY(istruttore) REFERENCES istruttori,
+	FOREIGN KEY(stanza) REFERENCES stanze
 );
 
 --Sedute
-CREATE TABLE Sedute(
+CREATE TABLE sedute(
 	id INT PRIMARY KEY,
 	corso INT NOT NULL,
-	dataSeduta TIMESTAMP, --log persone per covid
-	FOREIGN KEY(corso) REFERENCES Corsi
+	dataseduta TIMESTAMP, --log persone per covid
+	FOREIGN KEY(corso) REFERENCES corsi
 );
 
 --AbbonatiSedute
-CREATE TABLE AbbonatiSedute(
+CREATE TABLE abbonatisedute(
 	abbonato INT,
 	seduta INT,
 	PRIMARY KEY(abbonato,seduta),
-	FOREIGN KEY(abbonato) REFERENCES Abbonati,
-	FOREIGN KEY(seduta) REFERENCES Sedute
+	FOREIGN KEY(abbonato) REFERENCES abbonati,
+	FOREIGN KEY(seduta) REFERENCES sedute
 );
 
 --Giorni
-CREATE TABLE Giorni(
+CREATE TABLE giorni(
 	data DATE PRIMARY KEY
 );
 
 --Slot
-CREATE TABLE Slot(
+CREATE TABLE slot(
 	id INT PRIMARY KEY,
-	personeMax INT CHECK(personeMax > 0),
+	personemax INT CHECK(personemax > 0),
 	giorno DATE,
-	oraInizio TIMESTAMP,
-	oraFine TIMESTAMP,
-	FOREIGN KEY(giorno) REFERENCES Giorni,
-	CHECK (oraFine > oraInizio) 
+	orainizio TIMESTAMP,
+	orafine TIMESTAMP,
+	FOREIGN KEY(giorno) REFERENCES giorni,
+	CHECK (orafine > orainizio) 
 );
 
 --CorsiSlot
-CREATE TABLE CorsiSlot(
+CREATE TABLE corsislot(
 	corso INT,
 	slot INT,
 	PRIMARY KEY(corso, slot),
-	FOREIGN KEY(corso) REFERENCES Corsi,
-	FOREIGN KEY(slot) REFERENCES Slot
+	FOREIGN KEY(corso) REFERENCES corsi,
+	FOREIGN KEY(slot) REFERENCES slot
 );
 
 --SalaPesiSlot
-CREATE TABLE SalaPesiSlot(
+CREATE TABLE salapesislot(
 	salapesi INT,
 	slot INT,
 	PRIMARY KEY(salapesi, slot),
-	FOREIGN KEY(salapesi) REFERENCES SalePesi,
-	FOREIGN KEY(slot) REFERENCES Slot
+	FOREIGN KEY(salapesi) REFERENCES salepesi,
+	FOREIGN KEY(slot) REFERENCES slot
 );
 
 --Prenotazioni
-CREATE TABLE Prenotazioni( --AbbonatiSlot
+CREATE TABLE prenotazioni( --AbbonatiSlot
 	abbonato INT,
 	slot INT,
 	PRIMARY KEY(abbonato, slot),
-	FOREIGN KEY(abbonato) REFERENCES Abbonati,
-	FOREIGN KEY(slot) REFERENCES Slot
+	FOREIGN KEY(abbonato) REFERENCES abbonati,
+	FOREIGN KEY(slot) REFERENCES slot
 );

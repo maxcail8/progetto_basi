@@ -1,9 +1,22 @@
 <html>
     <head>
-        <link rel="stylesheet" href="css/bootstrap/bootstrap-grid.min.css">
+        <style>
+            body{
+                /*ont-family: 'Courier New', Courier, monospace;*/
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+        </style>
     </head>
-    <h1>Progetto di Basi di Dati</h1>
     <body>
+        <h1>Area riservata</h1>
         {% if current_user.is_authenticated %}
         Benvenuto nell'area riservata! Sei l'utente {{ current_user }}! <br/>
         <form action="/calendar">

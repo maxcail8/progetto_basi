@@ -17,10 +17,10 @@ INSERT INTO altri VALUES (3);
 
 --abbonamenti
 
-INSERT INTO abbonamenti VALUES (0, 'sala_pesi', 30);
-INSERT INTO abbonamenti VALUES (1, 'corsi', 40);
-INSERT INTO abbonamenti VALUES (2, 'completo', 55);
-INSERT INTO abbonamenti VALUES (3, 'prova', 10);
+INSERT INTO abbonamenti VALUES (0, 'sala_pesi', 30, 30);
+INSERT INTO abbonamenti VALUES (1, 'corsi', 40, 30);
+INSERT INTO abbonamenti VALUES (2, 'completo', 55, 30);
+INSERT INTO abbonamenti VALUES (3, 'prova', 10, 30);
 
 --abbonati X
 --nonabbonati X

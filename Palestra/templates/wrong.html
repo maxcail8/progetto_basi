@@ -18,23 +18,23 @@
        </style>
     </head>
     <body>
-        <p><label id="lab0">Nuovo cliente creato correttamente. Reindirizzamento tra 4 secondi...</label></p>
+        <p><label id="lab0">Le credenziali inserite non sono corrette. Reindirizzamento tra 3 secondi...</label></p>
     </body>
     <script>
         var lab0 = document.getElementById("lab0");
-        var sec = 3;
+        var sec = 2;
 
         document.body.onload = function(){
             window.setInterval("SetLabel()", 1000);
-            window.setTimeout("Redirect()", 4000);
+            window.setTimeout("Redirect()", 3000);
         }
 
         function Redirect(){
-            location.href = "http://127.0.0.1:5000/";
+            location.href = "http://127.0.0.1:5000/reserved_private";
         }
 
         function SetLabel(){
-            lab0.innerHTML = "Nuovo cliente creato correttamente. Reindirizzamento tra " + sec + " secondi...";
+            lab0.innerHTML = "Le credenziali inserite non sono corrette. Reindirizzamento tra " + sec + " secondi...";
             sec--;
         }
     </script>

@@ -13,6 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 #other-import
 from werkzeug.utils import redirect
+from datetime import datetime, timedelta
 
 #######################
 #Parametri applicazione
@@ -77,11 +78,34 @@ def load_user(user_id):
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
 
+def get_current_date():
+    now = datetime.now()
+    return now.strftime("%Y-%m-%d")
+
+
+def get_increment_date(giorni):
+    data = datetime.now() + timedelta(days=giorni)
+    return data.strftime("%Y-%m-%d")
+
+
+def get_subscription(subscription):
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM abbonamenti WHERE tipo = \'%s\'' % subscription)
+    sub = rs.fetchone()
+    conn.close()
+    return classes.Subscription(sub.id, sub.tipo, sub.costo, sub.durata)
+
+
 #self, username, password, nome, cognome, email, datanascita):
 #Routes
 @app.route('/')
 def home():
     return render_template("index.html")
+
+
+@app.route('/wrong')
+def wrong():
+    return render_template("wrong.html")
 
 
 @app.route('/signup')
@@ -107,20 +131,20 @@ def login():
                 login_user(user)
                 return redirect(url_for('administration'))
             else:
-                return redirect(url_for('home'))
-        elif(real_pwd is not None):
+                return redirect(url_for('wrong'))
+        elif real_pwd is not None:
             print('SI')
             if p_pass == real_pwd['password']:
                 user = get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
-                return redirect(url_for('home'))
+                return redirect(url_for('wrong'))
         else:
             print('NO2')
-            return redirect(url_for('home'))
+            return redirect(url_for('wrong'))
     else:
-        return redirect(url_for('home'))
+        return redirect(url_for('wrong'))
 
 
 @app.route('/reserved_private')
@@ -158,13 +182,14 @@ def calendar():
 @app.route('/create', methods=['GET', 'POST'])
 def create_user():
     new_id = get_id_increment()
-    user = classes.User(id=new_id, username=request.form['username'], password=request.form['password'], nome=request.form['nome'],
-                cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
+    user = classes.User(id=new_id, username=request.form['username'], password=request.form['password'], nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
     client = classes.Client(id=new_id)
-    print(user)
-    print(client)
     session.add(user)
     session.add(client)
+    if request.form['abbonamento'] != "":
+        sub = get_subscription(request.form['abbonamento'])
+        subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(sub.durata))
+        session.add(subscriber)
     session.commit()
     return render_template("conferma.html")
 
@@ -172,5 +197,5 @@ def create_user():
 @app.route('/logout')
 @login_required
 def logout():
-	logout_user()
-	return redirect(url_for('home'))
+    logout_user()
+    return redirect(url_for('home'))
