@@ -63,7 +63,7 @@
                 font-size: 12pt;
             }
 
-            #sezione0 input[type="submit"]{
+            #sezione0 input[type="button"]{
                 display: block;
                 margin: 0 auto;
                 margin-top: 30px;
@@ -75,7 +75,7 @@
                 background-color: #4eb99f;
             }
 
-            #sezione0 input[type="submit"]:hover{
+            #sezione0 input[type="button"]:hover{
                 border: 2px solid blue;
                 background-color: #5febc8;
             }
@@ -93,33 +93,33 @@
         <h1>Registrazione nuovo cliente</h1>
 
         <section id="sezione0">
-            <form class="w3-container w3-card-4" action="/create" method="POST">
+            <form id="form0" class="w3-container w3-card-4" action="/create" method="POST">
                 <section>
                     <section>
                         <label>Nome:</label>
                         <div>
-                            <input type="text" name="nome" placeholder="Inserisci qui il tuo nome">
+                            <input id="nome" type="text" name="nome" placeholder="Inserisci qui il tuo nome">
                         </div>
                     </section>
                     
                     <section>
                         <label>Cognome:</label>
                         <div>
-                            <input type="text" name="cognome"  placeholder="Inserisci qui il tuo cognome">
+                            <input id="cognome" type="text" name="cognome"  placeholder="Inserisci qui il tuo cognome">
                         </div>
                     </section>
                     
                     <section>
                         <label>Data di nascita:</label>
                         <div>
-                            <input type="date" name="dataNascita">
+                            <input id="data" type="date" name="dataNascita">
                         </div>
                     </section>
                 
                     <section>
                         <label>Email:</label>
                         <div>
-                            <input type="email" name="email" placeholder="Inserisci qui la tua email">
+                            <input id="email" type="email" name="email" placeholder="Inserisci qui la tua email">
                         </div>
                     </section>
                     
@@ -127,27 +127,69 @@
                     <section>
                         <label>Username:</label>
                         <div>
-                            <input type="text" name="username"  placeholder="Inserisci qui il tuo username">
+                            <input id="username" type="text" name="username"  placeholder="Inserisci qui il tuo username">
                         </div>
                     </section>
                     
                     <section>
                         <label>Password:</label>
                         <div>
-                            <input type="password" name="password"  placeholder="Inserisci qui la tua password">
+                            <input id="pwd" type="password" name="password"  placeholder="Inserisci qui la tua password" oninput="ControllaPass()">
                         </div>
                     </section>
                     
                     <section>
                         <label>Conferma password:</label>
                         <div>
-                            <input type="password" name="password"  placeholder="Conferma qui la tua password">
+                            <input id="conf" type="password" name="conf"  placeholder="Conferma qui la tua password"  oninput="ControllaPass()">
                         </div>
                     </section>
 
-                    <input class="button" type="submit" value="Conferma">
+                    <input id="sub0" class="button" type="button" value="Conferma" onclick="ControllaConferma()">
                 </section>
             </form>
         </section>
     </body>
+    <script>
+        var form0 = document.getElementById("form0");
+        var pulsante = document.getElementById("sub0");
+        var txtNome = document.getElementById("nome");
+        var txtCognome = document.getElementById("cognome");
+        var txtData = document.getElementById("data");
+        var txtEmail = document.getElementById("email");
+        var txtUsername = document.getElementById("username");
+        var txtPwd = document.getElementById("pwd");
+        var txtConf = document.getElementById("conf");
+
+        function ControllaConferma(){
+            if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaPwd()){
+                form0.submit();
+            }
+            else{
+                alert("I dati non sono stati inseritit correttamente");
+            }
+        }
+
+        function ControllaPass(){
+            var v1 = txtPwd.value.trim();
+            var v2 = txtConf.value.trim();
+            if(v1 == "")
+                txtPwd.style.backgroundColor = "white";
+            else{
+                txtPwd.style.backgroundColor = "#5febc8";
+                if(txtConf.value == "")
+                    txtConf.style.backgroundColor = "white";
+                else if(ControllaPwd()){
+                    txtPwd.style.backgroundColor = "#5febc8";
+                    txtConf.style.backgroundColor = "#5febc8";
+                }
+                else
+                    txtConf.style.backgroundColor = "#e76565";
+            }   
+        }
+
+        function ControllaPwd(){
+            return txtPwd.value.trim() == txtConf.value.trim();
+        }
+    </script>
 </html>

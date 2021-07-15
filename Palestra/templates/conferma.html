@@ -7,8 +7,36 @@
         <title>Conferma</title>
         <!--<link rel="stylesheet" href="css/w3.css">-->
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            body{
+               /*ont-family: 'Courier New', Courier, monospace;*/
+               background-color: #f3f2ee;
+           }
+           p{
+               padding: 5px;
+               /*text-align: center;*/
+           }
+       </style>
     </head>
     <body>
-        Conferma creazione utente
+        <p><label id="lab0">Nuovo cliente creato correttamente. Reindirizzamento tra 4 secondi...</label></p>
     </body>
+    <script>
+        var lab0 = document.getElementById("lab0");
+        var sec = 4;
+
+        document.body.onload = function(){
+            window.setInterval("SetLabel()", 1000);
+            window.setTimeout("Redirect()", 4000);
+        }
+
+        function Redirect(){
+            location.href = "http://127.0.0.1:5000/";
+        }
+
+        function SetLabel(){
+            lab0.innerHTML = "Nuovo cliente creato correttamente. Reindirizzamento tra " + sec + " secondi...";
+            sec--;
+        }
+    </script>
 </html>

@@ -52,13 +52,17 @@ INSERT INTO corsi VALUES (3, 'power-lifting', 30, 1, 3);
 
 
 --giorni (SUBITO)
-INSERT INTO giorni VALUES (DATE '2021-08-01')
-INSERT INTO giorni VALUES (DATE '2021-08-02')
-INSERT INTO giorni VALUES (DATE '2021-08-03')
-INSERT INTO giorni VALUES (DATE '2021-08-04')
-INSERT INTO giorni VALUES (DATE '2021-08-05')
-INSERT INTO giorni VALUES (DATE '2021-08-06')
-INSERT INTO giorni VALUES (DATE '2021-08-07')
+CREATE PROCEDURE LoopGiorni() AS $$
+	DECLARE giorno date = CURRENT_DATE;
+	BEGIN
+		FOR i IN 0..5 LOOP
+			INSERT INTO giorni VALUES(giorno);
+			giorno = giorno + 1;
+		END LOOP;
+	END;
+$$ LANGUAGE 'plpgsql';
+
+CALL LoopGiorni();
 
 
 --slot (SUBITO)
