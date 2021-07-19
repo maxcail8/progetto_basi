@@ -36,7 +36,6 @@ CREATE TABLE abbonamenti( --controllare
 	id INT PRIMARY KEY,
 	tipo VARCHAR(10),
 	costo REAL CHECK(costo > 0)
-	durata INT CHECK(durata > 0) --giorni di durata
 );
 
 --Abbonati
@@ -45,6 +44,7 @@ CREATE TABLE abbonati(
 	abbonamento INT NOT NULL,
 	datainizioabbonamento DATE,
 	datafineabbonamento DATE,
+	durata INT CHECK(durata > 0), --giorni di durata
 	FOREIGN KEY(id) REFERENCES Clienti,
 	FOREIGN KEY(abbonamento) REFERENCES abbonamenti,
 	CHECK (datafineabbonamento > datainizioabbonamento)

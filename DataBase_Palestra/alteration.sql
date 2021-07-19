@@ -1,3 +1,6 @@
 --Aggiungere durata agli abbonamenti
-ALTER TABLE Abbonamenti ADD durata INT NULL CHECK(durata>0);
+ALTER TABLE abbonamenti ADD durata INT NULL CHECK(durata>0);
 
+--Errore: mettere la durata in abbonati
+ALTER TABLE abbonamenti DROP durata;
+ALTER TABLE abbonati ADD durata INT NULL CHECK(durata>0);

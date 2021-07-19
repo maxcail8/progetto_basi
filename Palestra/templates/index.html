@@ -1,79 +1,180 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <style>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Homepage</title>
+        <style>
 
-        *{
-            padding: 0;
-            margin: 0;
-            border: none;
-        }
-         body{
-            /*font-family: 'Courier New', Courier, monospace;*/
-            background-color: #f3f2ee;
-        }
+            *{
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                background-color: #f3f2ee;
+            }
 
-        header{
-            background-color: white;
-            position: sticky;
-            top: 0;
-            padding-top: 1%;
-            padding-bottom: 1%;
-        }
+            header{
+                background-color: white;
+                position: sticky;
+                top: 0;
+                padding-top: 1%;
+                padding-bottom: 1%;
+            }
 
-        header div{
-            display: inline-block;
-            width: 32%;
-            text-align: center;
-        }
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
 
-        header a{
-            text-decoration: none;
-            font-size: 15pt;
-            font-weight: bold;
-            color: blue;
-        }
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
 
-        header a:hover{
-            text-decoration: underline;
-        }
+            header a:hover{
+                text-decoration: underline;
+            }
 
-        #div0 a{
-            padding-left: 4%;
-        }
+            #div0 a{
+                padding-left: 4%;
+            }
 
-        h1{
-            font-size: 25pt;
-            color: #51bdd5;
-            font-weight: bold;
-            text-shadow: 1px 1px black;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <nav>
-            <div id="div0">
-                <a href="info">Informazioni palestra</a>
-            </div>
-            <div id="div1">
-                <h1>Benvenuto nella palestra!</h1>
-            </div>
-            <div id="div2">
-                <a href="reserved_private">Accedi o Registrati</a>
-            </div>
-        </nav>
-    </header>
+            h1{
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="info">Informazioni palestra</a>
+                </div>
+                <div id="div1">
+                    <h1>Benvenuto nella palestra!</h1>
+                </div>
+                <div id="div2">
+                    <a href="reserved_private">Accedi o Registrati</a>
+                </div>
+            </nav>
+        </header>
 
-    
-    <hr>
-    <p>Scegli cosa vuoi fare </p>
-    <ul>
-        <li><a href="calendar">calendario</a></li>
-    </ul>
+        
+        <hr>
+        <section id='tabella'>
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan='7'>
+                            <span id='nomeMese'>
+                                <!--????????????????????????????????????-->
+                            </span>
+                            <input type='button' value='<' onclick='SubmitPrima()'>
+                            <input type='button' value='>' onclick='SubmitDopo()'>
+                        </th>
+                    </tr>
+                </thead>
+                <tr>
+                    {% for i in first_column %}
+                        {% if i==0 %}
+                        <td style='background-color:#00000041!important;'></td>
+                        {% else %}
+                        <td>
+                            <span>{{i}}</span>
+                            <br>
+                        </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            </table>
+        </section>
     </body>
+    <script>
+        
+        /*
+        //Creazione stringa con tabella
+         
+            //Aggiunta intestazione con nome del mese e pulsanti per visualizzare mese precedente e sucessivo
+            $tabella .= "\t
+            //$calendar = array();
+
+            $giorno = 1;
+            $timestamp = strtotime("$mese/$giorno/$anno"); //Timestamp primo giorno del mese
+            $dataLocale = strftime("%A %d %B %Y", $timestamp); //Creazione stringa con formato locale
+            $primoGiorno = SplitArray(Italiano($dataLocale), 0); //Giorno della settimana
+
+            $col=giornoSettimana($primoGiorno);  //Posizione del primo giorno del mese
+            $riga = 0;
+            $tabella .= "\t\t<tr>\n";
+            $giornoDelMese = date("t",$timestamp); //Numero di giorni del mese passato
+
+            for($con=0;$giorno<$giornoDelMese;$con++){
+                $timestamp = strtotime("$mese/$giorno/$anno"); //Timestamp
+                $dataLocale = strftime("%A %d %B %Y", $timestamp); //Creazione stringa con formato locale
+
+                if($con<=$col){  //Posizione corrente <= Posizione del primo giorno
+
+                    if($con==$col){ 
+                        //$calendar[$riga][$con] = "$giorno";
+                        $nome = SplitArray(Italiano($dataLocale), 0);
+
+                        if($nome == 'domenica' && !Today($mese, $giorno, $anno))
+                            $tabella .= "\t\t\t<td style='background-color:#ff9933;color:orange;text-shadow:2px 2px black;'><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                        else if(Today($mese, $giorno, $anno))
+                            $tabella .= "\t\t\t<td style='background-color:#009933;color:green;text-shadow:2px 2px black;'><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                        else
+                            $tabella .= "\t\t\t<td><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                    }
+                    else{
+                        //$calendar[$riga][$con] = "";
+                        $tabella .= "\t\t\t<td style='background-color:#00000041!important;'></td>\n";
+                    }
+                }
+                else{ //Posizione corrente > Posizione del primo giorno
+                    $giorno++;
+                    $timestamp = strtotime("$mese/$giorno/$anno"); //Timestamp
+                    $dataLocale = strftime("%A %d %B %Y", $timestamp); //Creazione stringa con formato locale
+
+                    if(checkdate($mese, $giorno, $anno)){ //Controllo che esista la data, altrimenti aggiungo una colonna vuota
+                        if($con > 0 && $con%7==0){
+                            $riga++;
+                            $tabella .= "\t\t</tr>\n";
+                            $tabella .= "\t\t<tr>\n";
+                        }
+                        //$calendar[$riga][$con%7]="$giorno";
+                        $nome = SplitArray(Italiano($dataLocale), 0);
+
+                        if($nome == 'domenica' && !Today($mese, $giorno, $anno))
+                            $tabella .= "\t\t\t<td style='background-color:#ff9933;color:orange;text-shadow:2px 2px black;'><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                        else if(Today($mese, $giorno, $anno))
+                            $tabella .= "\t\t\t<td style='background-color:#009933;color:green;text-shadow:2px 2px black;'><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                        else
+                            $tabella .= "\t\t\t<td><span>$giorno</span><br>" . Nome($nome) . "</td>\n";
+                    }
+                    else{
+                        //$calendar[$riga][$con] = "";
+                        $tabella .= "\t\t\t<td style='background-color:#00000041!important;'></td>\n";
+                    }
+                }
+            }
+
+            while($con%7!=0){ //Aggiungo colonne vuote fino a completare l'ultima
+                $tabella .= "\t\t\t<td style='background-color:#00000041!important;'></td>\n";
+                $con++;
+            }
+            $tabella .= "\t\t</tr>\n\t</table>\n\t</section>\n";
+            
+            echo $tabella;
+        */
+    </script>
 </html>

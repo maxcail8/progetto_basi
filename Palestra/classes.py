@@ -6,6 +6,9 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
 Base = declarative_base()
 
 # Dichiarazione Classi-Tabelle
@@ -77,19 +80,16 @@ class Subscription(Base):
     __tablename__ = 'abbonamenti'
     __table_args__ = (
         CheckConstraint('"costo" > 0'),
-        CheckConstraint('"durata" > 0')
     )
 
     id = Column(Integer, primary_key=True)  # aggiunta provvisoria id
     tipo = Column(String)
     costo = Column(REAL)
-    durata = Column(Integer)
 
-    def __init__(self, id, tipo, costo, durata):
+    def __init__(self, id, tipo, costo):
         self.id = id
         self.tipo = tipo
         self.costo = costo
-        self.durata = durata
 
     def __repr__(self):
         return "<Subscription(type = {0}, costo = {1})>".format(self.tipo, self.costo)
@@ -99,6 +99,7 @@ class Subscriber(Base):
     __tablename__ = 'abbonati'
     __table_args__ = (
         CheckConstraint('"datafineabbonamento" > "datainizioabbonamento"'),
+        CheckConstraint('"durata" > 0'),
     )
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
@@ -106,14 +107,16 @@ class Subscriber(Base):
     abbonamento = Column(Integer, ForeignKey(Subscription.id), nullable=False)
     datainizioabbonamento = Column(Date)
     datafineabbonamento = Column(Date)
+    durata = Column(Integer)
     client = relationship(Client, uselist=False)
     abbonato = relationship(Subscription, uselist=False)
 
-    def __init__(self, id, abbonamento, datainizioabbonamento, datafineabbonamento):
+    def __init__(self, id, abbonamento, datainizioabbonamento, datafineabbonamento, durata):
         self.id = id
         self.abbonamento = abbonamento
         self.datainizioabbonamento = datainizioabbonamento
         self.datafineabbonamento = datafineabbonamento
+        self.durata = durata
 
     def __repr__(self):
         return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
@@ -309,3 +312,44 @@ class Reservation(Base):
 
     def __repr__(self):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
+
+
+class MyDate():
+    first_column = []
+    second_column = []
+    third_column = []
+    fourth_column = []
+    last_column = []
+
+    def __init__(self):
+        i = datetime.now()
+        first = datetime(i.year, i.month, 1)
+        last = datetime(i.year, i.month, i.day) + relativedelta(day=31)  # torna l'utlimo giorno del mese
+        days = 0
+
+        first_column_days = 7 - first.weekday()
+        for i in range(7 - first_column_days):
+            self.first_column.append(0)
+        for i in range(first_column_days):
+            self.first_column.append(i+1)
+
+        second_column_day = first_column_days + 1
+        for i in range(second_column_day, second_column_day + 7):
+            self.second_column.append(i)
+
+        third_column_day = second_column_day + 7
+        for i in range(third_column_day, third_column_day + 7):
+            self.third_column.append(i)
+
+        fourth_column_day = third_column_day + 7
+        for i in range(fourth_column_day, fourth_column_day + 7):
+            self.fourth_column.append(i)
+
+        last_column_day = fourth_column_day + 7
+        days += first_column_days + 21
+        last_column_days = last.day - days
+        end_days = 7 - last_column_days
+        for i in range(last_column_day, last_column_day + last_column_days):
+            self.last_column.append(i)
+        for i in range(end_days):
+            self.last_column.append(0)

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Info palestra</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
+
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*ont-family: 'Courier New', Courier, monospace;*/
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Informazioni palestra</h1>
+        
+        <hr>
+        <h2>Corsi</h2>
+        <ul>
+            {% for c in courses %}
+            <li> {{ c }} </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Stanze</h2>
+        <ul>
+            {% for r in rooms %}
+            <li> {{ r }} </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Sale pesi</h2>
+        <ul>
+            {% for w in weight_rooms %}
+            <li> {{ w }} </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Istruttori</h2>
+        <ul>
+            {% for t in trainers %}
+            <li> {{ t }} </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Clienti</h2>
+        <ul>
+            {% for c in clients %}
+            <li> {{ c }} </li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

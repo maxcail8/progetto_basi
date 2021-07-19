@@ -1,4 +1,6 @@
 #modules-import
+import array
+
 import classes
 
 #flask-import
@@ -14,6 +16,7 @@ from sqlalchemy.orm import sessionmaker
 #other-import
 from werkzeug.utils import redirect
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 #######################
 #Parametri applicazione
@@ -41,13 +44,25 @@ first_id_client = 100
 admim_email = 'admin@palestra.it'
 admim_pwd = 'admin'
 
+
 #Functions
+#user_loader
+@login_manager.user_loader
+def load_user(user_id):
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
+    user = rs.fetchone()
+    conn.close()
+    return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
+
+
 def get_user_by_email(email):
     conn = engine.connect()
     p_query = "SELECT * FROM utenti WHERE email = %s"
     user = conn.engine.execute(p_query, email).first()
     conn.close()
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
+
 
 #Funzione per autoincrementare id tramite query
 def get_id_increment():
@@ -60,19 +75,11 @@ def get_id_increment():
     else:
         return first_id_client
 
+
 #Funzione per tornare l'utente amministratore
 def get_admin_user():
     conn = engine.connect()
     rs = conn.execute('SELECT * FROM utenti WHERE id = 0')
-    user = rs.fetchone()
-    conn.close()
-    return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
-
-#user_loader
-@login_manager.user_loader
-def load_user(user_id):
-    conn = engine.connect()
-    rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
     user = rs.fetchone()
     conn.close()
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
@@ -93,14 +100,60 @@ def get_subscription(subscription):
     rs = conn.execute('SELECT * FROM abbonamenti WHERE tipo = \'%s\'' % subscription)
     sub = rs.fetchone()
     conn.close()
-    return classes.Subscription(sub.id, sub.tipo, sub.costo, sub.durata)
+    return classes.Subscription(sub.id, sub.tipo, sub.costo)
 
 
-#self, username, password, nome, cognome, email, datanascita):
+def get_courses():
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM corsi')
+    courses = rs.fetchone()
+    conn.close()
+    return courses
+
+
+def get_rooms():
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM stanze')
+    rooms = rs.fetchone()
+    conn.close()
+    return rooms
+
+
+def get_weight_rooms():
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM salepesi')
+    weight_rooms = rs.fetchone()
+    conn.close()
+    return weight_rooms
+
+
+def get_trainers():
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM istruttori NATURAL JOIN utenti')
+    trainers = rs.fetchone()
+    conn.close()
+    return trainers
+
+
+def get_clients():
+    conn = engine.connect()
+    rs = conn.execute('SELECT * FROM clienti NATURAL JOIN utenti')
+    clients = rs.fetchone()
+    conn.close()
+    return clients
+
+
 #Routes
 @app.route('/')
 def home():
-    return render_template("index.html")
+    i = datetime.now()
+    mydate = classes.MyDate()
+    print(mydate.first_column)
+    print(mydate.second_column)
+    print(mydate.third_column)
+    print(mydate.fourth_column)
+    print(mydate.last_column)
+    return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, second_columnn=mydate.second_column, third_columnn=mydate.third_column, fourth_columnn=mydate.fourth_column, last_columnn=mydate.last_column)
 
 
 @app.route('/wrong')
@@ -147,6 +200,13 @@ def login():
         return redirect(url_for('wrong'))
 
 
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
 @app.route('/reserved_private')
 def reserved():
     if current_user.is_authenticated:
@@ -188,14 +248,24 @@ def create_user():
     session.add(client)
     if request.form['abbonamento'] != "":
         sub = get_subscription(request.form['abbonamento'])
-        subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(sub.durata))
+        subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
         session.add(subscriber)
     session.commit()
     return render_template("conferma.html")
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
+@app.route('/info')
+def info():
+    i = datetime.now()
+    print("Data e ora corrente = %s" % i)
+    print("Data e ora ISO format = %s" % i.isoformat())
+    print("Anno corrente = %s" % i.year)
+    print("Mese corrente = %s" % i.month)
+    print("Data corrente (giorno) =  %s" % i.day)
+    print("Formato dd/mm/yyyy =  %s/%s/%s" % (i.day, i.month, i.year))
+    print("Ora corrente = %s" % i.hour)
+    print("Minuto corrente = %s" % i.minute)
+    print("Secondo corrente =  %s" % i.second)
+    print("Formato hh:mm:ss = %s:%s:%s" % (i.hour, i.minute, i.second))
+    print("Giorno della settimana = %s" % (i.weekday()))
+    return render_template("info.html", courses=get_courses(), rooms=get_rooms(), weight_rooms=get_weight_rooms(), trainers=get_trainers(), clients=get_clients())
