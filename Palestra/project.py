@@ -148,12 +148,7 @@ def get_clients():
 def home():
     i = datetime.now()
     mydate = classes.MyDate()
-    print(mydate.first_column)
-    print(mydate.second_column)
-    print(mydate.third_column)
-    print(mydate.fourth_column)
-    print(mydate.last_column)
-    return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, second_columnn=mydate.second_column, third_columnn=mydate.third_column, fourth_columnn=mydate.fourth_column, last_columnn=mydate.last_column)
+    return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
 
 
 @app.route('/wrong')
@@ -228,15 +223,8 @@ def administration():
         resp = make_response(render_template("administration.html", current_user=current_user))
         return resp
     else:
-        ###############################################################
         resp = make_response(render_template("private.html", current_user=current_user))
         return resp
-
-@app.route('/calendar')
-@login_required
-def calendar():
-    resp = make_response(render_template("calendar.html", current_user=current_user))
-    return resp
 
 
 @app.route('/create', methods=['GET', 'POST'])
@@ -256,16 +244,9 @@ def create_user():
 
 @app.route('/info')
 def info():
-    i = datetime.now()
-    print("Data e ora corrente = %s" % i)
-    print("Data e ora ISO format = %s" % i.isoformat())
-    print("Anno corrente = %s" % i.year)
-    print("Mese corrente = %s" % i.month)
-    print("Data corrente (giorno) =  %s" % i.day)
-    print("Formato dd/mm/yyyy =  %s/%s/%s" % (i.day, i.month, i.year))
-    print("Ora corrente = %s" % i.hour)
-    print("Minuto corrente = %s" % i.minute)
-    print("Secondo corrente =  %s" % i.second)
-    print("Formato hh:mm:ss = %s:%s:%s" % (i.hour, i.minute, i.second))
-    print("Giorno della settimana = %s" % (i.weekday()))
     return render_template("info.html", courses=get_courses(), rooms=get_rooms(), weight_rooms=get_weight_rooms(), trainers=get_trainers(), clients=get_clients())
+
+
+@app.route('/calendar', methods=['GET', 'POST'])
+def calendar():
+    return render_template("index.html", month=request.form['month'], year=request.form['year'], day=request.form['day'], first_column=request.form['first_column'], last_day=request.form['last_day'])

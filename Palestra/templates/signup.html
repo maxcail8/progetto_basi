@@ -24,7 +24,8 @@
             }
 
             body{
-                /*ont-family: 'Courier New', Courier, monospace;*/
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
                 background-color: #f3f2ee;
             }
 
@@ -226,7 +227,12 @@
         }
 
         function ControllaAbbonamento(){
-            if(selectAbbonamento.value != "" && selectAbbonamento.value != "prova"){
+            if(cbxAbbonamento.checked == false){
+                selectAbbonamento.value = "";
+                selectDurata.value = "";
+                return true;
+            }
+            else if(selectAbbonamento.value != "" && selectAbbonamento.value != "prova"){
                 if(selectDurata.value != "")
                     return true;
                 else

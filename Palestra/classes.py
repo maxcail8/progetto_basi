@@ -314,7 +314,7 @@ class Reservation(Base):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
 
 
-class MyDate():
+class My2Date():
     first_column = []
     second_column = []
     third_column = []
@@ -353,3 +353,15 @@ class MyDate():
             self.last_column.append(i)
         for i in range(end_days):
             self.last_column.append(0)
+
+class MyDate():
+    first_column = Integer
+    last_day = Integer
+
+    def __init__(self):
+        i = datetime.now()
+        first = datetime(i.year, i.month, 1)
+        last = datetime(i.year, i.month, i.day) + relativedelta(day=31)  # torna l'utlimo giorno del mese
+        first_column_days = 7 - first.weekday()
+        self.first_column = 7 - first_column_days
+        self.last_day = last.day
