@@ -1,57 +1,59 @@
-#modules-import
+# modules-import
 import array
 
 import classes
 
-#flask-import
+# flask-import
 from flask import Flask, render_template, request, redirect, url_for, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from flask_migrate import Migrate
 
-#sqlalchemy-import
+# sqlalchemy-import
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
 from sqlalchemy.orm import sessionmaker
 
-#other-import
+# other-import
 from werkzeug.utils import redirect
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 #######################
-#Parametri applicazione
+# Parametri applicazione
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/progetto_palestra', echo=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/progetto_palestra"
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-#Secret key
-#app.config['SECRET_KEY'] = 'secret11'
+# Secret key
+# app.config['SECRET_KEY'] = 'secret11'
 app.secret_key = 'secret14'
 
-#Gestione login
+# Gestione login
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-#Sessione
+# Sessione
 Session = sessionmaker(bind=engine)
 session = Session()
 
 #############################
-#Variabili e costanti globali
+# Variabili e costanti globali
 first_id_client = 100
 admim_email = 'admin@palestra.it'
 admim_pwd = 'admin'
 
 
-#Functions
-#user_loader
+# Functions
+# user_loader
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
-    user = rs.fetchone()
+    #rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
+    #user = rs.fetchone()
+    p_query = "SELECT * FROM utenti WHERE id = %s"
+    user = conn.engine.execute(p_query, user_id).first()
     conn.close()
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
@@ -64,7 +66,7 @@ def get_user_by_email(email):
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
 
-#Funzione per autoincrementare id tramite query
+# Funzione per autoincrementare id tramite query
 def get_id_increment():
     conn = engine.connect()
     p_query = "SELECT * FROM utenti WHERE id>=100 ORDER BY id DESC"
@@ -76,11 +78,11 @@ def get_id_increment():
         return first_id_client
 
 
-#Funzione per tornare l'utente amministratore
+# Funzione per tornare l'utente amministratore
 def get_admin_user():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM utenti WHERE id = 0')
-    user = rs.fetchone()
+    p_query = "SELECT * FROM utenti WHERE id = 0"
+    user = conn.engine.execute(p_query).first()
     conn.close()
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
@@ -97,53 +99,64 @@ def get_increment_date(giorni):
 
 def get_subscription(subscription):
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM abbonamenti WHERE tipo = \'%s\'' % subscription)
-    sub = rs.fetchone()
+    p_query = "SELECT * FROM abbonamenti WHERE tipo = '%s'"
+    sub = conn.engine.execute(p_query, subscription).first()
     conn.close()
     return classes.Subscription(sub.id, sub.tipo, sub.costo)
 
 
 def get_courses():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM corsi')
-    courses = rs.fetchone()
+    p_query = "SELECT * FROM corsi"
+    courses = conn.engine.execute(p_query)
     conn.close()
     return courses
 
 
 def get_rooms():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM stanze')
-    rooms = rs.fetchone()
+    p_query = "SELECT * FROM stanze"
+    rooms = conn.engine.execute(p_query)
     conn.close()
     return rooms
 
 
 def get_weight_rooms():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM salepesi')
-    weight_rooms = rs.fetchone()
+    p_query = "SELECT * FROM salepesi"
+    weight_rooms = conn.engine.execute(p_query)
     conn.close()
     return weight_rooms
 
 
 def get_trainers():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM istruttori NATURAL JOIN utenti')
-    trainers = rs.fetchone()
+    p_query = "SELECT * FROM istruttori NATURAL JOIN utenti"
+    trainers = conn.engine.execute(p_query)
     conn.close()
     return trainers
 
 
 def get_clients():
     conn = engine.connect()
-    rs = conn.execute('SELECT * FROM clienti NATURAL JOIN utenti')
-    clients = rs.fetchone()
+    p_query = "SELECT * FROM clienti NATURAL JOIN utenti"
+    clients = conn.engine.execute(p_query)
     conn.close()
     return clients
 
 
-#Routes
+def is_subscriber(user_id):
+    conn = engine.connect()
+    p_query = "SELECT * FROM abbonati WHERE id = %s"
+    sub = conn.engine.execute(p_query, user_id).first()
+    conn.close()
+    if sub is not None:
+        return True
+    else:
+        return False
+
+
+# Routes
 @app.route('/')
 def home():
     i = datetime.now()
@@ -161,7 +174,7 @@ def signup():
     return render_template("signup.html")
 
 
-@app.route('/login', methods =['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         p_email = request.form['user']
@@ -169,11 +182,9 @@ def login():
         conn = engine.connect()
         p_query = "SELECT password AS password FROM utenti WHERE email = %s"
         real_pwd = conn.engine.execute(p_query, p_email).first()
-        print('real_pwd %s', real_pwd)
         conn.close()
 
         if p_email == admim_email:
-            print('NO')
             if real_pwd is not None and p_pass == real_pwd['password']:
                 user = get_user_by_email(request.form['user'])
                 login_user(user)
@@ -181,7 +192,6 @@ def login():
             else:
                 return redirect(url_for('wrong'))
         elif real_pwd is not None:
-            print('SI')
             if p_pass == real_pwd['password']:
                 user = get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
@@ -212,7 +222,8 @@ def reserved():
 @app.route('/private')
 @login_required
 def private():
-    resp = make_response(render_template("private.html", current_user=current_user))
+    sub = is_subscriber(current_user.id)
+    resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
     return resp
 
 
@@ -235,11 +246,25 @@ def create_user():
     session.add(user)
     session.add(client)
     if request.form['abbonamento'] != "":
-        sub = get_subscription(request.form['abbonamento'])
-        subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
-        session.add(subscriber)
+        subscribe(new_id)
     session.commit()
     return render_template("conferma.html")
+
+
+@app.route('/subscribe', methods=['GET', 'POST'])
+def subscribe(user_id):
+    if not is_subscriber(user_id) and request.form['abbonamento'] != "":
+        sub = get_subscription(request.form['abbonamento'])
+        if request.form['abbonamento'] == "prova":
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=null)
+            session.add(subscriber)
+        else:
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            session.add(subscriber)
+        session.commit()
+        return render_template("conferma.html")
+    else:
+        return render_template("wrong.html")
 
 
 @app.route('/info')
@@ -247,6 +272,21 @@ def info():
     return render_template("info.html", courses=get_courses(), rooms=get_rooms(), weight_rooms=get_weight_rooms(), trainers=get_trainers(), clients=get_clients())
 
 
+@app.route('/info_user', methods=['GET', 'POST'])
+@login_required
+def info_user():
+    return render_template("info_user.html")
+
+
 @app.route('/calendar', methods=['GET', 'POST'])
+@login_required
 def calendar():
-    return render_template("index.html", month=request.form['month'], year=request.form['year'], day=request.form['day'], first_column=request.form['first_column'], last_day=request.form['last_day'])
+    i = datetime.now()
+    mydate = classes.MyDate()
+    return render_template("calendar.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
+
+
+@app.route('/subscribe_course', methods=['GET', 'POST'])
+@login_required
+def subscribe_course():
+    return render_template("subscribe_course.html")

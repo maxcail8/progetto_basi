@@ -5,34 +5,229 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Area riservata</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
             body{
                 /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-family: "Comic Sans MS", cursive, sans-serif!important;;
                 background-color: #f3f2ee;
             }
 
+            #p0{
+                padding: 5px;
+            }
+
             h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
                 text-align: center;
                 font-size: 25pt;
                 color: #51bdd5;
                 font-weight: bold;
                 text-shadow: 1px 1px black;
             }
+
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 3%;
+            }
+
+            #informazioniUtente{
+                margin-left: 3%;
+            }
+
+            #informazioniUtente label{
+                display: block;
+            }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            #sezione0{
+                background-color: white;
+                width: 90%;
+                display: block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 section div{
+                display: inline-block;
+                width: 90%;
+            }
+
+            #sezione0 section label{
+                display: inline-block;
+                width: 45%;
+            }
+
+            #sezione0 input[type="button"]{
+                display: inline-block;
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+
+            #span0{
+                padding-left: 3%;
+            }
+
+            #span0 select{
+                border: 1px solid black;
+            }
+
+            #span1{
+                padding-left: 3%;
+            }
+
+            #span1 select{
+                border: 1px solid black;
+            }
         </style>
     </head>
     <body>
         <h1>Area riservata</h1>
         {% if current_user.is_authenticated %}
-        Benvenuto nell'area riservata! Sei l'utente {{ current_user }}! <br/>
-        <form action="/calendar">
-        </form>
-        {% else %}
-        Per essere benvenuto devi essere autenticato
-        {% endif %}
+        <h3>Informazioni utente {{ current_user.nome }} {{ current_user.cognome }}</h3>
+        <div id="informazioniUtente">
+            <span>
+                <label>Nome: {{current_user.nome }}</label><label>Cognome: {{ current_user.cognome }}</label><label>Data di nascita: {{ current_user.datanascita }}</label>
+                
+                <label>Username: {{ current_user.username }}</label><label>Email: {{ current_user.email }}</label>
+            </span>
+        </div>
         
+        <h3>Operazioni disponibili</h3>
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <section>
+                    <form id="informazioni" action="/info_user" method="POST">
+                        <div>
+                            <label>Visualizza ulteriori informazioni (prenotazioni, corsi, ecc...)</label>
+                        </div>
+                        <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
+                    </form>
+                </section>
+                <hr>
+                {% if sub==True %}
+                <section>
+                    <form id="calendario" action="/calendar" method="POST">
+                        <div>
+                            <label>Effettua una prenotazione</label>
+                        </div>
+                        <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
+                    </form>
+                </section>
+                <hr>
+                <section>
+                    <form id="iscrizione" action="/subscribe_course" method="POST">
+                        <div>
+                            <label>Iscriviti ad un corso</label>
+                        </div>
+                        <input id="subCorso" class="button" type="button" value="Iscriviti" onclick="IscrizioneCorso()">
+                    </form>
+                </section>
+                {% else %}
+                <section>
+                    <form id="abbonati" action="/subscribe" method="POST">
+                        <div id="divCheck">
+                            <label>Effettua abbonamento</label>
+                            <input id="abbonamento" type="checkbox" onchange="ControllaCheck()">Abbonati
+                            <span id="span0" style="visibility: hidden;">
+                                <select id="select0" name="abbonamento">
+                                    <option value="" disabled selected>Seleziona abbonamento</option>
+                                    <option value="sala_pesi">Sala pesi</option>
+                                    <option value="corsi">Corsi</option>
+                                    <option value="completo">Completo</option>
+                                    <option value="prova">Prova</option>
+                                </select>
+                            </span>
+                            <span id="span1" style="visibility: hidden;">
+                                <select id="select1" name="durata">
+                                    <option value="" disabled selected>Seleziona durata</option>
+                                    <option value="30">1 mese</option>
+                                    <option value="90">3 mesi</option>
+                                    <option value="180">6 mesi</option>
+                                    <option value="365">1 anno</option>
+                                </select>
+                            </span>
+                            <span id="spanIdUtente" name="idUtente" style="visibility: hidden;">{{current_user.id}}</span>
+                        </div>
+                        <input id="subAbb" class="button" type="button" value="Abbonati" onclick="Abbonati()">
+                    </form>
+                </section>
+                {% endif %}
+            </section>
+        {% else %}
+        <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato</label></p>
+        {% endif %}
+        <br>
         <form action="/logout">
             Disconnetti:<input type="submit">
         </form>
     </body>
+    <script>
+        var span0 = document.getElementById("span0");
+        var span1 = document.getElementById("span1");
+        var selectAbbonamento = document.getElementById("select0");
+        var selectDurata = document.getElementById("select1");
+        var cbxAbbonamento = document.getElementById("abbonamento");
+        var informazioni = document.getElementById("informazioni");
+        var iscrizione = document.getElementById("iscrizione");
+        var calendario = document.getElementById("calendario");
+        var abbonati = document.getElementById("abbonati");
+        var spanIdUtente = document.getElementById("spanIdUtente");
+
+        function VisualizzaInformazioni(){
+            informazioni.submit();
+        }
+
+        function IscrizioneCorso(){
+            iscrizione.submit();
+        }
+
+        function PrenotaCalendario(){
+            calendario.submit();
+        }
+
+        function ControllaCheck(){
+            if(cbxAbbonamento.checked){
+                span0.style.visibility = "visible";
+                span1.style.visibility = "visible";
+            }
+            else{
+                span0.style.visibility = "hidden";
+                span1.style.visibility = "hidden";
+                selectAbbonamento.value = "";
+                selectDurata.value = "";
+            }
+        }
+
+        function Abbonati(){
+            spanIdUtente.value = spanIdUtente.textContent;
+            abbonati.submit();
+        }
+    </script>
 </html> 

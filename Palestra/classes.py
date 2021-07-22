@@ -1,7 +1,7 @@
-#flask-import
+# flask-import
 from flask_login import UserMixin
 
-#sqlalchemy-import
+# sqlalchemy-import
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 Base = declarative_base()
+
 
 # Dichiarazione Classi-Tabelle
 class User(Base, UserMixin):
@@ -314,7 +315,7 @@ class Reservation(Base):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
 
 
-class My2Date():
+class My2Date:
     first_column = []
     second_column = []
     third_column = []
@@ -353,6 +354,7 @@ class My2Date():
             self.last_column.append(i)
         for i in range(end_days):
             self.last_column.append(0)
+
 
 class MyDate():
     first_column = Integer
