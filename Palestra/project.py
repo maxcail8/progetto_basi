@@ -99,7 +99,7 @@ def get_increment_date(giorni):
 
 def get_subscription(subscription):
     conn = engine.connect()
-    p_query = "SELECT * FROM abbonamenti WHERE tipo = '%s'"
+    p_query = "SELECT * FROM abbonamenti WHERE tipo = %s"
     sub = conn.engine.execute(p_query, subscription).first()
     conn.close()
     return classes.Subscription(sub.id, sub.tipo, sub.costo)
@@ -245,15 +245,23 @@ def create_user():
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
-    if request.form['abbonamento'] != "":
-        subscribe(new_id)
+    if request.form['abbonamento'] != "null":
+        sub = get_subscription(request.form['abbonamento'])
+        if request.form['abbonamento'] == "prova":
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=null)
+            session.add(subscriber)
+        else:
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            session.add(subscriber)
     session.commit()
-    return render_template("conferma.html")
+    return render_template("confirm.html")
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
-def subscribe(user_id):
-    if not is_subscriber(user_id) and request.form['abbonamento'] != "":
+@login_required
+def subscribe():
+    user_id = current_user.id
+    if not is_subscriber(user_id) and request.form['abbonamento'] != "null":
         sub = get_subscription(request.form['abbonamento'])
         if request.form['abbonamento'] == "prova":
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=null)
@@ -262,7 +270,7 @@ def subscribe(user_id):
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
         session.commit()
-        return render_template("conferma.html")
+        return render_template("confirm_private.html")
     else:
         return render_template("wrong.html")
 
