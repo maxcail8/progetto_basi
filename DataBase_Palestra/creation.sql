@@ -1,6 +1,6 @@
 --DataBase
-
 --Creazione
+ALTER USER postgres PASSWORD 'postgres';
 
 --Utenti
 CREATE TABLE utenti(
