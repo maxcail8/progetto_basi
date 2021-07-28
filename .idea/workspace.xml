@@ -3,14 +3,22 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/alteration.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/alteration.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/population.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/population.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/calendar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/confirm.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/confirm_private.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/private.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/private.html" afterDir="false" />
     </list>
-    <list id="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" name="Changes by matte" comment="" />
+    <list id="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" name="Changes by matte" comment="">
+      <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -26,6 +34,35 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/Palestra/functions.py">
+      <ranges>
+        <range start1="36" end1="36" start2="36" end2="37" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="121" end1="121" start2="122" end2="123" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="122" end1="122" start2="124" end2="130" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="123" end1="123" start2="131" end2="133" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="132" end1="132" start2="142" end2="150" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/Palestra/classes.py">
+      <ranges>
+        <range start1="288" end1="289" start2="288" end2="289" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="293" end1="295" start2="293" end2="295" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="298" end1="299" start2="298" end2="299" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="316" end1="316" start2="316" end2="332" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/Palestra/project.py">
+      <ranges>
+        <range start1="37" end1="37" start2="37" end2="38" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="124" end1="127" start2="125" end2="133" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="133" end1="134" start2="139" end2="141" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="136" end1="137" start2="143" end2="145" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="172" end1="173" start2="180" end2="181" changelist="18c5af7a-2f0a-40c1-9205-2fcbf8c85063" />
+        <range start1="200" end1="200" start2="208" end2="215" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="1saNpiFlj9WtaRyWjIQbrpdA1SR" />
   <component name="ProjectViewState">

@@ -1,4 +1,4 @@
---DataBase
+--DataBase 'progetto_palestra'
 --Creazione
 ALTER USER postgres PASSWORD 'postgres';
 
@@ -145,6 +145,7 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 --Informazioni
 CREATE TABLE informazioni(
 	accessisettimana INT CHECK(accessisettimana > 0),
-	allenamentogiorno INT CHECK(allenamentogiorno > 0),
-	personemaxslot INT CHECK(personemaxslot > 0)
+	slotgiorno INT CHECK(slotgiorno > 0 AND slotgiorno < 6),
+	personemaxslot INT CHECK(personemaxslot > 0),
+	PRIMARY KEY(accessisettimana, slotgiorno, personemaxslot)
 );

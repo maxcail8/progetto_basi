@@ -55,7 +55,7 @@ INSERT INTO corsi VALUES (3, 'power-lifting', 30, 1, 3);
 
 
 --giorni (SUBITO)
-CREATE PROCEDURE LoopGiorni() AS $$
+CREATE PROCEDURE LoopGiorniSlot() AS $$
 	DECLARE giorno date = CURRENT_DATE + 1;
 	DECLARE pms INT;
 	DECLARE oraIn TIME = '05:30:00';
@@ -63,7 +63,7 @@ CREATE PROCEDURE LoopGiorni() AS $$
 	BEGIN
 		SELECT personemaxslot INTO pms FROM informazioni;
 		INSERT INTO giorni VALUES(CURRENT_DATE);
-		INSERT INTO slot VALUES(DEFAULT, 10, CURRENT_DATE, oraIn, oraFin);
+		INSERT INTO slot VALUES(0, pms, CURRENT_DATE, oraIn, oraFin);
 		FOR i IN 0..5 LOOP
 			INSERT INTO giorni VALUES(giorno);
 			FOR j IN 0..5 LOOP
@@ -76,7 +76,7 @@ CREATE PROCEDURE LoopGiorni() AS $$
 	END;
 $$ LANGUAGE 'plpgsql';
 
-CALL LoopGiorni();
+CALL LoopGiorniSlot();
 
 
 --slot (SUBITO)

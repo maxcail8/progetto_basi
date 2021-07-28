@@ -34,6 +34,7 @@ first_id_client = 100
 
 
 # Functions
+# GETTERS
 def get_user_by_email(email):
     conn = engine.connect()
     p_query = "SELECT * FROM utenti WHERE email = %s"
@@ -121,6 +122,15 @@ def get_clients():
     return clients
 
 
+def get_information():
+    conn = engine.connect()
+    p_query = "SELECT * FROM informazioni"
+    info = conn.engine.execute(p_query).first()
+    conn.close()
+    return classes.Information(info.accessisettimana, info.slotgiorno, info.personemaxslot)
+
+
+# BOOLEANS
 def is_subscriber(user_id):
     conn = engine.connect()
     p_query = "SELECT * FROM abbonati WHERE id = %s"
@@ -130,3 +140,11 @@ def is_subscriber(user_id):
         return True
     else:
         return False
+
+
+# SETTERS
+def set_information(accessiSettimana, slotGiorno, personeMax):
+    conn = engine.connect()
+    p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s"
+    conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax)
+    conn.close()

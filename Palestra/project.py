@@ -35,6 +35,7 @@ login_manager.init_app(app)
 
 # Sessione
 Session = sessionmaker(bind=engine)
+Session.close_all()
 session = Session()
 
 #############################
@@ -122,19 +123,26 @@ def reserved():
 @app.route('/private')
 @login_required
 def private():
-    sub = functions.is_subscriber(current_user.id)
-    resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
-    return resp
+    if current_user == functions.get_admin_user():
+        info = functions.get_information()
+        resp = make_response(render_template("administration.html", current_user=current_user, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
+        return resp
+    else:
+        sub = functions.is_subscriber(current_user.id)
+        resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
+        return resp
 
 
 @app.route('/administration')
 @login_required
 def administration():
     if current_user == functions.get_admin_user():
-        resp = make_response(render_template("administration.html", current_user=current_user))
+        info = functions.get_information()
+        resp = make_response(render_template("administration.html", current_user=current_user, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
         return resp
     else:
-        resp = make_response(render_template("private.html", current_user=current_user))
+        sub = functions.is_subscriber(current_user.id)
+        resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
         return resp
 
 
@@ -170,7 +178,7 @@ def subscribe():
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
         session.commit()
-        return render_template("confirm_private.html")
+        return render_template("confirm.html")
     else:
         return render_template("wrong.html")
 
@@ -198,3 +206,10 @@ def calendar():
 @login_required
 def subscribe_course():
     return render_template("subscribe_course.html")
+
+
+@app.route('/edit_information', methods=['GET', 'POST'])
+@login_required
+def edit_information():
+    functions.set_information(request.form['accessiSettimana'], request.form['tempoAllenamento'], request.form['personeMassime'])
+    return render_template("confirm.html")

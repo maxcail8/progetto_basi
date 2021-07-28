@@ -286,17 +286,17 @@ class CourseSlot(Base):
 class WeightRoomSlot(Base):
     __tablename__ = 'salepesislot'
 
-    salaPesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
+    salapesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
     slot = Column(Integer, ForeignKey(Slot.id, ondelete='cascade'), primary_key=True)
     weightroom = relationship(WeightRoom, uselist=False)
     weightroomslot = relationship(Slot, uselist=False)
 
-    def __init__(self, salaPesi, slot):
-        self.salaPesi = salaPesi
+    def __init__(self, salapesi, slot):
+        self.salapesi = salapesi
         self.slot = slot
 
     def __repr__(self):
-        return "<WeightRoomSlot(sala = {0}, slot = {1})>".format(self.salaPesi, self.slot)
+        return "<WeightRoomSlot(sala = {0}, slot = {1})>".format(self.salapesi, self.slot)
 
 
 class Reservation(Base):
@@ -313,6 +313,22 @@ class Reservation(Base):
 
     def __repr__(self):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
+
+
+class Information(Base):
+    __tablename__ = 'informazioni'
+
+    accessisettimana = Column(Integer, primary_key=True)
+    slotgiorno = Column(Integer, primary_key=True)
+    personemaxslot = Column(Integer, primary_key=True)
+
+    def __init__(self, accessisettimana, slotgiorno, personemaxslot):
+        self.accessisettimana = accessisettimana
+        self.slotgiorno = slotgiorno
+        self.personemaxslot = personemaxslot
+
+    def __repr__(self):
+        return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2})>".format(self.abbonato, self.slot, self.personemaxslot)
 
 
 class MyDate():

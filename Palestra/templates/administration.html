@@ -5,11 +5,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Administration</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
             body{
                 /*font-family: 'Courier New', Courier, monospace;*/
                 font-family: "Comic Sans MS", cursive, sans-serif;
                 background-color: #f3f2ee;
+            }
+
+            #p0{
+                padding: 5px;
             }
 
             h1{
@@ -19,20 +24,150 @@
                 font-weight: bold;
                 text-shadow: 1px 1px black;
             }
+
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 3%;
+            }
+
+            #informazioniUtente label{
+                display: block;
+            }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            #sezione0{
+                background-color: white;
+                width: 90%;
+                display: block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 section div{
+                display: inline-block;
+                width: 90%;
+            }
+
+            #sezione0 section label{
+                display: inline-block;
+                width: 45%;
+            }
+
+            #sezione0 input[type="button"]{
+                display: inline-block;
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
         </style>
     </head>
     <body>
         <h1>Amministrazione</h1>
-        {% if current_user.is_authenticated %}
-        Benvenuto nell'area di amministrazione!!!!!!!!!!! Sei l'utente {{ current_user }}! <br/>
-        <form action="/calendar">
-        </form>
+        {% if current_user.is_authenticated and current_user.email == 'admin@palestra.it' %}
+
+        <span id="spanAccessi" style="visibility: hidden;">{{accessi_settimana}}</span>
+        <span id="spanSlot" style="visibility: hidden;">{{slot_giorno}}</span>
+        <span id="spanPersone" style="visibility: hidden;">{{persone_max}}</span>
+
+        <h3>Operazioni disponibili</h3>
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <form id="form0" action="edit_information" method="POST">
+                    <!--<section>
+                        <form id="informazioni" action="/info_user" method="POST">
+                            <div>
+                                <label>Visualizza ulteriori informazioni (prenotazioni, corsi, ecc...)</label>
+                            </div>
+                            <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
+                        </form>
+                    </section>-->
+                    <section>
+                            <div>
+                                <label>Modifica accessi settimanali</label>
+                                <input id="txtAccessi" name="accessiSettimana" type="number" min="1" max="7" value="1">
+                            </div>
+                            <input id="subAccessi" class="button" type="button" value="Modifica" onclick="ModificaAccessi()">
+                    </section>
+                    <hr>
+                    <section>
+                            <div>
+                                <label>Modifica tempo allenamento</label>
+                                <input id="txtSlot" name="tempoAllenamento" type="number" min="1" max="6" value="1">
+                            </div>
+                            <input id="subSlot" class="button" type="button" value="Modifica" onclick="ModificaSlot()">
+                    </section>
+                    <hr>
+                    <section>
+                            <div>
+                                <label>Modifica numero persone massime</label>
+                                <input id="txtPersone" name="personeMassime" type="number" min="1" value="1">
+                            </div>
+                            <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
+                    </section>
+                </form>
+            </section>
+        </div>
         {% else %}
-        Per essere benvenuto devi essere autenticato
+        <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
         {% endif %}
         
         <form action="/logout">
             Disconnetti:<input type="submit">
         </form>
     </body>
+    <script>
+        var spanAccessi = document.getElementById("spanAccessi");
+        var spanSlot = document.getElementById("spanSlot");
+        var spanPersone = document.getElementById("spanPersone");
+        var txtAccessi = document.getElementById("txtAccessi");
+        var txtSlot = document.getElementById("txtSlot");
+        var txtPersone = document.getElementById("txtPersone");
+        
+        var form0 = document.getElementById("form0");
+
+        document.body.onload = function(){
+            txtAccessi.value = spanAccessi.textContent;
+            txtSlot.value = spanSlot.textContent;
+            txtPersone.value = spanPersone.textContent;
+        }
+
+        function ModificaAccessi(){
+            form0.submit();
+        }
+
+        function ModificaSlot(){
+            form0.submit();
+        }
+
+        function ModificaPersone(){
+            form0.submit();
+        }
+
+        
+    </script>
 </html> 
