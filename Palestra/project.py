@@ -1,10 +1,9 @@
 # modules-import
-import array
-
 import classes
+import functions
 
 # flask-import
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, url_for, make_response
 from flask_login import LoginManager, login_user, login_required, current_user, logout_user
 from flask_migrate import Migrate
 
@@ -41,12 +40,11 @@ session = Session()
 #############################
 # Variabili e costanti globali
 first_id_client = 100
-admim_email = 'admin@palestra.it'
-admim_pwd = 'admin'
+admin_email = 'admin@palestra.it'
+admin_pwd = 'admin'
 
 
-# Functions
-# user_loader
+#user-loader
 @login_manager.user_loader
 def load_user(user_id):
     conn = engine.connect()
@@ -56,104 +54,6 @@ def load_user(user_id):
     user = conn.engine.execute(p_query, user_id).first()
     conn.close()
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
-
-
-def get_user_by_email(email):
-    conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE email = %s"
-    user = conn.engine.execute(p_query, email).first()
-    conn.close()
-    return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
-
-
-# Funzione per autoincrementare id tramite query
-def get_id_increment():
-    conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE id>=100 ORDER BY id DESC"
-    user = conn.engine.execute(p_query).first()
-    conn.close()
-    if(user is not None):
-        return user.id + 1
-    else:
-        return first_id_client
-
-
-# Funzione per tornare l'utente amministratore
-def get_admin_user():
-    conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE id = 0"
-    user = conn.engine.execute(p_query).first()
-    conn.close()
-    return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
-
-
-def get_current_date():
-    now = datetime.now()
-    return now.strftime("%Y-%m-%d")
-
-
-def get_increment_date(giorni):
-    data = datetime.now() + timedelta(days=giorni)
-    return data.strftime("%Y-%m-%d")
-
-
-def get_subscription(subscription):
-    conn = engine.connect()
-    p_query = "SELECT * FROM abbonamenti WHERE tipo = %s"
-    sub = conn.engine.execute(p_query, subscription).first()
-    conn.close()
-    return classes.Subscription(sub.id, sub.tipo, sub.costo)
-
-
-def get_courses():
-    conn = engine.connect()
-    p_query = "SELECT * FROM corsi"
-    courses = conn.engine.execute(p_query)
-    conn.close()
-    return courses
-
-
-def get_rooms():
-    conn = engine.connect()
-    p_query = "SELECT * FROM stanze"
-    rooms = conn.engine.execute(p_query)
-    conn.close()
-    return rooms
-
-
-def get_weight_rooms():
-    conn = engine.connect()
-    p_query = "SELECT * FROM salepesi"
-    weight_rooms = conn.engine.execute(p_query)
-    conn.close()
-    return weight_rooms
-
-
-def get_trainers():
-    conn = engine.connect()
-    p_query = "SELECT * FROM istruttori NATURAL JOIN utenti"
-    trainers = conn.engine.execute(p_query)
-    conn.close()
-    return trainers
-
-
-def get_clients():
-    conn = engine.connect()
-    p_query = "SELECT * FROM clienti NATURAL JOIN utenti"
-    clients = conn.engine.execute(p_query)
-    conn.close()
-    return clients
-
-
-def is_subscriber(user_id):
-    conn = engine.connect()
-    p_query = "SELECT * FROM abbonati WHERE id = %s"
-    sub = conn.engine.execute(p_query, user_id).first()
-    conn.close()
-    if sub is not None:
-        return True
-    else:
-        return False
 
 
 # Routes
@@ -184,16 +84,16 @@ def login():
         real_pwd = conn.engine.execute(p_query, p_email).first()
         conn.close()
 
-        if p_email == admim_email:
+        if p_email == admin_email:
             if real_pwd is not None and p_pass == real_pwd['password']:
-                user = get_user_by_email(request.form['user'])
+                user = functions.get_user_by_email(request.form['user'])
                 login_user(user)
                 return redirect(url_for('administration'))
             else:
                 return redirect(url_for('wrong'))
         elif real_pwd is not None:
             if p_pass == real_pwd['password']:
-                user = get_user_by_email(request.form['user'])
+                user = functions.get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
@@ -222,7 +122,7 @@ def reserved():
 @app.route('/private')
 @login_required
 def private():
-    sub = is_subscriber(current_user.id)
+    sub = functions.is_subscriber(current_user.id)
     resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
     return resp
 
@@ -230,7 +130,7 @@ def private():
 @app.route('/administration')
 @login_required
 def administration():
-    if current_user == get_admin_user():
+    if current_user == functions.get_admin_user():
         resp = make_response(render_template("administration.html", current_user=current_user))
         return resp
     else:
@@ -240,18 +140,18 @@ def administration():
 
 @app.route('/create', methods=['GET', 'POST'])
 def create_user():
-    new_id = get_id_increment()
+    new_id = functions.get_id_increment()
     user = classes.User(id=new_id, username=request.form['username'], password=request.form['password'], nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
     if request.form['abbonamento'] != "null":
-        sub = get_subscription(request.form['abbonamento'])
+        sub = functions.get_subscription(request.form['abbonamento'])
         if request.form['abbonamento'] == "prova":
-            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=null)
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
             session.add(subscriber)
         else:
-            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
     session.commit()
     return render_template("confirm.html")
@@ -261,13 +161,13 @@ def create_user():
 @login_required
 def subscribe():
     user_id = current_user.id
-    if not is_subscriber(user_id) and request.form['abbonamento'] != "null":
-        sub = get_subscription(request.form['abbonamento'])
+    if not functions.is_subscriber(user_id) and request.form['abbonamento'] != "null":
+        sub = functions.get_subscription(request.form['abbonamento'])
         if request.form['abbonamento'] == "prova":
-            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=null)
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
             session.add(subscriber)
         else:
-            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=get_current_date(), datafineabbonamento=get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
         session.commit()
         return render_template("confirm_private.html")
@@ -277,7 +177,7 @@ def subscribe():
 
 @app.route('/info')
 def info():
-    return render_template("info.html", courses=get_courses(), rooms=get_rooms(), weight_rooms=get_weight_rooms(), trainers=get_trainers(), clients=get_clients())
+    return render_template("info.html", courses=functions.get_courses(), rooms=functions.get_rooms(), weight_rooms=functions.get_weight_rooms(), trainers=functions.get_trainers(), clients=functions.get_clients())
 
 
 @app.route('/info_user', methods=['GET', 'POST'])

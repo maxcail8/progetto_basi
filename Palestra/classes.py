@@ -6,7 +6,7 @@ from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 Base = declarative_base()
@@ -313,47 +313,6 @@ class Reservation(Base):
 
     def __repr__(self):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
-
-
-class My2Date:
-    first_column = []
-    second_column = []
-    third_column = []
-    fourth_column = []
-    last_column = []
-
-    def __init__(self):
-        i = datetime.now()
-        first = datetime(i.year, i.month, 1)
-        last = datetime(i.year, i.month, i.day) + relativedelta(day=31)  # torna l'utlimo giorno del mese
-        days = 0
-
-        first_column_days = 7 - first.weekday()
-        for i in range(7 - first_column_days):
-            self.first_column.append(0)
-        for i in range(first_column_days):
-            self.first_column.append(i+1)
-
-        second_column_day = first_column_days + 1
-        for i in range(second_column_day, second_column_day + 7):
-            self.second_column.append(i)
-
-        third_column_day = second_column_day + 7
-        for i in range(third_column_day, third_column_day + 7):
-            self.third_column.append(i)
-
-        fourth_column_day = third_column_day + 7
-        for i in range(fourth_column_day, fourth_column_day + 7):
-            self.fourth_column.append(i)
-
-        last_column_day = fourth_column_day + 7
-        days += first_column_days + 21
-        last_column_days = last.day - days
-        end_days = 7 - last_column_days
-        for i in range(last_column_day, last_column_day + last_column_days):
-            self.last_column.append(i)
-        for i in range(end_days):
-            self.last_column.append(0)
 
 
 class MyDate():

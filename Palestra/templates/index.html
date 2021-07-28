@@ -92,7 +92,7 @@
             #secC #tabella table td{ /*Colonne calendario*/
                 width: 100px;
                 padding: 10px;
-                font-size: 13pt;
+                font-size: 11pt;
                 text-align: center;
             }
             #secC #tabella table td:hover{
@@ -177,7 +177,9 @@
                     cal += "<td ";
                     value = DataCorretta(annoSelezionato, meseSelezionato, i+1);
                     cal += "value =\"" + value + "\"";
-                    cal += " onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br></td>";
+                    cal += " onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                    giornoSettimana = GiornoSettimana(annoSelezionato, meseSelezionato, i+1);
+                    cal += giornoSettimana + "</td>";
                 }
                 else
                     cal += "<td value=\"\" style='background-color:#00000041!important;'></td>";
@@ -195,6 +197,38 @@
             if(giorno < 10)
                 giorno = "0" + giorno;
             return anno + "-" + mese + "-" + giorno;
+        }
+
+        function GiornoSettimana(anno, mese, giorno){
+            var data = new Date(anno, mese-1, giorno);
+            var g = data.getDay();
+            var giornoSet = "";
+            
+            switch(g){
+                case 0:
+                    giornoSet = "Domenica";
+                    break;
+                case 1:
+                    giornoSet = "Lunedì";
+                    break;
+                case 2:
+                    giornoSet = "Martedì";
+                    break;
+                case 3:
+                    giornoSet = "Mercoledì";
+                    break;
+                case 4:
+                    giornoSet = "Giovedì";
+                    break;
+                case 5:
+                    giornoSet = "Venerdì";
+                    break;
+                case 6:
+                    giornoSet = "Sabato";
+                    break;
+            }
+
+            return giornoSet;
         }
 
         function SubmitTestCalendar(){

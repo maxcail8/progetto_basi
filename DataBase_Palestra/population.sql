@@ -1,5 +1,8 @@
---istruttori
+--infomazioni
+INSERT INTO informazioni VALUES (4, 2, 30);
 
+
+--istruttori
 INSERT INTO utenti VALUES (1, 'maxcail8', 'p', 'Massimo', 'Cailotto', 'max@palestra.it', DATE '2000-01-07');
 INSERT INTO istruttori VALUES (1);
 
@@ -53,10 +56,21 @@ INSERT INTO corsi VALUES (3, 'power-lifting', 30, 1, 3);
 
 --giorni (SUBITO)
 CREATE PROCEDURE LoopGiorni() AS $$
-	DECLARE giorno date = CURRENT_DATE;
+	DECLARE giorno date = CURRENT_DATE + 1;
+	DECLARE pms INT;
+	DECLARE oraIn TIME = '05:30:00';
+	DECLARE oraFin TIME = '08:50:00';
 	BEGIN
+		SELECT personemaxslot INTO pms FROM informazioni;
+		INSERT INTO giorni VALUES(CURRENT_DATE);
+		INSERT INTO slot VALUES(DEFAULT, 10, CURRENT_DATE, oraIn, oraFin);
 		FOR i IN 0..5 LOOP
 			INSERT INTO giorni VALUES(giorno);
+			FOR j IN 0..5 LOOP
+				INSERT INTO slot(personemax, giorno, orainizio, orafine) VALUES(pms, giorno, oraIn, oraFin);
+				oraIn = oraFin + '00:10:00';
+				oraFin = oraIn + '02:50:00';
+			END LOOP;
 			giorno = giorno + 1;
 		END LOOP;
 	END;
@@ -77,7 +91,7 @@ CALL LoopGiorni();
 --prenotazioni (CALENDARIO)
 
 
---
+
 /*
 delete from corsi;
 delete from salepesi;

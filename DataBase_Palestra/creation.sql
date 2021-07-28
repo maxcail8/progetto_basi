@@ -102,15 +102,18 @@ CREATE TABLE giorni(
 );
 
 --Slot
+CREATE SEQUENCE slot_id_seq;
 CREATE TABLE slot(
-	id INT PRIMARY KEY,
+	id smallint NOT NULL DEFAULT nextval('slot_id_seq'),
 	personemax INT CHECK(personemax > 0),
 	giorno DATE,
-	orainizio TIMESTAMP,
-	orafine TIMESTAMP,
+	orainizio TIME,
+	orafine TIME,
+	PRIMARY KEY(id),
 	FOREIGN KEY(giorno) REFERENCES giorni,
 	CHECK (orafine > orainizio) 
 );
+ALTER SEQUENCE slot_id_seq OWNED BY slot.id;
 
 --CorsiSlot
 CREATE TABLE corsislot(
@@ -137,4 +140,11 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 	PRIMARY KEY(abbonato, slot),
 	FOREIGN KEY(abbonato) REFERENCES abbonati,
 	FOREIGN KEY(slot) REFERENCES slot
+);
+
+--Informazioni
+CREATE TABLE informazioni(
+	accessisettimana INT CHECK(accessisettimana > 0),
+	allenamentogiorno INT CHECK(allenamentogiorno > 0),
+	personemaxslot INT CHECK(personemaxslot > 0)
 );
