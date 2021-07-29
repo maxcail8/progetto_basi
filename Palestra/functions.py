@@ -157,6 +157,13 @@ def update_weight_room(idSala, dimensione):
     conn.close()
 
 
+def update_room(idStanza, nome, dimensione):
+    conn = engine.connect()
+    p_query = "UPDATE stanze SET nome = %s, dimensione = %s WHERE id = %s"
+    conn.engine.execute(p_query, nome, dimensione, idStanza)
+    conn.close()
+
+
 # ADD
 def add_weight_room(dimensione):
     conn = engine.connect()
@@ -165,11 +172,25 @@ def add_weight_room(dimensione):
     conn.close()
 
 
+def add_room(nome, dimensione):
+    conn = engine.connect()
+    p_query = "INSERT INTO stanze(nome, dimensione) VALUES (%s, %s)"
+    conn.engine.execute(p_query, nome, dimensione)
+    conn.close()
+
+
 # REMOVE
 def remove_weight_room(idSala):
     conn = engine.connect()
     p_query = "DELETE FROM salepesi WHERE id = %s"
     conn.engine.execute(p_query, idSala)
+    conn.close()
+
+
+def remove_room(idStanza):
+    conn = engine.connect()
+    p_query = "DELETE FROM stanze WHERE id = %s"
+    conn.engine.execute(p_query, idStanza)
     conn.close()
 
 

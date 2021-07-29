@@ -233,6 +233,36 @@ def edit_rooms():
         return render_template("wrong.html")
 
 
+@app.route('/add_room', methods=['GET', 'POST'])
+@login_required
+def add_room():
+    if current_user == functions.get_admin_user():
+        functions.add_room(request.form['nome'], request.form['dim'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/remove_room', methods=['GET', 'POST'])
+@login_required
+def remove_room():
+    if current_user == functions.get_admin_user():
+        functions.remove_room(request.form['idStanza'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/update_room', methods=['GET', 'POST'])
+@login_required
+def update_room():
+    if current_user == functions.get_admin_user():
+        functions.update_room(request.form['idStanza'], request.form['nome'], request.form['dim'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
 @app.route('/edit_weight_rooms', methods=['GET', 'POST'])
 @login_required
 def edit_weight_rooms():
