@@ -10,25 +10,25 @@ CREATE TABLE utenti(
 	nome VARCHAR(100),
 	cognome VARCHAR(100),
 	email VARCHAR(100),
-	dataNascita DATE CHECK (dataNascita < CURRENT_DATE)
+	datanascita DATE CHECK (datanascita < CURRENT_DATE)
 );
 
 --Istruttori
 CREATE TABLE istruttori(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES utenti
+	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
 
 --Altri
 CREATE TABLE altri(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES utenti
+	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
 
 --Clienti
 CREATE TABLE clienti(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES utenti
+	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
 
 --Abbonamenti
@@ -45,28 +45,35 @@ CREATE TABLE abbonati(
 	datainizioabbonamento DATE,
 	datafineabbonamento DATE,
 	durata INT CHECK(durata > 0), --giorni di durata
-	FOREIGN KEY(id) REFERENCES Clienti,
-	FOREIGN KEY(abbonamento) REFERENCES abbonamenti,
+	FOREIGN KEY(id) REFERENCES clienti ON DELETE CASCADE,
+	FOREIGN KEY(abbonamento) REFERENCES abbonamenti ON DELETE CASCADE,
 	CHECK (datafineabbonamento > datainizioabbonamento)
 );
 
 --NonAbbonati
 CREATE TABLE nonabbonati(
 	id INT PRIMARY KEY,
-	FOREIGN KEY(id) REFERENCES clienti
+	FOREIGN KEY(id) REFERENCES clienti ON DELETE CASCADE
 );
 
 --Stanze
+CREATE SEQUENCE stanze_id_seq;
 CREATE TABLE stanze(
-	id INT PRIMARY KEY,
-	dimensione INT CHECK(dimensione > 0) --metri quadri
+	id smallint NOT NULL DEFAULT nextval('stanze_id_seq'),
+	nome VARCHAR(100),
+	dimensione INT CHECK(dimensione > 0), --metri quadri
+	PRIMARY KEY(id)
 );
+ALTER SEQUENCE stanze_id_seq OWNED BY stanze.id;
 
 --SalePesi
+CREATE SEQUENCE salepesi_id_seq;
 CREATE TABLE salepesi(
-	id INT PRIMARY KEY,
-	dimensione INT CHECK(dimensione > 0) --metri quadri
+	id smallint NOT NULL DEFAULT nextval('salepesi_id_seq'),
+	dimensione INT CHECK(dimensione > 0), --metri quadri
+	PRIMARY KEY(id)
 );
+ALTER SEQUENCE salepesi_id_seq OWNED BY salepesi.id;
 
 --Corsi
 CREATE TABLE corsi(
@@ -75,8 +82,8 @@ CREATE TABLE corsi(
 	iscrittimax INT CHECK(iscrittimax > 0),
 	istruttore INT NOT NULL,
 	stanza INT NOT NULL,
-	FOREIGN KEY(istruttore) REFERENCES istruttori,
-	FOREIGN KEY(stanza) REFERENCES stanze
+	FOREIGN KEY(istruttore) REFERENCES istruttori ON DELETE SET NULL,
+	FOREIGN KEY(stanza) REFERENCES stanze ON DELETE CASCADE
 );
 
 --Sedute
@@ -84,7 +91,7 @@ CREATE TABLE sedute(
 	id INT PRIMARY KEY,
 	corso INT NOT NULL,
 	dataseduta TIMESTAMP, --log persone per covid
-	FOREIGN KEY(corso) REFERENCES corsi
+	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE
 );
 
 --AbbonatiSedute
@@ -92,8 +99,8 @@ CREATE TABLE abbonatisedute(
 	abbonato INT,
 	seduta INT,
 	PRIMARY KEY(abbonato,seduta),
-	FOREIGN KEY(abbonato) REFERENCES abbonati,
-	FOREIGN KEY(seduta) REFERENCES sedute
+	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
+	FOREIGN KEY(seduta) REFERENCES sedute ON DELETE CASCADE
 );
 
 --Giorni
@@ -110,7 +117,7 @@ CREATE TABLE slot(
 	orainizio TIME,
 	orafine TIME,
 	PRIMARY KEY(id),
-	FOREIGN KEY(giorno) REFERENCES giorni,
+	FOREIGN KEY(giorno) REFERENCES giorni ON DELETE CASCADE,
 	CHECK (orafine > orainizio) 
 );
 ALTER SEQUENCE slot_id_seq OWNED BY slot.id;
@@ -120,8 +127,8 @@ CREATE TABLE corsislot(
 	corso INT,
 	slot INT,
 	PRIMARY KEY(corso, slot),
-	FOREIGN KEY(corso) REFERENCES corsi,
-	FOREIGN KEY(slot) REFERENCES slot
+	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE,
+	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
 
 --SalaPesiSlot
@@ -129,8 +136,8 @@ CREATE TABLE salapesislot(
 	salapesi INT,
 	slot INT,
 	PRIMARY KEY(salapesi, slot),
-	FOREIGN KEY(salapesi) REFERENCES salepesi,
-	FOREIGN KEY(slot) REFERENCES slot
+	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE,
+	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
 
 --Prenotazioni
@@ -138,8 +145,8 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 	abbonato INT,
 	slot INT,
 	PRIMARY KEY(abbonato, slot),
-	FOREIGN KEY(abbonato) REFERENCES abbonati,
-	FOREIGN KEY(slot) REFERENCES slot
+	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
+	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
 
 --Informazioni

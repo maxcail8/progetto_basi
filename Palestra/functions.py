@@ -142,11 +142,34 @@ def is_subscriber(user_id):
         return False
 
 
-# SETTERS
+# UPDATE
 def set_information(accessiSettimana, slotGiorno, personeMax):
     conn = engine.connect()
     p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s"
     conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax)
+    conn.close()
+
+
+def update_weight_room(idSala, dimensione):
+    conn = engine.connect()
+    p_query = "UPDATE salepesi SET dimensione = %s WHERE id = %s"
+    conn.engine.execute(p_query, dimensione, idSala)
+    conn.close()
+
+
+# ADD
+def add_weight_room(dimensione):
+    conn = engine.connect()
+    p_query = "INSERT INTO salepesi(dimensione) VALUES (%s)"
+    conn.engine.execute(p_query, dimensione)
+    conn.close()
+
+
+# REMOVE
+def remove_weight_room(idSala):
+    conn = engine.connect()
+    p_query = "DELETE FROM salepesi WHERE id = %s"
+    conn.engine.execute(p_query, idSala)
     conn.close()
 
 

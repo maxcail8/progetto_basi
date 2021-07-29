@@ -31,14 +31,14 @@ INSERT INTO abbonamenti VALUES (3, 'prova', 10);
 
 --stanze
 INSERT INTO stanze VALUES (0, 20);
-INSERT INTO stanze VALUES (1, 40);
-INSERT INTO stanze VALUES (2, 60);
-INSERT INTO stanze VALUES (3, 60);
+INSERT INTO stanze(dimensione) VALUES (40);
+INSERT INTO stanze(dimensione) VALUES (60);
+INSERT INTO stanze(dimensione) VALUES (60);
 
 
 --salepesi
 INSERT INTO salepesi VALUES (0, 70);
-INSERT INTO salepesi VALUES (1, 80);
+INSERT INTO salepesi(dimensione) VALUES (80);
 
 
 --corsi

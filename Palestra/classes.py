@@ -105,7 +105,7 @@ class Subscriber(Base):
 
     id = Column(Integer, ForeignKey(Client.id, ondelete='cascade'), primary_key=True)
     # abbonamento = Column(AbbonamentoT, ForeignKey(Subscription.tipo), nullable=False)
-    abbonamento = Column(Integer, ForeignKey(Subscription.id), nullable=False)
+    abbonamento = Column(Integer, ForeignKey(Subscription.id, ondelete='cascade'), nullable=False)
     datainizioabbonamento = Column(Date)
     datafineabbonamento = Column(Date)
     durata = Column(Integer)
@@ -143,15 +143,17 @@ class Room(Base):
     )
 
     id = Column(Integer, primary_key=True)
+    nome = Column(String)
     dimensione = Column(Integer)
 
     # primary key progressiva
-    def __init__(self, id, dimensione):
+    def __init__(self, id, nome, dimensione):
         self.id = id
+        self.nome = nome
         self.dimensione = dimensione
 
     def __repr__(self):
-        return "<Room(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
+        return "<Room(id = {0}, nome = {1}, dimensione = {2})>".format(self.id, self.nome, self.dimensione)
 
 
 class WeightRoom(Base):
@@ -180,7 +182,7 @@ class Course(Base):
     id = Column(Integer, primary_key=True)
     nome = Column(String)
     iscrittimax = Column(Integer)
-    istruttore = Column(Integer, ForeignKey(Trainer.id), nullable=False)
+    istruttore = Column(Integer, ForeignKey(Trainer.id, ondelete='SET NULL'), nullable=False)
     stanza = Column(Integer, ForeignKey(Room.id, ondelete='cascade'), nullable=False)
     trainer = relationship(Trainer, uselist=False)
     room = relationship(Room, uselist=False)

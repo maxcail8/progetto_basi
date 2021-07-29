@@ -84,6 +84,11 @@
                 margin: 0 auto;
                 margin-top: 10px;
             }
+
+            input[type=number]{
+                border: 1px solid black;
+                width: 5%;
+            }
         </style>
     </head>
     <body>
@@ -97,7 +102,7 @@
         <h3>Operazioni disponibili</h3>
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="edit_information" method="POST">
+                <form id="form0" action="/edit_information" method="POST">
                     
                     <section>
                             <div>
@@ -127,7 +132,7 @@
 
                 <hr>
 
-                <form id="form1" action="edit_courses" method="POST">
+                <form id="form1" action="/edit_courses" method="POST">
                     <section>
                         <div>
                             <label>Gestione dei corsi</label>
@@ -138,7 +143,7 @@
 
                 <hr>
 
-                <form id="form2" action="edit_rooms" method="POST">
+                <form id="form2" action="/edit_rooms" method="POST">
                     <section>
                         <div>
                             <label>Gestione delle stanze</label>
@@ -149,7 +154,7 @@
 
                 <hr>
 
-                <form id="form3" action="edit_weight_rooms" method="POST">
+                <form id="form3" action="/edit_weight_rooms" method="POST">
                     <section>
                         <div>
                             <label>Gestione delle sale pesi</label>
@@ -203,7 +208,7 @@
         }
 
         function GestisciStanze(){
-            form2
+            form2.submit();
         }
         
         function GestisciSalePesi(){

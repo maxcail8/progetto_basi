@@ -9,3 +9,6 @@ ALTER TABLE abbonati ADD durata INT NULL CHECK(durata>0);
 ALTER TABLE slot
 ALTER COLUMN orainizio TYPE TIME,
 ALTER COLUMN orafine TYPE TIME;
+
+--Aggiunta nome stanze
+ALTER TABLE stanze ADD nome VARCHAR(100);

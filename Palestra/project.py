@@ -76,9 +76,9 @@ def create_user():
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
-    if request.form['abbonamento'] != "null":
-        sub = functions.get_subscription(request.form['abbonamento'])
-        if request.form['abbonamento'] == "prova":
+    if request.form['abb'] != 'null':
+        sub = functions.get_subscription(request.form['abb'])
+        if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
             session.add(subscriber)
         else:
@@ -149,9 +149,9 @@ def subscribe_course():
 @login_required
 def subscribe():
     user_id = current_user.id
-    if not functions.is_subscriber(user_id) and request.form['abbonamento'] != "null":
-        sub = functions.get_subscription(request.form['abbonamento'])
-        if request.form['abbonamento'] == "prova":
+    if not functions.is_subscriber(user_id) and request.form['abb'] != 'null':
+        sub = functions.get_subscription(request.form['abb'])
+        if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
             session.add(subscriber)
         else:
@@ -216,7 +216,7 @@ def edit_information():
 @login_required
 def edit_courses():
     if current_user == functions.get_admin_user():
-        courses = functions.get_courses();
+        courses = functions.get_courses()
         return render_template("edit_courses.html", courses=courses)
     else:
         return render_template("wrong.html")
@@ -226,17 +226,49 @@ def edit_courses():
 @login_required
 def edit_rooms():
     if current_user == functions.get_admin_user():
-        rooms = functions.get_rooms();
-        return render_template("edit_rooms.html", rooms=rooms)
+        rooms = functions.get_rooms()
+        rooms2 = functions.get_rooms()
+        return render_template("edit_rooms.html", rooms=rooms, rooms2=rooms2)
     else:
         return render_template("wrong.html")
 
 
 @app.route('/edit_weight_rooms', methods=['GET', 'POST'])
 @login_required
-def edit_weightrooms():
+def edit_weight_rooms():
     if current_user == functions.get_admin_user():
-        weight_rooms = functions.get_weight_rooms();
-        return render_template("edit_weight_rooms.html", weight_rooms=weight_rooms)
+        weight_rooms = functions.get_weight_rooms()
+        weight_rooms2 = functions.get_weight_rooms()
+        return render_template("edit_weight_rooms.html", weight_rooms=weight_rooms, weight_rooms2=weight_rooms2)
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/add_weight_room', methods=['GET', 'POST'])
+@login_required
+def add_weight_room():
+    if current_user == functions.get_admin_user():
+        functions.add_weight_room(request.form['dim'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/remove_weight_room', methods=['GET', 'POST'])
+@login_required
+def remove_weight_room():
+    if current_user == functions.get_admin_user():
+        functions.remove_weight_room(request.form['idSala'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/update_weight_room', methods=['GET', 'POST'])
+@login_required
+def update_weight_room():
+    if current_user == functions.get_admin_user():
+        functions.update_weight_room(request.form['idSala'], request.form['dim'])
+        return render_template("confirm.html")
     else:
         return render_template("wrong.html")
