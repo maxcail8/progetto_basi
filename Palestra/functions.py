@@ -148,3 +148,6 @@ def set_information(accessiSettimana, slotGiorno, personeMax):
     p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s"
     conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax)
     conn.close()
+
+
+# Day of week: select extract(dow from date '2021-07-30');

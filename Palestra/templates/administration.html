@@ -98,14 +98,7 @@
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
                 <form id="form0" action="edit_information" method="POST">
-                    <!--<section>
-                        <form id="informazioni" action="/info_user" method="POST">
-                            <div>
-                                <label>Visualizza ulteriori informazioni (prenotazioni, corsi, ecc...)</label>
-                            </div>
-                            <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
-                        </form>
-                    </section>-->
+                    
                     <section>
                             <div>
                                 <label>Modifica accessi settimanali</label>
@@ -129,6 +122,40 @@
                             </div>
                             <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
                     </section>
+
+                </form>
+
+                <hr>
+
+                <form id="form1" action="edit_courses" method="POST">
+                    <section>
+                        <div>
+                            <label>Gestione dei corsi</label>
+                        </div>
+                        <input id="subCorsi" class="button" type="button" value="Gestisci" onclick="GestisciCorsi()">
+                    </section>
+                </form>
+
+                <hr>
+
+                <form id="form2" action="edit_rooms" method="POST">
+                    <section>
+                        <div>
+                            <label>Gestione delle stanze</label>
+                        </div>
+                        <input id="subStanze" class="button" type="button" value="Gestisci" onclick="GestisciStanze()">
+                    </section>
+                </form>
+
+                <hr>
+
+                <form id="form3" action="edit_weight_rooms" method="POST">
+                    <section>
+                        <div>
+                            <label>Gestione delle sale pesi</label>
+                        </div>
+                        <input id="subSale" class="button" type="button" value="Gestisci" onclick="GestisciSalePesi()">
+                    </section>
                 </form>
             </section>
         </div>
@@ -149,6 +176,9 @@
         var txtPersone = document.getElementById("txtPersone");
         
         var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2");
+        var form3 = document.getElementById("form3");
 
         document.body.onload = function(){
             txtAccessi.value = spanAccessi.textContent;
@@ -168,6 +198,16 @@
             form0.submit();
         }
 
+        function GestisciCorsi(){
+            form1.submit();
+        }
+
+        function GestisciStanze(){
+            form2
+        }
         
+        function GestisciSalePesi(){
+            form3.submit();
+        }
     </script>
 </html> 
