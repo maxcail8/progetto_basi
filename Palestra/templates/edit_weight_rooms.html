@@ -113,7 +113,7 @@
                     <section>
                             <div>
                                 <label>Aggiungi una sala pesi</label>
-                                Dimensione (in metri quadri): <input id="txtSala0" name="dim" type="number" min="1" value="75">
+                                Dimensione (in metri quadri): <input id="txtDim0" name="dim" type="number" min="1" value="75">
                             </div>
                             <input class="button" type="button" value="Aggiungi" onclick="AggiungiSalaPesi()">
                     </section>
@@ -147,7 +147,7 @@
                                     <option>{{ k.id + 1 }} ° sala, dimensione: {{ k.dimensione }}</option>
                                 {% endfor %}
                             </select>
-                            Nuova dimensione (in metri quadri): <input id="txtSala2" name="dim" type="number" min="1">
+                            Nuova dimensione (in metri quadri): <input id="txtDim2" name="dim" type="number" min="1">
                         </div>
                         <input class="button" type="button" value="Modifica" onclick="ModificaSalaPesi()">
                     </section>
@@ -156,12 +156,14 @@
         </div>
     </body>
     <script>
-        var select1 = document.getElementById("select1");
-        var select2 = document.getElementById("select2");     
         var form0 = document.getElementById("form0");
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
-        var txtSala2 = document.getElementById("txtSala2"); 
+
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");     
+        var txtDim0 = document.getElementById("txtDim0");
+        var txtDim2 = document.getElementById("txtDim2"); 
 
 
         document.body.onload = function(){
@@ -177,21 +179,30 @@
 
 
         function AggiungiSalaPesi() {
-            form0.submit();
+            if(txtDim0.value >= 1)
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function RimuoviSalaPesi() {
-            form1.submit();
+            if(select1.value != "")
+                form1.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function ModificaSalaPesi() {
-            form2.submit();
+            if(select2.value != "" && txtDim2.value >= 1) 
+                form2.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function AggiornaDim() {
             var options2 = select2.getElementsByTagName("option");
             var textOpt = options2[select2.selectedIndex].textContent;
-            txtSala2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
+            txtDim2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
         }
     </script>
 </html>

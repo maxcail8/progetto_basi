@@ -127,6 +127,14 @@
                             </div>
                             <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
                     </section>
+                    <hr>
+                    <section>
+                            <div>
+                                <label>Modifica numero di metri quadri minimi a persona</label>
+                                <input id="txtPersoneMq" name="personeMq" type="number" min="1" value="2">
+                            </div>
+                            <input id="subPersoneMq" class="button" type="button" value="Modifica" onclick="ModificaPersoneMq()">
+                    </section>
 
                 </form>
 
@@ -173,34 +181,53 @@
         </form>
     </body>
     <script>
+        var form0 = document.getElementById("form0");
+        var form1 = document.getElementById("form1");
+        var form2 = document.getElementById("form2");
+        var form3 = document.getElementById("form3");
+
         var spanAccessi = document.getElementById("spanAccessi");
         var spanSlot = document.getElementById("spanSlot");
         var spanPersone = document.getElementById("spanPersone");
         var txtAccessi = document.getElementById("txtAccessi");
         var txtSlot = document.getElementById("txtSlot");
         var txtPersone = document.getElementById("txtPersone");
+        var txtPersoneMq = document.getElementById("txtPersoneMq");
         
-        var form0 = document.getElementById("form0");
-        var form1 = document.getElementById("form1");
-        var form2 = document.getElementById("form2");
-        var form3 = document.getElementById("form3");
-
         document.body.onload = function(){
             txtAccessi.value = spanAccessi.textContent;
             txtSlot.value = spanSlot.textContent;
             txtPersone.value = spanPersone.textContent;
         }
 
+        function Controlla(){
+            if(txtAccessi.value > 1 && txtSlot.value > 1 && txtPersone.value > 1 && txtPersoneMq.value > 1)
+                return true;
+            else
+                return false;
+        }
+
+        function ModificaProcedure(){
+            if(Controlla())
+                form0.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
+        }
+
         function ModificaAccessi(){
-            form0.submit();
+            ModificaProcedure();
         }
 
         function ModificaSlot(){
-            form0.submit();
+            ModificaProcedure();
         }
 
         function ModificaPersone(){
-            form0.submit();
+            ModificaProcedure();
+        }
+
+        function ModificaPersoneMq(){
+            ModificaProcedure();
         }
 
         function GestisciCorsi(){

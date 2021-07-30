@@ -1,5 +1,5 @@
 --infomazioni
-INSERT INTO informazioni VALUES (4, 2, 30);
+INSERT INTO informazioni VALUES (4, 2, 30, 2);
 
 
 --istruttori
@@ -30,10 +30,10 @@ INSERT INTO abbonamenti VALUES (3, 'prova', 10);
 
 
 --stanze
-INSERT INTO stanze VALUES (0, 20);
-INSERT INTO stanze(dimensione) VALUES (40);
-INSERT INTO stanze(dimensione) VALUES (60);
-INSERT INTO stanze(dimensione) VALUES (60);
+INSERT INTO stanze VALUES (0, 'Stanza A', 20);
+INSERT INTO stanze(nome, dimensione) VALUES ('Stanza B', 40);
+INSERT INTO stanze(nome, dimensione) VALUES ('Stanza C', 60);
+INSERT INTO stanze(nome, dimensione) VALUES ('Stanza D', 60);
 
 
 --salepesi
@@ -43,9 +43,9 @@ INSERT INTO salepesi(dimensione) VALUES (80);
 
 --corsi
 INSERT INTO corsi VALUES (0, 'pilates', 10, 2, 0);
-INSERT INTO corsi VALUES (1, 'yoga', 20, 1, 1);
-INSERT INTO corsi VALUES (2, 'crossfit', 30, 2, 2);
-INSERT INTO corsi VALUES (3, 'power-lifting', 30, 1, 3);
+INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('yoga', 20, 1, 1);
+INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('crossfit', 30, 2, 2);
+INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('power-lifting', 30, 1, 3);
 
 
 --sedute (SUBITO O DOPO)

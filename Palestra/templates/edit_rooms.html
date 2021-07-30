@@ -117,8 +117,8 @@
                     <section>
                             <div>
                                 <label>Aggiungi una stanza</label>
-                                Nome: <input type="text" name="nome" placeholder="Nome stanza">
-                                Dimensione (in metri quadri): <input id="txtStanza0" name="dim" type="number" min="1" value="50">
+                                Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome stanza">
+                                Dimensione (in metri quadri): <input id="txtDim0" name="dim" type="number" min="1" value="50">
                             </div>
                             <input class="button" type="button" value="Aggiungi" onclick="AggiungiStanza()">
                     </section>
@@ -153,7 +153,7 @@
                                 {% endfor %}
                             </select>
                             Nome: <input id="txtNome2" type="text" name="nome" placeholder="Nome stanza">
-                            Nuova dimensione (in metri quadri): <input id="txtStanza2" name="dim" type="number" min="1">
+                            Nuova dimensione (in metri quadri): <input id="txtDim2" name="dim" type="number" min="1">
                         </div>
                         <input class="button" type="button" value="Modifica" onclick="ModificaStanza()">
                     </section>
@@ -162,13 +162,16 @@
         </div>
     </body>
     <script>
-        var select1 = document.getElementById("select1");
-        var select2 = document.getElementById("select2");     
         var form0 = document.getElementById("form0");
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
-        var txtStanza2 = document.getElementById("txtStanza2"); 
+
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");     
+        var txtDim2 = document.getElementById("txtDim2"); 
+        var txtNome0 = document.getElementById("txtNome0");
         var txtNome2 = document.getElementById("txtNome2");
+        var txtDim0 = document.getElementById("txtDim0");
 
 
         document.body.onload = function(){
@@ -184,21 +187,30 @@
 
 
         function AggiungiStanza() {
-            form0.submit();
+            if(txtNome0.value.trim() != "" && txtDim0.value >= 1)
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function RimuoviStanza() {
-            form1.submit();
+            if(select1.value != "")
+                form1.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function ModificaStanza() {
-            form2.submit();
+            if(txtNome2.value.trim() != "" && txtDim2.value >= 1 && select2.value != "")
+                form2.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function AggiornaNomeDim() {
             var options2 = select2.getElementsByTagName("option");
             var textOpt = options2[select2.selectedIndex].textContent;
-            txtStanza2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
+            txtDim2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
             var nomeStanza = textOpt.substr(textOpt.indexOf(": ")+2, textOpt.indexOf(",")-textOpt.indexOf(": ")-2);
             txtNome2.value = nomeStanza;
         }

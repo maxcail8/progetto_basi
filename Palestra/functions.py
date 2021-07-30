@@ -90,6 +90,14 @@ def get_courses():
     return courses
 
 
+def get_course(idCorso):
+    conn = engine.connect()
+    p_query = "SELECT * FROM corsi WHERE id = %s"
+    course = conn.engine.execute(p_query, idCorso).first()
+    conn.close()
+    return classes.Course(course.id, course.nome, course.iscrittimax, course.istruttore, course.stanza)
+
+
 def get_rooms():
     conn = engine.connect()
     p_query = "SELECT * FROM stanze"
@@ -127,7 +135,7 @@ def get_information():
     p_query = "SELECT * FROM informazioni"
     info = conn.engine.execute(p_query).first()
     conn.close()
-    return classes.Information(info.accessisettimana, info.slotgiorno, info.personemaxslot)
+    return classes.Information(info.accessisettimana, info.slotgiorno, info.personemaxslot, info.personemq)
 
 
 # BOOLEANS
@@ -143,10 +151,10 @@ def is_subscriber(user_id):
 
 
 # UPDATE
-def set_information(accessiSettimana, slotGiorno, personeMax):
+def set_information(accessiSettimana, slotGiorno, personeMax, personeMq):
     conn = engine.connect()
-    p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s"
-    conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax)
+    p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s, personemq = %s"
+    conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax, personeMq)
     conn.close()
 
 
@@ -161,6 +169,13 @@ def update_room(idStanza, nome, dimensione):
     conn = engine.connect()
     p_query = "UPDATE stanze SET nome = %s, dimensione = %s WHERE id = %s"
     conn.engine.execute(p_query, nome, dimensione, idStanza)
+    conn.close()
+
+
+def update_course(idCorso, nome, iscrittiMax, idIstruttore, idStanza):
+    conn = engine.connect()
+    p_query = "UPDATE corsi SET nome = %s, iscrittimax = %s, istruttore = %s, stanza = %s WHERE id = %s"
+    conn.engine.execute(p_query, nome, iscrittiMax, idIstruttore, idStanza, idCorso)
     conn.close()
 
 
@@ -179,6 +194,13 @@ def add_room(nome, dimensione):
     conn.close()
 
 
+def add_course(nome, iscrittimax, idIstruttore, idStanza):
+    conn = engine.connect()
+    p_query = "INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES (%s, %s, %s, %s)"
+    conn.engine.execute(p_query, nome, iscrittimax, idIstruttore, idStanza)
+    conn.close()
+
+
 # REMOVE
 def remove_weight_room(idSala):
     conn = engine.connect()
@@ -191,6 +213,13 @@ def remove_room(idStanza):
     conn = engine.connect()
     p_query = "DELETE FROM stanze WHERE id = %s"
     conn.engine.execute(p_query, idStanza)
+    conn.close()
+
+
+def remove_course(idCorso):
+    conn = engine.connect()
+    p_query = "DELETE FROM corsi WHERE id = %s"
+    conn.engine.execute(p_query, idCorso)
     conn.close()
 
 

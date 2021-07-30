@@ -49,8 +49,8 @@
 
             #sezione0{
                 background-color: white;
-                width: 90%;
                 display: block;
+                width: 98%;
                 padding-top: 10px;
                 padding-bottom: 10px;
             }
@@ -67,7 +67,7 @@
 
             #sezione0 section label{
                 display: inline-block;
-                width: 20%;
+                width: 12%;
             }
 
             #sezione0 input[type="button"]{
@@ -108,99 +108,118 @@
         </style>
     </head>
     <body>
-        <h1>Gestione stanze</h1>
+        <h1>Gestione corsi</h1>
         <h3>Operazioni disponibili</h3>
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/add_room" method="POST">
+                <form id="form0" action="/add_course" method="POST">
                     
                     <section>
                             <div>
-                                <label>Aggiungi una stanza</label>
-                                Nome: <input type="text" name="nome" placeholder="Nome stanza">
-                                Dimensione (in metri quadri): <input id="txtStanza0" name="dim" type="number" min="1" value="50">
+                                <label>Aggiungi un corso</label>
+                                Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome corso">
+                                Iscritti massimi: <input id="txtIscritti0" name="iscrittimax" type="number" min="1" value="50">
+                                Istruttore: <select id="select0i" name="idIstruttore">
+                                    {% for t in trainers %}
+                                        <option>{{ t.id + 1 }} ° istruttore: {{ t.nome }}</option>
+                                    {% endfor %}
+                                </select>
+                                Stanza: <select id="select0s" name="idStanza">
+                                    {% for r in rooms %}
+                                        <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                            <input class="button" type="button" value="Aggiungi" onclick="AggiungiStanza()">
+                            <input class="button" type="button" value="Aggiungi" onclick="AggiungiCorso()">
                     </section>
 
                 </form>
                 <hr>
-                <form id="form1" action="/remove_room" method="POST">
+                <form id="form1" action="/remove_course" method="POST">
                     
                     <section>
                         <div>
-                            <label>Rimuovi una stanza</label>
-                            <select id="select1" name="idStanza">
-                                {% for r in rooms %}
-                                    <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                            <label>Rimuovi un corso</label>
+                            <select id="select1" name="idCorso">
+                                {% for c in courses %}
+                                    <option>{{ c.id + 1 }} ° corso: {{ c.nome }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <input class="button" type="button" value="Rimuovi" onclick="RimuoviStanza()">
+                        <input class="button" type="button" value="Rimuovi" onclick="RimuoviCorso()">
                     </section>
 
                 </form>
 
                 <hr>
 
-                <form id="form2" action="/update_room" method="POST">
+                <form id="form2" action="/update_course" method="POST">
                     <section>
                         <div>
-                            <label>Modifica una stanza</label>
-                            <select id="select2" name="idStanza" onchange="AggiornaNomeDim()">
-                                {% for k in rooms2 %}
-                                    <option>{{ k.id + 1 }} ° stanza: {{ k.nome }}, dimensione: {{ k.dimensione }}</option>
+                            <label>Modifica un corso</label>
+                            <select id="select2" name="idCorso">
+                                {% for k in courses2 %}
+                                    <option>{{ k.id + 1 }} ° corso: {{ k.nome }}</option>
                                 {% endfor %}
                             </select>
-                            Nome: <input id="txtNome2" type="text" name="nome" placeholder="Nome stanza">
-                            Nuova dimensione (in metri quadri): <input id="txtStanza2" name="dim" type="number" min="1">
                         </div>
-                        <input class="button" type="button" value="Modifica" onclick="ModificaStanza()">
+                        <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
                     </section>
                 </form>
             </section>
         </div>
     </body>
     <script>
-        var select1 = document.getElementById("select1");
-        var select2 = document.getElementById("select2");     
         var form0 = document.getElementById("form0");
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
-        var txtStanza2 = document.getElementById("txtStanza2"); 
-        var txtNome2 = document.getElementById("txtNome2");
+
+        var select0i = document.getElementById("select0i");
+        var select0s = document.getElementById("select0s");
+        var select1 = document.getElementById("select1");
+        var select2 = document.getElementById("select2");
+        var txtNome0 = document.getElementById("txtNome0");
+        var txtIscritti0 = document.getElementById("txtIscritti0");
 
 
         document.body.onload = function(){
-            var options = select1.getElementsByTagName("option");
-            for(var i = 0; i < options.length; i++)
-                options[i].value = options[i].textContent.substr(0,  options[i].textContent.indexOf(" ")) - 1;
+            var options0i = select0i.getElementsByTagName("option");
+            for(var i = 0; i < options0i.length; i++)
+                options0i[i].value = options0i[i].textContent.substr(0,  options0i[i].textContent.indexOf(" ")) - 1;
+
+            var options0s = select0s.getElementsByTagName("option");
+            for(var i = 0; i < options0s.length; i++)
+                options0s[i].value = options0s[i].textContent.substr(0,  options0s[i].textContent.indexOf(" ")) - 1;
+
+            var options1 = select1.getElementsByTagName("option");
+            for(var i = 0; i < options1.length; i++)
+                options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" ")) - 1;
 
             var options2 = select2.getElementsByTagName("option");
             for(var i = 0; i < options2.length; i++)
                 options2[i].value = options2[i].textContent.substr(0,  options2[i].textContent.indexOf(" ")) - 1;
-            AggiornaNomeDim();
         }
 
 
-        function AggiungiStanza() {
-            form0.submit();
+        function AggiungiCorso() {
+            if(txtNome0.value.trim() != "" && txtIscritti0.value >= 1 && select0i.value != "" && select0s.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
-        function RimuoviStanza() {
-            form1.submit();
+        function RimuoviCorso() { 
+            if(select1.value != "")
+                form1.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
 
-        function ModificaStanza() {
-            form2.submit();
-        }
-
-        function AggiornaNomeDim() {
-            var options2 = select2.getElementsByTagName("option");
-            var textOpt = options2[select2.selectedIndex].textContent;
-            txtStanza2.value = textOpt.substr(textOpt.lastIndexOf(" ")+1);
-            var nomeStanza = textOpt.substr(textOpt.indexOf(": ")+2, textOpt.indexOf(",")-textOpt.indexOf(": ")-2);
-            txtNome2.value = nomeStanza;
+        function ModificaCorso() {
+            if(select2.value != "")
+                form2.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
     </script>
 </html>

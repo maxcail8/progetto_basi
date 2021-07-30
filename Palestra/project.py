@@ -206,7 +206,7 @@ def administration():
 @login_required
 def edit_information():
     if current_user == functions.get_admin_user():
-        functions.set_information(request.form['accessiSettimana'], request.form['tempoAllenamento'], request.form['personeMassime'])
+        functions.set_information(request.form['accessiSettimana'], request.form['tempoAllenamento'], request.form['personeMassime'], request.form['personeMq'])
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")
@@ -216,8 +216,53 @@ def edit_information():
 @login_required
 def edit_courses():
     if current_user == functions.get_admin_user():
+        trainers = functions.get_trainers()
+        rooms = functions.get_rooms()
         courses = functions.get_courses()
-        return render_template("edit_courses.html", courses=courses)
+        courses2 = functions.get_courses()
+        return render_template("edit_courses.html", trainers=trainers, rooms=rooms, courses=courses, courses2=courses2)
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/add_course', methods=['GET', 'POST'])
+@login_required
+def add_course():
+    if current_user == functions.get_admin_user():
+        functions.add_course(request.form['nome'], request.form['iscrittimax'], request.form['idIstruttore'], request.form['idStanza'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/remove_course', methods=['GET', 'POST'])
+@login_required
+def remove_course():
+    if current_user == functions.get_admin_user():
+        functions.remove_course(request.form['idCorso'])
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/update_course', methods=['GET', 'POST'])
+@login_required
+def update_course():
+    if current_user == functions.get_admin_user():
+        course = functions.get_course(request.form['idCorso'])
+        trainers = functions.get_trainers()
+        rooms = functions.get_rooms()
+        return render_template("update_course.html", course=course, trainers=trainers, rooms=rooms)
+    else:
+        return render_template("wrong.html")
+
+
+@app.route('/update_course_conf', methods=['GET', 'POST'])
+@login_required
+def update_course_conf():
+    if current_user == functions.get_admin_user():
+        functions.update_course(request.form['idCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
+        return render_template("confirm.html")
     else:
         return render_template("wrong.html")
 

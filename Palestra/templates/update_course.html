@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Modifica corso</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            *{
+                padding: 0;
+                margin: 0;
+                border: none;
+            }
+
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 3%;
+            }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            #sezione0{
+                background-color: white;
+                display: block;
+                width: 90%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 input[type="button"]{
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+
+            select{
+                border: 1px solid black;
+            }
+
+            input[type=number]{
+                border: 1px solid black;
+                width: 5%;
+            }
+
+            input[type=text]{
+                border: 0.1px solid black;
+            }
+        </style>
+    </head>    
+    <body>
+        <h1>Modifica corso</h1>
+        <h3>Modifica</h3>
+
+        <span id="spanNome" style="visibility: hidden;">{{ course.nome }}</span>
+        <span id="spanIscritti" style="visibility: hidden;">{{ course.iscrittimax }}</span>
+        <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
+        <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
+        <span id="spanIdC" style="visibility: hidden;">{{ course.id }}</span>
+
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <form id="form0" action="/update_course_conf" method="POST">
+                    
+                    <section>
+                        <span id="spanId" style="visibility: hidden;" name="idCorso"></span>
+                        Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome corso">
+                        <br><br>
+                        Iscritti massimi: <input id="txtIscritti0" name="iscrittiMax" type="number" min="1" value="50">
+                        <br><br>
+                        Istruttore: <select id="select0i" name="idIstruttore">
+                            {% for t in trainers %}
+                                <option>{{ t.id + 1 }} ° istruttore: {{ t.nome }}</option>
+                            {% endfor %}
+                        </select>
+                        <br><br>
+                        Stanza: <select id="select0s" name="idStanza">
+                            {% for r in rooms %}
+                                <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                            {% endfor %}
+                        </select>
+                        <br><br>
+                        <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
+                    </section>
+
+            </section>
+        </div>
+    </body>
+    <script>
+        var form0 = document.getElementById("form0");
+
+        var select0i = document.getElementById("select0i");
+        var select0s = document.getElementById("select0s");
+        var txtNome0 = document.getElementById("txtNome0");
+        var txtIscritti0 = document.getElementById("txtIscritti0");
+        var spanIdC = document.getElementById("spanIdC");
+        var spanId = document.getElementById("spanId");
+        var spanNome = document.getElementById("spanNome");
+        var spanIscritti = document.getElementById("spanIscritti");
+        var spanIstruttore = document.getElementById("spanIstruttore");
+        var spanStanza = document.getElementById("spanStanza");
+
+
+        document.body.onload = function(){
+            var options0i = select0i.getElementsByTagName("option");
+            for(var i = 0; i < options0i.length; i++)
+                options0i[i].value = options0i[i].textContent.substr(0,  options0i[i].textContent.indexOf(" ")) - 1;
+
+            for(var i = 0; i < options0i.length; i++)
+                if (options0i[i].value == spanIstruttore.textContent)
+                    options0i[i].selected = "selected";
+
+            var options0s = select0s.getElementsByTagName("option");
+            for(var i = 0; i < options0s.length; i++)
+                options0s[i].value = options0s[i].textContent.substr(0,  options0s[i].textContent.indexOf(" ")) - 1;
+
+            for(var i = 0; i < options0s.length; i++)
+                if (options0s[i].value == spanStanza.textContent)
+                    options0s[i].selected = "selected";
+                    
+            txtNome0.value = spanNome.textContent;
+            txtIscritti0.value = spanIscritti.textContent;
+            spanId.value = spanIdC.textContent;
+        }
+
+        function ModificaCorso() {
+            if(select0i.value != "" && select0s.value != "" && txtNome0.value.trim() != "" && txtIscritti0.value > 0){
+                console.log(spanId.value + ", " + txtNome0.value + ", " + txtIscritti0.value + ", " + select0i.value + ", " + select0s.value);
+                alert();
+                form0.submit();
+            }
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+</html>

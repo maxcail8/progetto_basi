@@ -76,15 +76,18 @@ CREATE TABLE salepesi(
 ALTER SEQUENCE salepesi_id_seq OWNED BY salepesi.id;
 
 --Corsi
+CREATE SEQUENCE corsi_id_seq;
 CREATE TABLE corsi(
-	id INT PRIMARY KEY,
+	id smallint NOT NULL DEFAULT nextval('corsi_id_seq'),
 	nome VARCHAR(100),
 	iscrittimax INT CHECK(iscrittimax > 0),
 	istruttore INT NOT NULL,
 	stanza INT NOT NULL,
+	PRIMARY KEY(id),
 	FOREIGN KEY(istruttore) REFERENCES istruttori ON DELETE SET NULL,
 	FOREIGN KEY(stanza) REFERENCES stanze ON DELETE CASCADE
 );
+ALTER SEQUENCE corsi_id_seq OWNED BY corsi.id;
 
 --Sedute
 CREATE TABLE sedute(
@@ -154,5 +157,6 @@ CREATE TABLE informazioni(
 	accessisettimana INT CHECK(accessisettimana > 0),
 	slotgiorno INT CHECK(slotgiorno > 0 AND slotgiorno < 6),
 	personemaxslot INT CHECK(personemaxslot > 0),
-	PRIMARY KEY(accessisettimana, slotgiorno, personemaxslot)
+	personemq INT CHECK(personemq > 0),
+	PRIMARY KEY(accessisettimana, slotgiorno, personemaxslot, personemq)
 );

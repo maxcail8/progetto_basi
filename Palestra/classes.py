@@ -323,14 +323,16 @@ class Information(Base):
     accessisettimana = Column(Integer, primary_key=True)
     slotgiorno = Column(Integer, primary_key=True)
     personemaxslot = Column(Integer, primary_key=True)
+    personemq = Column(Integer, primary_key=True)
 
-    def __init__(self, accessisettimana, slotgiorno, personemaxslot):
+    def __init__(self, accessisettimana, slotgiorno, personemaxslot, personemq):
         self.accessisettimana = accessisettimana
         self.slotgiorno = slotgiorno
         self.personemaxslot = personemaxslot
+        self.personemq = personemq
 
     def __repr__(self):
-        return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2})>".format(self.abbonato, self.slot, self.personemaxslot)
+        return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2}, personemq = {3})>".format(self.abbonato, self.slot, self.personemaxslot, self.personemq)
 
 
 class MyDate():

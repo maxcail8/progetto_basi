@@ -12,3 +12,6 @@ ALTER COLUMN orafine TYPE TIME;
 
 --Aggiunta nome stanze
 ALTER TABLE stanze ADD nome VARCHAR(100);
+
+--Aggiungere personemq
+ALTER TABLE informazioni ADD personemq INT CHECK(personemq > 0);

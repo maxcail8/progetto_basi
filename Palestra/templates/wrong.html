@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Errore cliente</title>
+        <title>Errore</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
             body{
@@ -19,7 +19,7 @@
        </style>
     </head>
     <body>
-        <p id="p0"><label id="lab0">Le credenziali inserite non sono corrette. Reindirizzamento tra 3 secondi...</label></p>
+        <p id="p0"><label id="lab0">Operazione non consentita. Reindirizzamento tra 3 secondi...</label></p>
     </body>
     <script>
         var lab0 = document.getElementById("lab0");
@@ -35,7 +35,7 @@
         }
 
         function SetLabel(){
-            lab0.innerHTML = "Le credenziali inserite non sono corrette. Reindirizzamento tra " + sec + " secondi...";
+            lab0.innerHTML = "Operazione non consentita. Reindirizzamento tra " + sec + " secondi...";
             sec--;
         }
     </script>
