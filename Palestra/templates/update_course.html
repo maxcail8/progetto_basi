@@ -100,18 +100,21 @@
         <h1>Modifica corso</h1>
         <h3>Modifica</h3>
 
+        <span id="spanIdCorso" style="visibility: hidden;">{{ course.id }}</span>
         <span id="spanNome" style="visibility: hidden;">{{ course.nome }}</span>
         <span id="spanIscritti" style="visibility: hidden;">{{ course.iscrittimax }}</span>
         <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
         <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
-        <span id="spanIdC" style="visibility: hidden;">{{ course.id }}</span>
 
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
                 <form id="form0" action="/update_course_conf" method="POST">
                     
                     <section>
-                        <span id="spanId" style="visibility: hidden;" name="idCorso"></span>
+                        <select id="selCorso" name="sCorso" style="visibility: hidden;">
+                            <option selected></option>
+                        </select>
+                        <br><br>
                         Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome corso">
                         <br><br>
                         Iscritti massimi: <input id="txtIscritti0" name="iscrittiMax" type="number" min="1" value="50">
@@ -128,9 +131,10 @@
                             {% endfor %}
                         </select>
                         <br><br>
+                        
                         <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
                     </section>
-
+                </form>
             </section>
         </div>
     </body>
@@ -139,10 +143,10 @@
 
         var select0i = document.getElementById("select0i");
         var select0s = document.getElementById("select0s");
+        var selCorso = document.getElementById("selCorso");
         var txtNome0 = document.getElementById("txtNome0");
         var txtIscritti0 = document.getElementById("txtIscritti0");
-        var spanIdC = document.getElementById("spanIdC");
-        var spanId = document.getElementById("spanId");
+        var spanIdCorso = document.getElementById("spanIdCorso");
         var spanNome = document.getElementById("spanNome");
         var spanIscritti = document.getElementById("spanIscritti");
         var spanIstruttore = document.getElementById("spanIstruttore");
@@ -165,15 +169,19 @@
             for(var i = 0; i < options0s.length; i++)
                 if (options0s[i].value == spanStanza.textContent)
                     options0s[i].selected = "selected";
+
+            var optionsid = selCorso.getElementsByTagName("option");
+            optionsid[0].value = spanIdCorso.textContent;
+            optionsid[0].textContent = spanIdCorso.textContent;
                     
             txtNome0.value = spanNome.textContent;
             txtIscritti0.value = spanIscritti.textContent;
-            spanId.value = spanIdC.textContent;
+            
         }
 
         function ModificaCorso() {
             if(select0i.value != "" && select0s.value != "" && txtNome0.value.trim() != "" && txtIscritti0.value > 0){
-                console.log(spanId.value + ", " + txtNome0.value + ", " + txtIscritti0.value + ", " + select0i.value + ", " + select0s.value);
+                console.log(selCorso.value + ", " + txtNome0.value + ", " + txtIscritti0.value + ", " + select0i.value + ", " + select0s.value);
                 alert();
                 form0.submit();
             }

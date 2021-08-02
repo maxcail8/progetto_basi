@@ -20,15 +20,15 @@
        </style>
     </head>
     <body>
-        <p id="p0"><label id="lab0">Operazione completata correttamente. Reindirizzamento tra 4 secondi...</label></p>
+        <p id="p0"><label id="lab0">Operazione completata correttamente. Reindirizzamento tra 3 secondi...</label></p>
     </body>
     <script>
         var lab0 = document.getElementById("lab0");
-        var sec = 3;
+        var sec = 2;
 
         document.body.onload = function(){
             window.setInterval("SetLabel()", 1000);
-            window.setTimeout("Redirect()", 4000);
+            window.setTimeout("Redirect()", 3000);
         }
 
         function Redirect(){

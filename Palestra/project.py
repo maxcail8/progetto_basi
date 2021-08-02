@@ -261,7 +261,8 @@ def update_course():
 @login_required
 def update_course_conf():
     if current_user == functions.get_admin_user():
-        functions.update_course(request.form['idCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
+        functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
+        #functions.update_course(request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")

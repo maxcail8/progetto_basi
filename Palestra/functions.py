@@ -84,7 +84,7 @@ def get_subscription(subscription):
 
 def get_courses():
     conn = engine.connect()
-    p_query = "SELECT * FROM corsi"
+    p_query = "SELECT * FROM corsi ORDER BY id ASC"
     courses = conn.engine.execute(p_query)
     conn.close()
     return courses
@@ -100,7 +100,7 @@ def get_course(idCorso):
 
 def get_rooms():
     conn = engine.connect()
-    p_query = "SELECT * FROM stanze"
+    p_query = "SELECT * FROM stanze ORDER BY id ASC"
     rooms = conn.engine.execute(p_query)
     conn.close()
     return rooms
@@ -108,7 +108,7 @@ def get_rooms():
 
 def get_weight_rooms():
     conn = engine.connect()
-    p_query = "SELECT * FROM salepesi"
+    p_query = "SELECT * FROM salepesi ORDER BY id ASC"
     weight_rooms = conn.engine.execute(p_query)
     conn.close()
     return weight_rooms
@@ -116,7 +116,7 @@ def get_weight_rooms():
 
 def get_trainers():
     conn = engine.connect()
-    p_query = "SELECT * FROM istruttori NATURAL JOIN utenti"
+    p_query = "SELECT * FROM istruttori NATURAL JOIN utenti ORDER BY id ASC"
     trainers = conn.engine.execute(p_query)
     conn.close()
     return trainers
@@ -124,7 +124,7 @@ def get_trainers():
 
 def get_clients():
     conn = engine.connect()
-    p_query = "SELECT * FROM clienti NATURAL JOIN utenti"
+    p_query = "SELECT * FROM clienti NATURAL JOIN utenti ORDER BY id ASC"
     clients = conn.engine.execute(p_query)
     conn.close()
     return clients
