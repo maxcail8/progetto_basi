@@ -5,10 +5,11 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/confirm.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/confirm.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/update_course.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/update_course.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" afterDir="false" />
     </list>
-    <list id="087465d8-35de-44d8-9ab9-890a118b2644" name="Changes by matte" comment="" />
+    <list id="087465d8-35de-44d8-9ab9-890a118b2644" name="Changes by matte" comment="">
+      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,6 +25,14 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/Palestra/functions.py">
+      <ranges>
+        <range start1="98" end1="98" start2="98" end2="106" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="201" end1="201" start2="209" end2="216" changelist="087465d8-35de-44d8-9ab9-890a118b2644" />
+      </ranges>
+    </file>
   </component>
   <component name="ProjectId" id="1saNpiFlj9WtaRyWjIQbrpdA1SR" />
   <component name="ProjectViewState">

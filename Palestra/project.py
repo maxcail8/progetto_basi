@@ -230,6 +230,10 @@ def edit_courses():
 def add_course():
     if current_user == functions.get_admin_user():
         functions.add_course(request.form['nome'], request.form['iscrittimax'], request.form['idIstruttore'], request.form['idStanza'])
+        print(request.form['primoGiorno'])
+        print(request.form['slot'])
+        print(functions.get_last_id_course())
+        functions.add_course_slot(functions.get_last_id_course(), request.form['primoGiorno'], request.form['slot'])
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")
@@ -262,7 +266,6 @@ def update_course():
 def update_course_conf():
     if current_user == functions.get_admin_user():
         functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
-        #functions.update_course(request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")

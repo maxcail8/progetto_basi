@@ -98,6 +98,14 @@ def get_course(idCorso):
     return classes.Course(course.id, course.nome, course.iscrittimax, course.istruttore, course.stanza)
 
 
+def get_last_id_course():
+    conn = engine.connect()
+    p_query = "SELECT * FROM corsi ORDER BY id DESC"
+    course = conn.engine.execute(p_query).first()
+    conn.close()
+    return course.id
+
+
 def get_rooms():
     conn = engine.connect()
     p_query = "SELECT * FROM stanze ORDER BY id ASC"
@@ -198,6 +206,13 @@ def add_course(nome, iscrittimax, idIstruttore, idStanza):
     conn = engine.connect()
     p_query = "INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES (%s, %s, %s, %s)"
     conn.engine.execute(p_query, nome, iscrittimax, idIstruttore, idStanza)
+    conn.close()
+
+
+def add_course_slot(idCorso, giorno, orario):
+    conn = engine.connect()
+    p_query = "CALL test(" + str(idCorso) + ")"
+    conn.engine.execute(p_query)
     conn.close()
 
 
