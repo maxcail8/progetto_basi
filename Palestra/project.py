@@ -210,6 +210,7 @@ def administration():
 def edit_information():
     if current_user == functions.get_admin_user():
         functions.set_information(request.form['accessiSettimana'], request.form['tempoAllenamento'], request.form['personeMassime'], request.form['personeMq'])
+        session.commit()
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")
@@ -232,11 +233,12 @@ def edit_courses():
 @login_required
 def add_course():
     if current_user == functions.get_admin_user():
-        functions.add_course(request.form['nome'], request.form['iscrittimax'], request.form['idIstruttore'], request.form['idStanza'])
-        print(request.form['primoGiorno'])
-        print(request.form['slot'])
-        print(functions.get_last_id_course())
-        functions.add_course_slot(functions.get_last_id_course(), request.form['primoGiorno'], request.form['slot'])
+        new_id = functions.get_course_id_increment()
+        course = classes.Course(id=new_id, nome=request.form['nome'], iscrittimax=request.form['iscrittimax'], istruttore=request.form['idIstruttore'], stanza=request.form['idStanza'])
+        session.add(course)
+        session.commit()
+        functions.add_course_slot(new_id, request.form['primoGiorno'], request.form['slot'])
+        session.commit()
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")
@@ -289,7 +291,10 @@ def edit_rooms():
 @login_required
 def add_room():
     if current_user == functions.get_admin_user():
-        functions.add_room(request.form['nome'], request.form['dim'])
+        new_id = functions.get_room_id_increment()
+        room = classes.Room(id=new_id, nome=request.form['nome'], dimensione=request.form['dim'])
+        session.add(room)
+        session.commit()
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")
@@ -330,7 +335,13 @@ def edit_weight_rooms():
 @login_required
 def add_weight_room():
     if current_user == functions.get_admin_user():
-        functions.add_weight_room(request.form['dim'])
+        new_id = functions.get_weight_room_id_increment()
+        pmq = functions.get_information().personemq
+        dimensione = request.form['dim']
+        iscrittimax = int(dimensione)/pmq
+        weight_room = classes.WeightRoom(id=new_id, dimensione=dimensione, iscrittimax=iscrittimax)
+        session.add(weight_room)
+        session.commit()
         return render_template("confirm.html")
     else:
         return render_template("wrong.html")

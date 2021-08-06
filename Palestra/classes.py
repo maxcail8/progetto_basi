@@ -164,13 +164,15 @@ class WeightRoom(Base):
 
     id = Column(Integer, primary_key=True)
     dimensione = Column(Integer)
+    iscrittimax = Column(Integer)
 
-    def __init__(self, id, dimensione):
+    def __init__(self, id, dimensione, iscrittimax):
         self.id = id
         self.dimensione = dimensione
+        self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<WeightRoom(id = {0}, dimensione = {1})>".format(self.id, self.dimensione)
+        return "<WeightRoom(id = {0}, dimensione = {1}, iscrittimax = {2})>".format(self.id, self.dimensione, self.iscrittimax)
 
 
 class Course(Base):

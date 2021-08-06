@@ -37,8 +37,8 @@ INSERT INTO stanze(nome, dimensione) VALUES ('Stanza D', 60);
 
 
 --salepesi
-INSERT INTO salepesi VALUES (0, 70);
-INSERT INTO salepesi(dimensione) VALUES (80);
+INSERT INTO salepesi VALUES (0, 70, 70/2);
+INSERT INTO salepesi(dimensione, iscrittimax) VALUES (80, 80/2);
 
 
 --corsi
@@ -56,7 +56,7 @@ INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('power-lifting'
 
 --giorni (SUBITO)
 CREATE PROCEDURE LoopGiorniSlot() AS $$
-	DECLARE giorno date = CURRENT_DATE + 1;
+	DECLARE giorno DATE = CURRENT_DATE + 1;
 	DECLARE pms INT;
 	DECLARE oraIn TIME = '05:30:00';
 	DECLARE oraFin TIME = '08:50:00';
@@ -64,13 +64,15 @@ CREATE PROCEDURE LoopGiorniSlot() AS $$
 		SELECT personemaxslot INTO pms FROM informazioni;
 		INSERT INTO giorni VALUES(CURRENT_DATE);
 		INSERT INTO slot VALUES(0, pms, CURRENT_DATE, oraIn, oraFin);
-		FOR i IN 0..5 LOOP
+		FOR i IN 0..29 LOOP
 			INSERT INTO giorni VALUES(giorno);
 			FOR j IN 0..5 LOOP
 				INSERT INTO slot(personemax, giorno, orainizio, orafine) VALUES(pms, giorno, oraIn, oraFin);
 				oraIn = oraFin + '00:10:00';
 				oraFin = oraIn + '02:50:00';
 			END LOOP;
+			oraIn = '05:30:00';
+			oraFin = '08:50:00';
 			giorno = giorno + 1;
 		END LOOP;
 	END;

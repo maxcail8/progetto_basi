@@ -9,6 +9,7 @@ from flask_migrate import Migrate
 # sqlalchemy-import
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
+from sqlalchemy.orm import sessionmaker
 
 # other-import
 from datetime import datetime, timedelta
@@ -27,6 +28,11 @@ app.secret_key = 'secret14'
 # Gestione login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+#Session
+Session = sessionmaker(bind=engine)
+Session.close_all()
+session = Session()
 
 #############################
 # Variabili e costanti globali
@@ -53,6 +59,39 @@ def get_id_increment():
         return user.id + 1
     else:
         return first_id_client
+
+
+def get_course_id_increment():
+    conn = engine.connect()
+    p_query = "SELECT * FROM corsi ORDER BY id DESC"
+    course = conn.engine.execute(p_query).first()
+    conn.close()
+    if (course is not None):
+        return course.id + 1
+    else:
+        return 0
+
+
+def get_room_id_increment():
+    conn = engine.connect()
+    p_query = "SELECT * FROM stanze ORDER BY id DESC"
+    room = conn.engine.execute(p_query).first()
+    conn.close()
+    if (room is not None):
+        return room.id + 1
+    else:
+        return 0
+
+
+def get_weight_room_id_increment():
+    conn = engine.connect()
+    p_query = "SELECT * FROM salepesi ORDER BY id DESC"
+    weight_room = conn.engine.execute(p_query).first()
+    conn.close()
+    if(weight_room is not None):
+        return weight_room.id + 1
+    else:
+        return 0
 
 
 # Funzione per tornare l'utente amministratore
@@ -168,8 +207,9 @@ def set_information(accessiSettimana, slotGiorno, personeMax, personeMq):
 
 def update_weight_room(idSala, dimensione):
     conn = engine.connect()
-    p_query = "UPDATE salepesi SET dimensione = %s WHERE id = %s"
-    conn.engine.execute(p_query, dimensione, idSala)
+    pmq = get_information().personemq
+    p_query = "UPDATE salepesi SET dimensione = %s, iscrittimax = %s WHERE id = %s"
+    conn.engine.execute(p_query, dimensione, int(dimensione)/pmq, idSala)
     conn.close()
 
 
@@ -187,47 +227,18 @@ def update_course(idCorso, nome, iscrittiMax, idIstruttore, idStanza):
     conn.close()
 
 
-# ADD
-def add_weight_room(dimensione):
-    conn = engine.connect()
-    p_query = "INSERT INTO salepesi(dimensione) VALUES (%s)"
-    conn.engine.execute(p_query, dimensione)
-    conn.close()
-
-
-def add_room(nome, dimensione):
-    conn = engine.connect()
-    p_query = "INSERT INTO stanze(nome, dimensione) VALUES (%s, %s)"
-    conn.engine.execute(p_query, nome, dimensione)
-    conn.close()
-
-
-def add_course(nome, iscrittimax, idIstruttore, idStanza):
-    conn = engine.connect()
-    p_query = "INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES (%s, %s, %s, %s)"
-    conn.engine.execute(p_query, nome, iscrittimax, idIstruttore, idStanza)
-    conn.close()
-
-
-def add_course_slot(idCorso, giorno, orario):
-    conn = engine.connect()
-    p_query = "CALL test(" + str(idCorso) + ")"
-    conn.engine.execute(p_query)
-    conn.close()
-
-
 # REMOVE
-def remove_weight_room(idSala):
-    conn = engine.connect()
-    p_query = "DELETE FROM salepesi WHERE id = %s"
-    conn.engine.execute(p_query, idSala)
-    conn.close()
-
-
 def remove_room(idStanza):
     conn = engine.connect()
     p_query = "DELETE FROM stanze WHERE id = %s"
     conn.engine.execute(p_query, idStanza)
+    conn.close()
+
+
+def remove_weight_room(idSala):
+    conn = engine.connect()
+    p_query = "DELETE FROM salepesi WHERE id = %s"
+    conn.engine.execute(p_query, idSala)
     conn.close()
 
 
@@ -243,6 +254,14 @@ def remove_not_subscriber(idCliente):
     p_query = "DELETE FROM nonabbonati WHERE id = %s"
     conn.engine.execute(p_query, idCliente)
     conn.close()
+
+
+# ADD
+def add_course_slot(idCorso, giorno, orario):
+    p_query = "CALL aggiungi_corsi_slot(" + str(idCorso) + ", " + str(giorno) + ", TIME '" + str(orario) + "')"
+    session.execute(p_query)
+    session.commit()
+    session.close()
 
 
 # Day of week: select extract(dow from date '2021-07-30');
