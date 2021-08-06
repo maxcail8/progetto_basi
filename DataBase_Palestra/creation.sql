@@ -69,7 +69,8 @@ ALTER SEQUENCE stanze_id_seq OWNED BY stanze.id;
 --SalePesi
 CREATE SEQUENCE salepesi_id_seq;
 CREATE TABLE salepesi(
-	id smallint NOT NULL DEFAULT nextval('salepesi_id_seq'),
+	id smallint NOT NULL DEFAULT nextval('salepesi_id_seq'),	
+	iscrittimax INT CHECK(iscrittimax > 0),
 	dimensione INT CHECK(dimensione > 0), --metri quadri
 	PRIMARY KEY(id)
 );

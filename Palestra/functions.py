@@ -238,4 +238,11 @@ def remove_course(idCorso):
     conn.close()
 
 
+def remove_not_subscriber(idCliente):
+    conn = engine.connect()
+    p_query = "DELETE FROM nonabbonati WHERE id = %s"
+    conn.engine.execute(p_query, idCliente)
+    conn.close()
+
+
 # Day of week: select extract(dow from date '2021-07-30');

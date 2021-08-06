@@ -76,7 +76,7 @@ def create_user():
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
-    if request.form['abb'] != 'null':
+    if request.form['abb'] != "null":
         sub = functions.get_subscription(request.form['abb'])
         if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
@@ -84,6 +84,9 @@ def create_user():
         else:
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
+    else:
+        not_subscriber = classes.NotSubscriber(id=new_id)
+        session.add(not_subscriber)
     session.commit()
     return render_template("confirm.html")
 
@@ -120,7 +123,6 @@ def login():
             else:
                 return render_template("wrong.html")
         else:
-            print('NO2')
             return render_template("wrong.html")
     else:
         return render_template("wrong.html")
@@ -157,6 +159,7 @@ def subscribe():
         else:
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
             session.add(subscriber)
+        functions.remove_not_subscriber(user_id)
         session.commit()
         return render_template("confirm.html")
     else:
