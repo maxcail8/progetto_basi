@@ -161,3 +161,8 @@ CREATE TABLE informazioni(
 	personemq INT CHECK(personemq > 0),
 	PRIMARY KEY(accessisettimana, slotgiorno, personemaxslot, personemq)
 );
+
+CREATE TABLE controlli(
+	controllo INT CHECK(controllo >= 0),
+	PRIMARY KEY(controllo)
+);

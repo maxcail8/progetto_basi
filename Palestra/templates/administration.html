@@ -94,7 +94,7 @@
     <body>
         <h1>Amministrazione</h1>
         {% if current_user.is_authenticated and current_user.email == 'admin@palestra.it' %}
-
+        <span id="spanControlli" style="visibility: hidden;">{{controllo}}</span> 
         <span id="spanAccessi" style="visibility: hidden;">{{accessi_settimana}}</span>
         <span id="spanSlot" style="visibility: hidden;">{{slot_giorno}}</span>
         <span id="spanPersone" style="visibility: hidden;">{{persone_max}}</span>
@@ -102,8 +102,17 @@
         <h3>Operazioni disponibili</h3>
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/edit_information" method="POST">
-                    
+                <form id="formChecks" action="/edit_checks" method="POST">
+                    <section>
+                        <div>
+                            <label>Esegui controlli giornalieri</label>
+                            <input id="txtControlli" name="controlliGiornalieri" type="number" min="1" value="1">
+                        </div>
+                        <input id="subControlli" class="button" type="button" value="Esegui" onclick="EseguiControlli()">
+                    </section>
+                    <hr>
+                </form>
+                <form id="form0" action="/edit_information" method="POST">                    
                     <section>
                             <div>
                                 <label>Modifica accessi settimanali</label>
@@ -182,20 +191,24 @@
         <br>
     </body>
     <script>
+        var formChecks = document.getElementById("formChecks");
         var form0 = document.getElementById("form0");
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
         var form3 = document.getElementById("form3");
 
+        var spanControlli = document.getElementById("spanControlli");
         var spanAccessi = document.getElementById("spanAccessi");
         var spanSlot = document.getElementById("spanSlot");
         var spanPersone = document.getElementById("spanPersone");
+        var txtControlli = document.getElementById("txtControlli");
         var txtAccessi = document.getElementById("txtAccessi");
         var txtSlot = document.getElementById("txtSlot");
         var txtPersone = document.getElementById("txtPersone");
         var txtPersoneMq = document.getElementById("txtPersoneMq");
         
         document.body.onload = function(){
+            txtControlli.value = spanControlli.textContent;
             txtAccessi.value = spanAccessi.textContent;
             txtSlot.value = spanSlot.textContent;
             txtPersone.value = spanPersone.textContent;
@@ -229,6 +242,10 @@
 
         function ModificaPersoneMq(){
             ModificaProcedure();
+        }
+
+        function EseguiControlli(){
+            formChecks.submit();
         }
 
         function GestisciCorsi(){

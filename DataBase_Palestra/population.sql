@@ -1,6 +1,7 @@
 --infomazioni
 INSERT INTO informazioni VALUES (4, 2, 30, 2);
 
+INSERT INTO controlli VALUES (0);
 
 --istruttori
 INSERT INTO utenti VALUES (1, 'maxcail8', 'p', 'Massimo', 'Cailotto', 'max@palestra.it', DATE '2000-01-07');

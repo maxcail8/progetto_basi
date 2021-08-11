@@ -337,6 +337,18 @@ class Information(Base):
         return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2}, personemq = {3})>".format(self.abbonato, self.slot, self.personemaxslot, self.personemq)
 
 
+class Checks(Base):
+    __tablename__ = 'controlli'
+
+    controllo = Column(Integer, primary_key=True)
+
+    def __init__(self, controllo):
+        self.controllo = controllo
+
+    def __repr__(self):
+        return "<Checks(controllo = {0})>".format(self.controllo)
+
+
 class MyDate():
     first_column = Integer
     last_day = Integer

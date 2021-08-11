@@ -197,12 +197,24 @@ def info():
 def administration():
     if current_user == functions.get_admin_user():
         info = functions.get_information()
-        resp = make_response(render_template("administration.html", current_user=current_user, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
+        checks = functions.get_checks()
+        resp = make_response(render_template("administration.html", current_user=current_user, controllo=checks.controllo, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
         return resp
     else:
         sub = functions.is_subscriber(current_user.id)
         resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
         return resp
+
+
+@app.route('/edit_checks', methods=['GET', 'POST'])
+@login_required
+def edit_checks():
+    if current_user == functions.get_admin_user():
+        functions.set_checks(request.form['controlliGiornalieri'])
+        session.commit()
+        return render_template("confirm.html")
+    else:
+        return render_template("wrong.html")
 
 
 @app.route('/edit_information', methods=['GET', 'POST'])

@@ -185,6 +185,14 @@ def get_information():
     return classes.Information(info.accessisettimana, info.slotgiorno, info.personemaxslot, info.personemq)
 
 
+def get_checks():
+    conn = engine.connect()
+    p_query = "SELECT * FROM controlli"
+    checks = conn.engine.execute(p_query).first()
+    conn.close()
+    return classes.Checks(checks.controllo)
+
+
 # BOOLEANS
 def is_subscriber(user_id):
     conn = engine.connect()
@@ -198,6 +206,13 @@ def is_subscriber(user_id):
 
 
 # UPDATE
+def set_checks(controlliGiornalieri):
+    conn = engine.connect()
+    p_query = "UPDATE controlli SET controllo = %s"
+    conn.engine.execute(p_query, controlliGiornalieri)
+    conn.close()
+
+
 def set_information(accessiSettimana, slotGiorno, personeMax, personeMq):
     conn = engine.connect()
     p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s, personemq = %s"
