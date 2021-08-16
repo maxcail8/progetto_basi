@@ -130,6 +130,7 @@ ALTER SEQUENCE slot_id_seq OWNED BY slot.id;
 CREATE TABLE corsislot(
 	corso INT,
 	slot INT,
+	iscrittimax INT,
 	PRIMARY KEY(corso, slot),
 	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
@@ -139,6 +140,7 @@ CREATE TABLE corsislot(
 CREATE TABLE salapesislot(
 	salapesi INT,
 	slot INT,
+	iscrittimax INT,
 	PRIMARY KEY(salapesi, slot),
 	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE

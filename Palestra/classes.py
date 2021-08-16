@@ -276,15 +276,17 @@ class CourseSlot(Base):
 
     corso = Column(Integer, ForeignKey(Course.id, ondelete='cascade'), primary_key=True)
     slot = Column(Integer, ForeignKey(Slot.id, ondelete='cascade'), primary_key=True)
+    iscrittimax = Column(Integer)
     course = relationship(Course, uselist=False)
     courseslot = relationship(Slot, uselist=False)
 
-    def __init__(self, corso, slot):
+    def __init__(self, corso, slot, iscrittimax):
         self.corso = corso
         self.slot = slot
+        self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<CourseSlot(corso = {0}, slot = {1})>".format(self.corso, self.slot)
+        return "<CourseSlot(corso = {0}, slot = {1}, iscrittimax = {2})>".format(self.corso, self.slot, self.iscrittimax)
 
 
 class WeightRoomSlot(Base):
@@ -292,15 +294,17 @@ class WeightRoomSlot(Base):
 
     salapesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
     slot = Column(Integer, ForeignKey(Slot.id, ondelete='cascade'), primary_key=True)
+    iscrittimax = Column(Integer)
     weightroom = relationship(WeightRoom, uselist=False)
     weightroomslot = relationship(Slot, uselist=False)
 
-    def __init__(self, salapesi, slot):
+    def __init__(self, salapesi, slot, iscrittimax):
         self.salapesi = salapesi
         self.slot = slot
+        self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<WeightRoomSlot(sala = {0}, slot = {1})>".format(self.salapesi, self.slot)
+        return "<WeightRoomSlot(sala = {0}, slot = {1}, iscrittimax = {2})>".format(self.salapesi, self.slot, self.iscrittimax)
 
 
 class Reservation(Base):
