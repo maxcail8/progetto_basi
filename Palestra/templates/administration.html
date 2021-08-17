@@ -97,7 +97,8 @@
         <span id="spanControlli" style="visibility: hidden;">{{controllo}}</span> 
         <span id="spanAccessi" style="visibility: hidden;">{{accessi_settimana}}</span>
         <span id="spanSlot" style="visibility: hidden;">{{slot_giorno}}</span>
-        <span id="spanPersone" style="visibility: hidden;">{{persone_max}}</span>
+        <span id="spanPersoneMax" style="visibility: hidden;">{{persone_max}}</span>
+        <span id="spanPersoneMq" style="visibility: hidden;">{{personemq}}</span>
 
         <h3>Operazioni disponibili</h3>
         <div id="operazioniDisp">
@@ -112,7 +113,7 @@
                     </section>
                     <hr>
                 </form>
-                <form id="form0" action="/edit_information" method="POST">                    
+                <form id="form01" action="/edit_information_accessi" method="POST">                    
                     <section>
                             <div>
                                 <label>Modifica accessi settimanali</label>
@@ -121,6 +122,8 @@
                             <input id="subAccessi" class="button" type="button" value="Modifica" onclick="ModificaAccessi()">
                     </section>
                     <hr>
+                </form>
+                <form id="form02" action="/edit_information_tempo" method="POST">
                     <section>
                             <div>
                                 <label>Modifica tempo allenamento</label>
@@ -129,6 +132,8 @@
                             <input id="subSlot" class="button" type="button" value="Modifica" onclick="ModificaSlot()">
                     </section>
                     <hr>
+                </form>
+                <form id="form03" action="/edit_information_personemax" method="POST">
                     <section>
                             <div>
                                 <label>Modifica numero persone massime</label>
@@ -137,6 +142,8 @@
                             <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
                     </section>
                     <hr>
+                </form>
+                <form id="form04" action="/edit_information_personemq" method="POST">
                     <section>
                             <div>
                                 <label>Modifica numero di metri quadri minimi a persona</label>
@@ -144,7 +151,6 @@
                             </div>
                             <input id="subPersoneMq" class="button" type="button" value="Modifica" onclick="ModificaPersoneMq()">
                     </section>
-
                 </form>
 
                 <hr>
@@ -192,7 +198,10 @@
     </body>
     <script>
         var formChecks = document.getElementById("formChecks");
-        var form0 = document.getElementById("form0");
+        var form01 = document.getElementById("form01");
+        var form02 = document.getElementById("form02");
+        var form03 = document.getElementById("form03");
+        var form04 = document.getElementById("form04");
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
         var form3 = document.getElementById("form3");
@@ -200,7 +209,8 @@
         var spanControlli = document.getElementById("spanControlli");
         var spanAccessi = document.getElementById("spanAccessi");
         var spanSlot = document.getElementById("spanSlot");
-        var spanPersone = document.getElementById("spanPersone");
+        var spanPersoneMax = document.getElementById("spanPersoneMax");
+        var spanPersoneMq = document.getElementById("spanPersoneMq");
         var txtControlli = document.getElementById("txtControlli");
         var txtAccessi = document.getElementById("txtAccessi");
         var txtSlot = document.getElementById("txtSlot");
@@ -211,7 +221,8 @@
             txtControlli.value = spanControlli.textContent;
             txtAccessi.value = spanAccessi.textContent;
             txtSlot.value = spanSlot.textContent;
-            txtPersone.value = spanPersone.textContent;
+            txtPersone.value = spanPersoneMax.textContent;
+            txtPersoneMq.value = spanPersoneMq.textContent;
         }
 
         function Controlla(){
@@ -221,27 +232,32 @@
                 return false;
         }
 
-        function ModificaProcedure(){
+        function ModificaAccessi(){
             if(Controlla())
-                form0.submit();
+                form01.submit();
             else 
                 alert("I dati non sono stati inseritit correttamente");
         }
 
-        function ModificaAccessi(){
-            ModificaProcedure();
-        }
-
         function ModificaSlot(){
-            ModificaProcedure();
+            if(Controlla())
+                form02.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function ModificaPersone(){
-            ModificaProcedure();
+            if(Controlla())
+                form03.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function ModificaPersoneMq(){
-            ModificaProcedure();
+            if(Controlla())
+                form04.submit();
+            else 
+                alert("I dati non sono stati inseritit correttamente");
         }
 
         function EseguiControlli(){

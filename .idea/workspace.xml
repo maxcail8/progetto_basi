@@ -3,9 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
     </list>
     <list id="087465d8-35de-44d8-9ab9-890a118b2644" name="Changes by matte" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -54,6 +55,7 @@
       <workItem from="1628758739222" duration="4032000" />
       <workItem from="1629033953468" duration="5122000" />
       <workItem from="1629124143711" duration="596000" />
+      <workItem from="1629202341992" duration="5517000" />
     </task>
     <servers />
   </component>

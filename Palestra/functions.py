@@ -213,10 +213,31 @@ def set_checks(controlliGiornalieri):
     conn.close()
 
 
-def set_information(accessiSettimana, slotGiorno, personeMax, personeMq):
+def set_information_accessisettimana(accessiSettimana):
     conn = engine.connect()
-    p_query = "UPDATE informazioni SET accessisettimana = %s, slotgiorno = %s, personemaxslot = %s, personemq = %s"
-    conn.engine.execute(p_query, accessiSettimana, slotGiorno, personeMax, personeMq)
+    p_query = "UPDATE informazioni SET accessisettimana = %s"
+    conn.engine.execute(p_query, accessiSettimana)
+    conn.close()
+
+
+def set_information_slotgiorno(slotGiorno):
+    conn = engine.connect()
+    p_query = "UPDATE informazioni SET slotgiorno = %s"
+    conn.engine.execute(p_query, slotGiorno)
+    conn.close()
+
+
+def set_information_personemaxslot(personeMax):
+    conn = engine.connect()
+    p_query = "UPDATE informazioni SET personemaxslot = %s"
+    conn.engine.execute(p_query, personeMax)
+    conn.close()
+
+
+def set_information_personemq(personeMq):
+    conn = engine.connect()
+    p_query = "UPDATE informazioni SET personemq = %s"
+    conn.engine.execute(p_query, personeMq)
     conn.close()
 
 

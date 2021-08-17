@@ -84,8 +84,7 @@ CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
                 SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
                 totale = totale_corsi + totale_sale;
             END LOOP;
-            UPDATE slot SET personemax = 1 + 
-                                        (SELECT COALESCE(SUM(iscrittimax),0) 
+            UPDATE slot SET personemax =(SELECT COALESCE(SUM(iscrittimax),0) 
                                         FROM corsislot WHERE slot=s.id) 
                                         + 
                                         (SELECT COALESCE(SUM(iscrittimax),0)

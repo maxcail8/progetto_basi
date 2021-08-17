@@ -64,6 +64,21 @@ def home():
     return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
 
 
+@app.route('/confirm')
+def confirm():
+    return render_template("confirm.html")
+
+
+@app.route('/wrong')
+def wrong():
+    return render_template("wrong.html")
+
+
+@app.route('/signin')
+def signin():
+    return render_template("signin.html")
+
+
 @app.route('/signup')
 def signup():
     return render_template("signup.html")
@@ -88,14 +103,14 @@ def create_user():
         not_subscriber = classes.NotSubscriber(id=new_id)
         session.add(not_subscriber)
     session.commit()
-    return render_template("confirm.html")
+    return redirect(url_for('confirm'))
 
 
 @app.route('/reserved_private')
 def reserved():
     if current_user.is_authenticated:
-        return private()
-    return render_template("signin.html")
+        return redirect(url_for('private'))
+    return redirect(url_for('signin'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -114,27 +129,25 @@ def login():
                 login_user(user)
                 return redirect(url_for('administration'))
             else:
-                return render_template("wrong.html")
+                return redirect(url_for('wrong'))
         elif real_pwd is not None:
             if p_pass == real_pwd['password']:
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
             else:
-                return render_template("wrong.html")
+                return redirect(url_for('wrong'))
         else:
-            return render_template("wrong.html")
+            return redirect(url_for('wrong'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/private')
 @login_required
 def private():
     if current_user == functions.get_admin_user():
-        info = functions.get_information()
-        resp = make_response(render_template("administration.html", current_user=current_user, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
-        return resp
+        return redirect(url_for('administration'))
     else:
         sub = functions.is_subscriber(current_user.id)
         resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
@@ -161,9 +174,9 @@ def subscribe():
             session.add(subscriber)
         functions.remove_not_subscriber(user_id)
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/info_user', methods=['GET', 'POST'])
@@ -198,12 +211,10 @@ def administration():
     if current_user == functions.get_admin_user():
         info = functions.get_information()
         checks = functions.get_checks()
-        resp = make_response(render_template("administration.html", current_user=current_user, controllo=checks.controllo, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot))
+        resp = make_response(render_template("administration.html", current_user=current_user, controllo=checks.controllo, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot, personemq=info.personemq))
         return resp
     else:
-        sub = functions.is_subscriber(current_user.id)
-        resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
-        return resp
+        return redirect(url_for('private'))
 
 
 @app.route('/edit_checks', methods=['GET', 'POST'])
@@ -212,20 +223,53 @@ def edit_checks():
     if current_user == functions.get_admin_user():
         functions.set_checks(request.form['controlliGiornalieri'])
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
-@app.route('/edit_information', methods=['GET', 'POST'])
+@app.route('/edit_information_accessi', methods=['GET', 'POST'])
 @login_required
-def edit_information():
+def edit_information_accessi():
     if current_user == functions.get_admin_user():
-        functions.set_information(request.form['accessiSettimana'], request.form['tempoAllenamento'], request.form['personeMassime'], request.form['personeMq'])
+        functions.set_information_accessisettimana(request.form['accessiSettimana'])
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
+
+
+@app.route('/edit_information_tempo', methods=['GET', 'POST'])
+@login_required
+def edit_information_tempo():
+    if current_user == functions.get_admin_user():
+        functions.set_information_slotgiorno(request.form['tempoAllenamento'])
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/edit_information_personemax', methods=['GET', 'POST'])
+@login_required
+def edit_information_personemax():
+    if current_user == functions.get_admin_user():
+        functions.set_information_personemaxslot(request.form['personeMassime'])
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/edit_information_personemq', methods=['GET', 'POST'])
+@login_required
+def edit_information_personemq():
+    if current_user == functions.get_admin_user():
+        functions.set_information_personemq(request.form['personeMq'])
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/edit_courses', methods=['GET', 'POST'])
@@ -238,7 +282,7 @@ def edit_courses():
         courses2 = functions.get_courses()
         return render_template("edit_courses.html", trainers=trainers, rooms=rooms, courses=courses, courses2=courses2)
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_course', methods=['GET', 'POST'])
@@ -251,9 +295,9 @@ def add_course():
         session.commit()
         functions.add_course_slot(new_id, request.form['primoGiorno'], request.form['slot'])
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/remove_course', methods=['GET', 'POST'])
@@ -261,9 +305,9 @@ def add_course():
 def remove_course():
     if current_user == functions.get_admin_user():
         functions.remove_course(request.form['idCorso'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/update_course', methods=['GET', 'POST'])
@@ -275,7 +319,7 @@ def update_course():
         rooms = functions.get_rooms()
         return render_template("update_course.html", course=course, trainers=trainers, rooms=rooms)
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/update_course_conf', methods=['GET', 'POST'])
@@ -283,9 +327,9 @@ def update_course():
 def update_course_conf():
     if current_user == functions.get_admin_user():
         functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/edit_rooms', methods=['GET', 'POST'])
@@ -296,7 +340,7 @@ def edit_rooms():
         rooms2 = functions.get_rooms()
         return render_template("edit_rooms.html", rooms=rooms, rooms2=rooms2)
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_room', methods=['GET', 'POST'])
@@ -307,9 +351,9 @@ def add_room():
         room = classes.Room(id=new_id, nome=request.form['nome'], dimensione=request.form['dim'])
         session.add(room)
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/remove_room', methods=['GET', 'POST'])
@@ -317,9 +361,9 @@ def add_room():
 def remove_room():
     if current_user == functions.get_admin_user():
         functions.remove_room(request.form['idStanza'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/update_room', methods=['GET', 'POST'])
@@ -327,9 +371,9 @@ def remove_room():
 def update_room():
     if current_user == functions.get_admin_user():
         functions.update_room(request.form['idStanza'], request.form['nome'], request.form['dim'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/edit_weight_rooms', methods=['GET', 'POST'])
@@ -340,7 +384,7 @@ def edit_weight_rooms():
         weight_rooms2 = functions.get_weight_rooms()
         return render_template("edit_weight_rooms.html", weight_rooms=weight_rooms, weight_rooms2=weight_rooms2)
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_weight_room', methods=['GET', 'POST'])
@@ -354,9 +398,9 @@ def add_weight_room():
         weight_room = classes.WeightRoom(id=new_id, dimensione=dimensione, iscrittimax=iscrittimax)
         session.add(weight_room)
         session.commit()
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/remove_weight_room', methods=['GET', 'POST'])
@@ -364,9 +408,9 @@ def add_weight_room():
 def remove_weight_room():
     if current_user == functions.get_admin_user():
         functions.remove_weight_room(request.form['idSala'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
 
 
 @app.route('/update_weight_room', methods=['GET', 'POST'])
@@ -374,6 +418,6 @@ def remove_weight_room():
 def update_weight_room():
     if current_user == functions.get_admin_user():
         functions.update_weight_room(request.form['idSala'], request.form['dim'])
-        return render_template("confirm.html")
+        return redirect(url_for('confirm'))
     else:
-        return render_template("wrong.html")
+        return redirect(url_for('wrong'))
