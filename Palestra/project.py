@@ -60,7 +60,7 @@ def load_user(user_id):
 @app.route('/')
 def home():
     i = datetime.now()
-    mydate = classes.MyDate()
+    mydate = classes.MyDate(i.year, i.month, i.day)
     return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
 
 
@@ -188,9 +188,8 @@ def info_user():
 @app.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-    i = datetime.now()
-    mydate = classes.MyDate()
-    return render_template("calendar.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
+    mydate = classes.MyDate(request.form['anno'], request.form['mese'], request.form['giorno'])
+    return render_template("calendar.html", year=request.form['anno'], month=request.form['mese'], day=request.form['giorno'], first_column=mydate.first_column, last_day=mydate.last_day)
 
 
 @app.route('/logout')

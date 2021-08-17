@@ -192,8 +192,19 @@
                     cal += "<td ";
                     value = DataCorretta(annoSelezionato, meseSelezionato, i+1);
                     cal += "value =\"" + value + "\"";
-                    console.log(value);
-                    cal += " onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+
+                    var today = new Date();
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    var mm = String(today.getMonth()+1).padStart(2, '0'); //January is 0!
+                    var yyyy = today.getFullYear();
+                    today = yyyy + '-' + mm + '-' + dd;   
+                    
+                    if(today.localeCompare(value)==0)
+                        cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                    else if(today.localeCompare(value)>0)
+                        cal += " style='background-color:#696969!important;' onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                    else
+                        cal += " onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
                     giornoSettimana = GiornoSettimana(annoSelezionato, meseSelezionato, i+1);
                     cal += giornoSettimana + "</td>";
                 }

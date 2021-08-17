@@ -222,12 +222,8 @@
         }
 
         function ControllaConferma(){
-            if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaAbbonamento() && ControllaPwd()){
-                console.log("nome: " + txtNome.value + ", cognome: " + txtCognome.value + ", data nascita: " + txtData.value + ", email: " + txtEmail.value + ", username: " + txtUsername.value + ", pwd: " + txtPwd.value)
-                console.log("abbonamento: " + selectAbbonamento.value + ", durata: " + selectDurata.value)
-                alert("wait");
+            if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaAbbonamento() && ControllaPwd())
                 form0.submit();
-            }
             else
                 alert("I dati non sono stati inseritit correttamente");
         }

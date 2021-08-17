@@ -137,6 +137,15 @@
                         <div>
                             <label>Effettua una prenotazione</label>
                         </div>
+                        <select name="anno" id="spanAnno" style="visibility: hidden;">
+                            <option></option>
+                        </select>
+                        <select name="mese" id="spanMese" style="visibility: hidden;">
+                            <option></option>
+                        </select>
+                        <select name="giorno" id="spanGiorno" style="visibility: hidden;">
+                            <option></option>
+                        </select>
                         <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
                     </form>
                 </section>
@@ -192,6 +201,10 @@
     <script>
         var span0 = document.getElementById("span0");
         var span1 = document.getElementById("span1");
+        var spanAnno = document.getElementById("spanAnno");
+        var spanMese = document.getElementById("spanMese");
+        var spanGiorno = document.getElementById("spanGiorno");
+        
         var selectAbbonamento = document.getElementById("select0");
         var selectDurata = document.getElementById("select1");
         var cbxAbbonamento = document.getElementById("abbonamento");
@@ -202,6 +215,17 @@
         var spanIdUtente = document.getElementById("spanIdUtente");
 
         document.body.onload = function(){
+            var data_corrente = new Date();
+            var opt = spanAnno.getElementsByTagName("option");
+            opt[0].value = data_corrente.getFullYear();
+            opt = spanMese.getElementsByTagName("option");
+            opt[0].value = data_corrente.getMonth()+1;
+            opt = spanGiorno.getElementsByTagName("option");
+            opt[0].value = data_corrente.getDate();
+            
+            console.log(spanAnno.value + ", " + spanMese.value + ", " + spanGiorno.value);
+            alert();
+
             ControllaCheck();
         }
 
@@ -214,6 +238,8 @@
         }
 
         function PrenotaCalendario(){
+            console.log("anno: " + spanAnno.value + ", mese: " + spanMese.value + ", giorno: " + spanGiorno.value);
+            alert();
             calendario.submit();
         }
 
