@@ -137,6 +137,7 @@
                         <div>
                             <label>Effettua una prenotazione</label>
                         </div>
+                        <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
                         <select name="anno" id="spanAnno" style="visibility: hidden;">
                             <option></option>
                         </select>
@@ -146,7 +147,6 @@
                         <select name="giorno" id="spanGiorno" style="visibility: hidden;">
                             <option></option>
                         </select>
-                        <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
                     </form>
                 </section>
                 <hr>
@@ -222,9 +222,6 @@
             opt[0].value = data_corrente.getMonth()+1;
             opt = spanGiorno.getElementsByTagName("option");
             opt[0].value = data_corrente.getDate();
-            
-            console.log(spanAnno.value + ", " + spanMese.value + ", " + spanGiorno.value);
-            alert();
 
             ControllaCheck();
         }
@@ -238,8 +235,6 @@
         }
 
         function PrenotaCalendario(){
-            console.log("anno: " + spanAnno.value + ", mese: " + spanMese.value + ", giorno: " + spanGiorno.value);
-            alert();
             calendario.submit();
         }
 

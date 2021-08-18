@@ -41,6 +41,14 @@ first_id_client = 100
 
 # Functions
 # GETTERS
+def get_subscriber_by_id(id):
+    conn = engine.connect()
+    p_query = "SELECT * FROM abbonati WHERE id = %s"
+    subscriber = conn.engine.execute(p_query, id).first()
+    conn.close()
+    return classes.Subscriber(subscriber.id, subscriber.abbonamento, subscriber.datafineabbonamento, subscriber.datafineabbonamento, subscriber.durata)
+
+
 def get_user_by_email(email):
     conn = engine.connect()
     p_query = "SELECT * FROM utenti WHERE email = %s"
@@ -121,6 +129,14 @@ def get_subscription(subscription):
     return classes.Subscription(sub.id, sub.tipo, sub.costo)
 
 
+def get_subscription_by_id(id):
+    conn = engine.connect()
+    p_query = "SELECT * FROM abbonamenti WHERE id = %s"
+    sub = conn.engine.execute(p_query, id).first()
+    conn.close()
+    return classes.Subscription(sub.id, sub.tipo, sub.costo)
+
+
 def get_courses():
     conn = engine.connect()
     p_query = "SELECT * FROM corsi ORDER BY id ASC"
@@ -191,6 +207,36 @@ def get_checks():
     checks = conn.engine.execute(p_query).first()
     conn.close()
     return classes.Checks(checks.controllo)
+
+
+def get_slot_from_date(data):
+    conn = engine.connect()
+    p_query = "SELECT * FROM slot WHERE giorno = DATE %s"
+    slots = conn.engine.execute(p_query, data)
+    conn.close()
+    return slots
+
+
+def get_slot_weight_rooms(idSlot, subscription):
+    if subscription=='corsi':
+        return None
+    else:
+        conn = engine.connect()
+        p_query = "SELECT salapesi FROM salapesislot WHERE slot= %s"
+        weightrooms = conn.engine.execute(p_query, idSlot)
+        conn.close()
+        return weightrooms
+
+
+def get_slot_courses(idSlot, subscription):
+    if subscription=='sala_pesi':
+        return None
+    else:
+        conn = engine.connect()
+        p_query = "SELECT corso FROM corsislot WHERE slot= %s"
+        courses = conn.engine.execute(p_query, idSlot)
+        conn.close()
+        return courses
 
 
 # BOOLEANS

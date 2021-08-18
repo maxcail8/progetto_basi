@@ -108,19 +108,22 @@
         <span id="firstColumn" style="visibility: hidden;">{{first_column}}</span>
         <span id="lastDay" style="visibility: hidden;">{{last_day}}</span>
 
-        <form id="calendar" name="calendar" action="/calendar" method="POST" style="visibility: hidden;">
-            <span id="dataPassata" name="datapassata"></span>
+        <form id="calendar" name="calendar" action="/book_day" method="POST" style="visibility: hidden;">
+            <select id="dataPassata" name="datapassata">
+                <option selected></option>
+            </select>
         </form>
 
         <section id="secS">
-            <form action="/" name="changeCal" id="changeCal">
+            <form action="/calendar" name="changeCal" id="changeCal" method="POST">
                 <div>Mese e Anno</div>
-                <select id="selMese" name="month" onchange="SubmitChange()">
+                <select id="selMese" name="mese" onchange="SubmitChange()">
                 </select>
-                <select id="selAnno" name="year" onchange="SubmitChange()">
+                <select id="selAnno" name="anno" onchange="SubmitChange()">
                 </select>
-                <span id="first_column" name="first_column" style="visibility: hidden;"></span>
-                <span id="last_day" name="last_day" style="visibility: hidden;"></span>
+                <select id="selGiorno" name="giorno" onchange="SubmitChange()" style="visibility: hidden;">
+                    <option value="1" selected></option>
+                </select>
             </form>
         </section>
         
@@ -141,6 +144,7 @@
         var spanAnno = document.getElementById("spanAnno");
         var selMese = document.getElementById("selMese");
         var selAnno = document.getElementById("selAnno");
+        var selGiorno = document.getElementById("selGiorno");
         var dataPassata = document.getElementById("dataPassata");
         var calendar = document.getElementById("calendar");
         var first_column = document.getElementById("first_column");
@@ -152,6 +156,12 @@
         var lastDay = document.getElementById("lastDay").textContent;
         var meseSelezionato = spanMese.textContent;
         var annoSelezionato = spanAnno.textContent;
+
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth()+1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
 
         document.body.onload = function(){
             var tabella = document.getElementById("tabella");
@@ -192,19 +202,15 @@
                     cal += "<td ";
                     value = DataCorretta(annoSelezionato, meseSelezionato, i+1);
                     cal += "value =\"" + value + "\"";
-
-                    var today = new Date();
-                    var dd = String(today.getDate()).padStart(2, '0');
-                    var mm = String(today.getMonth()+1).padStart(2, '0'); //January is 0!
-                    var yyyy = today.getFullYear();
-                    today = yyyy + '-' + mm + '-' + dd;   
+                    
+                    var str = new String(value);
                     
                     if(today.localeCompare(value)==0)
-                        cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                        cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                     else if(today.localeCompare(value)>0)
-                        cal += " style='background-color:#696969!important;' onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                        cal += " style='background-color:#696969!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                     else
-                        cal += " onclick=\"SubmitTestCalendar(this.value);\"><span>" + (i+1) + "</span><br>";
+                        cal += " onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                     giornoSettimana = GiornoSettimana(annoSelezionato, meseSelezionato, i+1);
                     cal += giornoSettimana + "</td>";
                 }
@@ -258,12 +264,16 @@
             return giornoSet;
         }
 
-        function SubmitTestCalendar(){
-            alert("Per effettuare le prenotazioni accedi all'area riservata");
+        function SubmitTestCalendar(value){
+            if(today.localeCompare(value)>0)
+                alert("Impossibile effettuare prenotazioni nella data selezionata: " + value);
+            else
+                SubmitData(value);
         }
 
         function SubmitData(value){
-            dataPassata.value = value;
+            opt = dataPassata.getElementsByTagName("option");
+            opt[0].value = value;
             calendar.submit();
         }
 
@@ -277,10 +287,6 @@
         }
 
         function SubmitChange(){
-            var data = new Date(selAnno.value, selMese.value, 1);
-            var giorni = 7 - data.getDay();
-            first_column.value = giorni;
-            last_day.value = GiorniMese(selMese.value);
             changeCal.submit();
         }
     </script>
