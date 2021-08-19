@@ -222,7 +222,7 @@ def get_slot_weight_rooms(idSlot, subscription):
         return None
     else:
         conn = engine.connect()
-        p_query = "SELECT salapesi FROM salapesislot WHERE slot= %s"
+        p_query = "SELECT * FROM salepesi WHERE id IN (SELECT salapesi FROM salapesislot WHERE slot= %s)"
         weightrooms = conn.engine.execute(p_query, idSlot)
         conn.close()
         return weightrooms
@@ -233,7 +233,7 @@ def get_slot_courses(idSlot, subscription):
         return None
     else:
         conn = engine.connect()
-        p_query = "SELECT corso FROM corsislot WHERE slot= %s"
+        p_query = "SELECT * FROM corsi WHERE id IN (SELECT corso FROM corsislot WHERE slot= %s)"
         courses = conn.engine.execute(p_query, idSlot)
         conn.close()
         return courses
@@ -341,6 +341,13 @@ def remove_not_subscriber(idCliente):
 # ADD
 def add_course_slot(idCorso, giorno, orario):
     p_query = "CALL aggiungi_corsi_slot(" + str(idCorso) + ", " + str(giorno) + ", TIME '" + str(orario) + "')"
+    session.execute(p_query)
+    session.commit()
+    session.close()
+
+
+def add_weight_room_slot(idSala):
+    p_query = "CALL aggiungi_salapesi_slot(" + str(idSala) + ")"
     session.execute(p_query)
     session.commit()
     session.close()

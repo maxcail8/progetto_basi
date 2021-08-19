@@ -38,16 +38,17 @@ INSERT INTO stanze(nome, dimensione) VALUES ('Stanza D', 60);
 
 
 --salepesi
-INSERT INTO salepesi VALUES (0, 70, 70/2);
-INSERT INTO salepesi(dimensione, iscrittimax) VALUES (80, 80/2);
+/*INSERT INTO salepesi VALUES (0, 70, 70/2);
+INSERT INTO salepesi(dimensione, iscrittimax) VALUES (80, 80/2);*/
 
 
 --corsi
+/*
 INSERT INTO corsi VALUES (0, 'pilates', 10, 2, 0);
 INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('yoga', 20, 1, 1);
 INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('crossfit', 30, 2, 2);
 INSERT INTO corsi(nome, iscrittimax, istruttore, stanza) VALUES ('power-lifting', 30, 1, 3);
-
+*/
 
 --sedute (SUBITO O DOPO)
 

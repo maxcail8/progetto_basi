@@ -416,6 +416,8 @@ def add_weight_room():
         weight_room = classes.WeightRoom(id=new_id, dimensione=dimensione, iscrittimax=iscrittimax)
         session.add(weight_room)
         session.commit()
+        functions.add_weight_room_slot(new_id)
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))

@@ -12,11 +12,11 @@ CREATE PROCEDURE aggiungi_corsi_slot(idcorso INT, giorno INT, slot TIME) AS $$
     DECLARE cs_iscrittimax INT;
     BEGIN
         SELECT COALESCE(MAX(id),0) INTO seduta_c FROM sedute;
+        SELECT iscrittimax INTO cs_iscrittimax FROM corsi where id=idcorso;
         WHILE giorno_buffer < giorno_finale LOOP
             SELECT EXTRACT(DOW FROM giorno_buffer) INTO giorno_settimana;
             IF (giorno_settimana = giorno) THEN
                 SELECT s.id INTO slot_c FROM slot s WHERE s.giorno = giorno_buffer AND s.orainizio = slot;
-                SELECT iscrittimax INTO cs_iscrittimax FROM corsi where id=idcorso;
                 INSERT INTO corsislot VALUES (idcorso, slot_c, cs_iscrittimax);
                 seduta_c = seduta_c + 1;
                 INSERT INTO sedute(id, corso, dataseduta) VALUES(seduta_c, idcorso, giorno_buffer+slot);
@@ -24,6 +24,29 @@ CREATE PROCEDURE aggiungi_corsi_slot(idcorso INT, giorno INT, slot TIME) AS $$
             ELSE 
                 giorno_buffer = giorno_buffer + 1;
             END IF;
+        END LOOP;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+
+
+
+
+
+
+DROP PROCEDURE IF EXISTS aggiungi_salapesi_slot(idsala INT);
+CREATE PROCEDURE aggiungi_salapesi_slot(idsala INT) AS $$
+    DECLARE giorno_finale DATE = CURRENT_DATE + 30;
+    DECLARE giorno_buffer DATE = CURRENT_DATE + 1;
+    DECLARE sps_iscrittimax INT;
+    DECLARE s slot%rowtype;
+    BEGIN
+        SELECT iscrittimax INTO sps_iscrittimax FROM salepesi where id=idsala;
+        WHILE giorno_buffer < giorno_finale LOOP
+            FOR s IN SELECT * FROM slot WHERE giorno=giorno_buffer LOOP
+                INSERT INTO salapesislot VALUES(idsala, s.id, sps_iscrittimax);
+            END LOOP;
+            giorno_buffer = giorno_buffer + 1;
         END LOOP;
     END;
 $$ LANGUAGE 'plpgsql';
@@ -72,25 +95,71 @@ CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
     DECLARE totale_corsi INT;
     DECLARE totale_sale INT;
     DECLARE s slot%rowtype;
+    DECLARE i INT = 0;
+    DECLARE guardia_corsi BOOLEAN = TRUE;
+    DECLARE guardia_salepesi BOOLEAN = TRUE;
     BEGIN
-        FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
-            SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
-            SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
-            totale = totale_corsi + totale_sale;
-            WHILE totale > NEW.personemaxslot LOOP
-                UPDATE corsislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
-                UPDATE salapesislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+        IF (NEW.personemaxslot <= (SELECT personemaxslot FROM informazioni)) THEN
+            FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
                 SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
                 SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
                 totale = totale_corsi + totale_sale;
-            END LOOP;
-            UPDATE slot SET personemax =(SELECT COALESCE(SUM(iscrittimax),0) 
-                                        FROM corsislot WHERE slot=s.id) 
-                                        + 
-                                        (SELECT COALESCE(SUM(iscrittimax),0)
-                                        FROM salapesislot WHERE slot=s.id) 
-                        WHERE id=s.id;
-        END LOOP;  
+                WHILE totale > NEW.personemaxslot LOOP
+                    UPDATE corsislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+                    UPDATE salapesislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+                    SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
+                    SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
+                    totale = totale_corsi + totale_sale;
+                END LOOP;
+                UPDATE slot SET personemax = 1 + (SELECT COALESCE(SUM(iscrittimax),0) 
+                                            FROM corsislot WHERE slot=s.id) 
+                                            + 
+                                            (SELECT COALESCE(SUM(iscrittimax),0)
+                                            FROM salapesislot WHERE slot=s.id) 
+                            WHERE id=s.id;
+            END LOOP;  
+        ELSE 
+            FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
+                SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
+                SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
+                totale = totale_corsi + totale_sale;
+                WHILE (totale < NEW.personemaxslot AND (guardia_corsi=TRUE OR guardia_salepesi=TRUE)) LOOP
+                    IF (i%2=0 AND guardia_corsi=TRUE) THEN
+                        UPDATE corsislot SET iscrittimax = iscrittimax + 1 WHERE slot=s.id;
+                        SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
+                        SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
+                        totale = totale_corsi + totale_sale;
+                        IF(totale >= NEW.personemaxslot) THEN
+                            UPDATE corsislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+                            guardia_corsi = FALSE;
+                        END IF;
+                    ELSE
+                        IF (i%2=1 AND guardia_salepesi=TRUE) THEN
+                            UPDATE salapesislot SET iscrittimax = iscrittimax + 1 WHERE slot=s.id;
+                            SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
+                            SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
+                            totale = totale_corsi + totale_sale;
+                            IF(totale >= NEW.personemaxslot) THEN
+                                UPDATE salapesislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+                                guardia_salepesi = FALSE;
+                            END IF;
+                        ELSE 
+                            totale = NEW.personemaxslot;
+                            guardia_corsi = FALSE;
+                            guardia_salepesi = FALSE;
+                        END IF;                        
+                    END IF;
+                    i = i + 1;
+                END LOOP;
+                UPDATE slot SET personemax =(SELECT COALESCE(SUM(iscrittimax),0) 
+                                            FROM corsislot WHERE slot=s.id) 
+                                            + 
+                                            (SELECT COALESCE(SUM(iscrittimax),0)
+                                            FROM salapesislot WHERE slot=s.id) 
+                            WHERE id=s.id;
+            END LOOP;  
+        END IF;
+
         RETURN NEW;      
     END;
 $$ LANGUAGE 'plpgsql';
@@ -182,9 +251,13 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
     DECLARE idSlot INT;
     DECLARE idSedute INT;
     DECLARE c corsi%rowtype;
+    DECLARE sp salepesi%rowtype;
+    DECLARE s slot%rowtype;
     DECLARE data_tmp TIMESTAMP;
     DECLARE data_buff TIMESTAMP;
     DECLARE cs_iscrittimax INT;
+    DECLARE sps_iscrittimax INT;
+    DECLARE personemaxslot_buffer INT;
     BEGIN
         --check_data_fine_abbonamento
         INSERT INTO nonabbonati (id) SELECT id FROM abbonati WHERE datafineabbonamento < CURRENT_DATE;
@@ -212,14 +285,16 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
         idSedute = idSedute + 1;
         FOR c IN SELECT * FROM corsi ORDER BY id LOOP
             FOR i IN 0..6 LOOP
-                SELECT s.dataseduta INTO data_tmp FROM sedute s WHERE s.corso=c.id AND i=(SELECT EXTRACT(DOW FROM s.dataseduta));
+                SELECT se.dataseduta INTO data_tmp FROM sedute se WHERE se.corso=c.id AND i=(SELECT EXTRACT(DOW FROM se.dataseduta));
                 IF (data_tmp IS NOT NULL) THEN
                     FOR j IN 0..3 LOOP
                         IF (NOT EXISTS(SELECT * FROM sedute se WHERE se.corso=c.id AND se.dataseduta=(data_tmp + (INTERVAL '1 day' * 7*j)))) THEN
                             INSERT INTO sedute VALUES(idSedute, c.id, data_tmp + (INTERVAL '1 day' * 7*j)); 
                             SELECT dataseduta INTO data_buff FROM sedute WHERE id=idSedute;
                             SELECT id INTO idSlot FROM slot WHERE giorno=(data_buff::date);
-                            SELECT cs.iscrittimax INTO cs_iscrittimax FROM corsislot cs JOIN slot s ON cs.slot=s.id WHERE cs.corso=c.id AND s.giorno > CURRENT_DATE - 7 AND i=(SELECT EXTRACT(DOW FROM s.giorno));
+                            SELECT cs.iscrittimax INTO cs_iscrittimax 
+                                                    FROM corsislot cs JOIN slot s ON cs.slot=s.id 
+                                                    WHERE cs.corso=c.id AND s.giorno > CURRENT_DATE - 7 AND i=(SELECT EXTRACT(DOW FROM s.giorno));
                             INSERT INTO corsislot VALUES(c.id, idSlot, cs_iscrittimax);
                             idSedute = idSedute + 1;
                         END IF;
@@ -227,6 +302,28 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
                 END IF;
             END LOOP;    
         END LOOP;
+        --check_aggiungi_sapalesi_slot
+        /*FOR sp IN SELECT * FROM salepesi LOOP
+            FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE + 7 AND giorno < CURRENT_DATE + 30 LOOP
+                IF (NOT EXISTS(SELECT * FROM salapesislot WHERE salapesi=sp.id AND slot=s.id)) THEN
+                    SELECT sps.iscrittimax INTO sps_iscrittimax
+                                            FROM salapesislot sps JOIN slot sl ON sps.slot=sl.id
+                                            WHERE sl.giorno = s.giorno - 7 AND sl.orainizio=s.orainizio;
+                    INSERT INTO salapesislot VALUES(sp.id, s.id, sps_iscrittimax);
+                END IF;
+            END LOOP;
+        END LOOP;*/
+        FOR sp IN SELECT * FROM salepesi LOOP
+            FOR i IN 1..30 LOOP
+                FOR s IN SELECT * FROM slot WHERE s.giorno = CURRENT_DATE + i LOOP
+                    IF (NOT EXISTS(SELECT * FROM salapesislot WHERE salapesi=sp.id AND slot=s.id)) THEN
+                        INSERT INTO salapesislot VALUES(sp.id, s.id, sp.iscrittimax);
+                    END IF;
+                END LOOP;
+            END LOOP;
+        END LOOP;
+        --SELECT personemaxslot INTO personemaxslot_buffer FROM informazioni;
+        --UPDATE informazioni SET personemaxslot = personemaxslot_buffer;
 
         RETURN NEW;
     END;
