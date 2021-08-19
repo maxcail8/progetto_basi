@@ -239,6 +239,14 @@ def get_slot_courses(idSlot, subscription):
         return courses
 
 
+def get_sitting_id(idSlot, idCorso):
+    conn = engine.connect()
+    p_query = "SELECT id FROM sedute WHERE (dataseduta::date)=(SELECT giorno FROM slot WHERE id = %s) AND corso = %s"
+    id_sitting = conn.engine.execute(p_query, idSlot, idCorso).first()
+    conn.close()
+    return id_sitting
+
+
 # BOOLEANS
 def is_subscriber(user_id):
     conn = engine.connect()

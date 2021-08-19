@@ -211,6 +211,28 @@ def book_slot():
         return render_template("book_slot.html", idSlot=idSlot, weight_rooms=weight_rooms, courses=courses)
 
 
+@app.route('/book_weight_room', methods=['GET', 'POST'])
+@login_required
+def book_weight_room():
+    idSlot = request.form['idSlot']
+    reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
+    session.add(reservation)
+    session.commit()
+    return redirect(url_for('confirm'))
+
+
+@app.route('/book_course', methods=['GET', 'POST'])
+@login_required
+def book_course():
+    idSlot = request.form['idSlot']
+    idSeduta = functions.get_sitting_id(idSlot, request.form['idCorso'])
+    reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
+    subscriber_session = classes.SubscriberSession(abbonato=current_user.id, seduta=idSeduta)
+    session.add(subscriber_session)
+    session.add(reservation)
+    session.commit()
+    return redirect(url_for('confirm'))
+
 @app.route('/logout')
 @login_required
 def logout():

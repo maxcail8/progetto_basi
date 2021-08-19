@@ -111,7 +111,7 @@
         <h1>Prenotazioni giorno</h1>
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/" method="POST">
+                <form id="form0" action="/book_weight_room" method="POST">
                     <section>
                         <div>
                             <label>Seleziona sala pesi</label>
@@ -121,12 +121,15 @@
                                     <option>{{ w.id+1 }}° sala: {{ w.dimensione }}</option>
                                 {% endfor %}
                             </select>
+                            <select id="selectSlot0" name="idSlot" style="visibility: hidden;">
+                                <option>{{ idSlot }}</option>
+                            </select>
                         </div>
                         <input class="button" type="button" value="Prenota" onclick="PrenotaSala()">
                     </section>
                 </form>
                 <hr>
-                <form id="form1" action="/" method="POST">
+                <form id="form1" action="/book_course" method="POST">
                     <section>
                         <div>
                             <label>Seleziona corso</label>
@@ -135,6 +138,9 @@
                                 {% for c in courses %}
                                     <option>{{ c.id+1 }}° corso: {{ c.nome }}</option>
                                 {% endfor %}
+                            </select>
+                            <select id="selectSlot1" name="idSlot" style="visibility: hidden;">
+                                <option>{{ idSlot }}</option>
                             </select>
                         </div>
                         <input class="button" type="button" value="Prenota" onclick="PrenotaCorso()">
@@ -148,7 +154,9 @@
         var form0 = document.getElementById("form0");
         var form1 = document.getElementById("form1");
         var select0 = document.getElementById("select0");
+        var selectSlot0 = document.getElementById("selectSlot0");
         var select1 = document.getElementById("select1");
+        var selectSlot1 = document.getElementById("selectSlot1");
         
         document.body.onload = function(){
             var options0 = select0.getElementsByTagName("option");
@@ -156,10 +164,16 @@
             for(var i = 0; i < options0.length; i++)
                 options0[i].value = options0[i].textContent.substr(0,  options0[i].textContent.indexOf(" "));
 
+            var optionsSpan0 = selectSlot0.getElementsByTagName("option");
+            optionsSpan0[0].value = optionsSpan0[i].textContent;
+
             var options1 = select1.getElementsByTagName("option");
             var spans1 = select1.getElementsByTagName("span");
             for(var i = 0; i < options1.length; i++)
                 options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" "));
+
+            var optionsSpan1 = selectSlot1.getElementsByTagName("option");
+            optionsSpan1[0].value = optionsSpan1[i].textContent;
         }
 
         function PrenotaSala(){

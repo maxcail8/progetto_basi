@@ -86,6 +86,29 @@ EXECUTE FUNCTION trigger_personemq();
 
 
 
+DROP TRIGGER IF EXISTS t_iscrittimax_corso_stanza ON corsi CASCADE;
+DROP FUNCTION IF EXISTS trigger_iscrittimax_corso_stanza();
+CREATE FUNCTION trigger_iscrittimax_corso_stanza() RETURNS trigger AS $$
+    DECLARE pmq INT;
+    BEGIN
+        SELECT personemq INTO pmq FROM informazioni;
+        UPDATE corsi c SET iscrittimax = (SELECT s.dimensione
+                                            FROM stanze s
+                                            WHERE c.stanza=s.id) / pmq;
+        RETURN NULL;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER t_iscrittimax_corso_stanza AFTER INSERT ON corsi
+FOR EACH ROW
+EXECUTE FUNCTION trigger_iscrittimax_corso_stanza();
+
+
+
+
+
+
+
 
 
 DROP TRIGGER IF EXISTS t_personemaxslot ON informazioni CASCADE;

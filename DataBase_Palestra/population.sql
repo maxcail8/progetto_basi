@@ -105,4 +105,5 @@ delete from altri;
 delete from istruttori;
 delete from clienti;
 delete from utenti;
+select * from prenotazioni p join slot s ON p.slot=s.id
 */
