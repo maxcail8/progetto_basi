@@ -259,6 +259,43 @@ def is_subscriber(user_id):
         return False
 
 
+def is_reserved(user_id, idSlot):
+    conn = engine.connect()
+    p_query = "SELECT * FROM prenotazioni WHERE abbonato = %s AND slot = %s"
+    res = conn.engine.execute(p_query, user_id, idSlot).first()
+    conn.close()
+    if res is not None:
+        return True
+    else:
+        return False
+
+
+def has_exceeded_accessisettimana(user_id, giorno):
+    conn = engine.connect()
+    p_query1 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno >= %s - (SELECT EXTRACT(DOW FROM DATE %s))::INTEGER AND s.giorno < %s + (6 - (SELECT EXTRACT(DOW FROM DATE %s))::INTEGER)"
+    res1 = conn.engine.execute(p_query1, user_id, giorno, giorno, giorno, giorno).first()
+    p_query2 = "SELECT accessisettimana FROM informazioni"
+    res2 = conn.engine.execute(p_query2).first()
+    conn.close()
+    if res1 >= res2:
+        return True
+    else:
+        return False
+
+
+def has_exceeded_slotgiorno(user_id, giorno):
+    conn = engine.connect()
+    p_query1 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno = %s"
+    res1 = conn.engine.execute(p_query1, user_id, giorno).first()
+    p_query2 = "SELECT slotgiorno FROM informazioni"
+    res2 = conn.engine.execute(p_query2).first()
+    conn.close()
+    if res1 >= res2:
+        return True
+    else:
+        return False
+
+
 # UPDATE
 def set_checks(controlliGiornalieri):
     conn = engine.connect()

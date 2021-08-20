@@ -188,27 +188,37 @@ def info_user():
 @app.route('/calendar', methods=['GET', 'POST'])
 @login_required
 def calendar():
-    mydate = classes.MyDate(request.form['anno'], request.form['mese'], request.form['giorno'])
-    return render_template("calendar.html", year=request.form['anno'], month=request.form['mese'], day=request.form['giorno'], first_column=mydate.first_column, last_day=mydate.last_day)
+    if functions.is_subscriber(current_user.id):
+        mydate = classes.MyDate(request.form['anno'], request.form['mese'], request.form['giorno'])
+        return render_template("calendar.html", year=request.form['anno'], month=request.form['mese'], day=request.form['giorno'], first_column=mydate.first_column, last_day=mydate.last_day)
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/book_day', methods=['GET', 'POST'])
 @login_required
 def book_day():
-    slots = functions.get_slot_from_date(request.form['datapassata'])
-    return render_template("book_day.html", slots=slots, data=request.form['datapassata'])
+    if not functions.has_exceeded_accessisettimana(current_user.id, request.form['datapassata']):
+        slots = functions.get_slot_from_date(request.form['datapassata'])
+        return render_template("book_day.html", slots=slots, data=request.form['datapassata'])
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/book_slot', methods=['GET', 'POST'])
 @login_required
 def book_slot():
     idSlot = request.form['idSlot']
-    sub = functions.get_subscriber_by_id(current_user.id)
-    if (sub is not None):
-        subscription = functions.get_subscription_by_id(sub.abbonamento)
-        weight_rooms = functions.get_slot_weight_rooms(idSlot, subscription)
-        courses = functions.get_slot_courses(idSlot, subscription)
-        return render_template("book_slot.html", idSlot=idSlot, weight_rooms=weight_rooms, courses=courses)
+    if not functions.is_reserved(current_user.id, idSlot):
+        sub = functions.get_subscriber_by_id(current_user.id)
+        if sub is not None:
+            subscription = functions.get_subscription_by_id(sub.abbonamento)
+            weight_rooms = functions.get_slot_weight_rooms(idSlot, subscription)
+            courses = functions.get_slot_courses(idSlot, subscription)
+            return render_template("book_slot.html", idSlot=idSlot, weight_rooms=weight_rooms, courses=courses)
+    else:
+        return redirect(url_for('wrong'))
+
 
 
 @app.route('/book_weight_room', methods=['GET', 'POST'])

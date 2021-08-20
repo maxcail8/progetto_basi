@@ -86,6 +86,10 @@ EXECUTE FUNCTION trigger_personemq();
 
 
 
+
+
+
+
 DROP TRIGGER IF EXISTS t_iscrittimax_corso_stanza ON corsi CASCADE;
 DROP FUNCTION IF EXISTS trigger_iscrittimax_corso_stanza();
 CREATE FUNCTION trigger_iscrittimax_corso_stanza() RETURNS trigger AS $$
