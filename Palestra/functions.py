@@ -272,15 +272,23 @@ def is_reserved(user_id, idSlot):
 
 def has_exceeded_accessisettimana(user_id, giorno):
     conn = engine.connect()
-    p_query1 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno >= %s - (SELECT EXTRACT(DOW FROM DATE %s))::INTEGER AND s.giorno < %s + (6 - (SELECT EXTRACT(DOW FROM DATE %s))::INTEGER)"
-    res1 = conn.engine.execute(p_query1, user_id, giorno, giorno, giorno, giorno).first()
-    p_query2 = "SELECT accessisettimana FROM informazioni"
-    res2 = conn.engine.execute(p_query2).first()
-    conn.close()
-    if res1 >= res2:
-        return True
+    p_query1 = "SELECT EXTRACT(DOW FROM DATE %s)"
+    res1 = conn.engine.execute(p_query1, giorno).first()
+    if int(str(res1)[1:2]) > 0:
+        p_query2 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno > DATE %s - %s AND s.giorno <= DATE %s + (7 - %s)"
+        res2 = conn.engine.execute(p_query2, user_id, giorno, int(str(res1)[1:2]), giorno, int(str(res1)[1:2])).first()
+        p_query3 = "SELECT accessisettimana FROM informazioni"
+        res3 = conn.engine.execute(p_query3).first()
     else:
+        p_query2 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno >= DATE %s - 6 AND s.giorno <= DATE %s"
+        res2 = conn.engine.execute(p_query2, user_id, giorno, giorno).first()
+        p_query3 = "SELECT accessisettimana FROM informazioni"
+        res3 = conn.engine.execute(p_query3).first()
+    conn.close()
+    if res2 < res3:
         return False
+    else:
+        return True
 
 
 def has_exceeded_slotgiorno(user_id, giorno):

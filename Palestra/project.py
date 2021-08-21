@@ -198,7 +198,7 @@ def calendar():
 @app.route('/book_day', methods=['GET', 'POST'])
 @login_required
 def book_day():
-    if not functions.has_exceeded_accessisettimana(current_user.id, request.form['datapassata']):
+    if (not functions.has_exceeded_accessisettimana(current_user.id, request.form['datapassata'])) and (not functions.has_exceeded_slotgiorno(current_user.id, request.form['datapassata'])):
         slots = functions.get_slot_from_date(request.form['datapassata'])
         return render_template("book_day.html", slots=slots, data=request.form['datapassata'])
     else:
