@@ -90,21 +90,38 @@ CREATE TABLE corsi(
 );
 ALTER SEQUENCE corsi_id_seq OWNED BY corsi.id;
 
---Sedute
-CREATE TABLE sedute(
+--SeduteCorsi
+CREATE TABLE sedutecorsi(
 	id INT PRIMARY KEY,
 	corso INT NOT NULL,
 	dataseduta TIMESTAMP, --log persone per covid
 	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE
 );
 
---AbbonatiSedute
-CREATE TABLE abbonatisedute(
+--AbbonatiSeduteCorsi
+CREATE TABLE abbonatisedutecorsi(
 	abbonato INT,
 	seduta INT,
 	PRIMARY KEY(abbonato,seduta),
 	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
-	FOREIGN KEY(seduta) REFERENCES sedute ON DELETE CASCADE
+	FOREIGN KEY(seduta) REFERENCES sedutecorsi ON DELETE CASCADE
+);
+
+--SeduteSalePesi
+CREATE TABLE sedutesalepesi(
+	id INT PRIMARY KEY,
+	salapesi INT NOT NULL,
+	dataseduta TIMESTAMP, --log persone per covid
+	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE
+);
+
+--AbbonatiSeduteSalePesi
+CREATE TABLE abbonatisedutesalepesi(
+	abbonato INT,
+	seduta INT,
+	PRIMARY KEY(abbonato,seduta),
+	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
+	FOREIGN KEY(seduta) REFERENCES sedutesalepesi ON DELETE CASCADE
 );
 
 --Giorni

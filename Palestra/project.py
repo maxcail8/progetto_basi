@@ -209,7 +209,7 @@ def book_day():
 @login_required
 def book_slot():
     idSlot = request.form['idSlot']
-    if not functions.is_reserved(current_user.id, idSlot):
+    if functions.is_available_slot(idSlot) and (not functions.is_reserved(current_user.id, idSlot)):
         sub = functions.get_subscriber_by_id(current_user.id)
         if sub is not None:
             subscription = functions.get_subscription_by_id(sub.abbonamento)
@@ -220,28 +220,54 @@ def book_slot():
         return redirect(url_for('wrong'))
 
 
-
 @app.route('/book_weight_room', methods=['GET', 'POST'])
 @login_required
 def book_weight_room():
     idSlot = request.form['idSlot']
-    reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
-    session.add(reservation)
-    session.commit()
-    return redirect(url_for('confirm'))
+    idSeduta = functions.get_weightroomsitting_id(idSlot, request.form['idSala'])
+    if functions.is_available_weight_room(idSeduta, idSlot):
+        reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
+        subscriber_session = classes.SubscriberWeightRoomSession(abbonato=current_user.id, seduta=idSeduta)
+        session.add(subscriber_session)
+        session.add(reservation)
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/cancel_reservation', methods=['GET', 'POST'])
+@login_required
+def cancel_reservation():
+    reservations = functions.get_reservations(current_user.id)
+    return render_template("cancel_reservation.html", reservations=reservations)
+
+
+@app.route('/cancel_reservation_conf', methods=['GET', 'POST'])
+@login_required
+def cancel_reservation_conf():
+    if functions.is_reserved(current_user.id, request.form['idSlot']):
+        functions.remove_reservation(current_user.id, request.form['idSlot'])
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/book_course', methods=['GET', 'POST'])
 @login_required
 def book_course():
     idSlot = request.form['idSlot']
-    idSeduta = functions.get_sitting_id(idSlot, request.form['idCorso'])
-    reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
-    subscriber_session = classes.SubscriberSession(abbonato=current_user.id, seduta=idSeduta)
-    session.add(subscriber_session)
-    session.add(reservation)
-    session.commit()
-    return redirect(url_for('confirm'))
+    idSeduta = functions.get_coursesitting_id(idSlot, request.form['idCorso'])
+    if functions.is_available_course(idSeduta, idSlot):
+        reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
+        subscriber_session = classes.SubscriberCourseSession(abbonato=current_user.id, seduta=idSeduta)
+        session.add(subscriber_session)
+        session.add(reservation)
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
+
 
 @app.route('/logout')
 @login_required

@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Prenotazioni slot</title>
+        <title>Gestione corsi</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
             *{
@@ -133,10 +133,9 @@
                     <section>
                         <div>
                             <label>Seleziona corso</label>
-                            
-                            Corsi: <select id="select1" name="idCorso">
+                            <select id="select1" name="idCorso">
                                 {% for c in courses %}
-                                    <option>{{ c.id + 1 }} ° corso: {{ c.nome }}</option>
+                                    <option value={{c.id}}>{{ c.id + 1 }} ° corso: {{ c.nome }}</option>
                                 {% endfor %}
                             </select>
                             <select id="selectSlot1" name="idSlot" style="visibility: hidden;">
@@ -148,6 +147,11 @@
                 </form>
             </section>
         </div>
+        <br>
+        <form action="/private">
+            Torna all'area riservata: <input type="submit">
+        </form>
+        <br>
     </body>
     <script>
         var form0 = document.getElementById("form0");
@@ -165,9 +169,9 @@
             var optionsSpan0 = selectSlot0.getElementsByTagName("option");
             optionsSpan0[0].value = optionsSpan0[i].textContent;
 
-            var options1 = select1.getElementsByTagName("option");
+            /*var options1 = select1.getElementsByTagName("option");
             for(var i = 0; i < options1.length; i++) 
-                options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" ")) - 1;
+                options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" ")) - 1;*/
 
             var optionsSpan1 = selectSlot1.getElementsByTagName("option");
             optionsSpan1[0].value = optionsSpan1[i].textContent;

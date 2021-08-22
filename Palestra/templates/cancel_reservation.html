@@ -108,23 +108,21 @@
         </style>
     </head>
     <body>
-        <h1>Prenotazioni giorno</h1>
-        <h3>{{ data }}</h3>
+        <h1>Cancella prenotazione</h1>
+
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/book_slot" method="POST">
-                    
+                <form id="form0" action="/cancel_reservation_conf" method="POST">
                     <section>
                         <div>
-                            <label>Seleziona slot</label>
-                            
-                            Slots: <select id="select0" name="idSlot">
-                                {% for s in slots %}
-                                    <option>{{ s.id }} , slot:{{ s.orainizio }} - {{ s.orafine }}</option>
+                            <label>Scegli la prenotazione da cancellare</label>
+                            <select id="select0" name="idSlot">
+                                {% for p in reservations %}
+                                    <option>{{ p.slot }} : {{ p.giorno }} dalle {{ p.orainizio }} alle {{ p.orafine }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <input class="button" type="button" value="Prenota" onclick="Prenota()">
+                        <input class="button" type="button" value="Cancella" onclick="ModificaCorso()">
                     </section>
                 </form>
             </section>
@@ -138,16 +136,18 @@
     <script>
         var form0 = document.getElementById("form0");
         var select0 = document.getElementById("select0");
-        
+
         document.body.onload = function(){
             var options0 = select0.getElementsByTagName("option");
-            var spans0 = select0.getElementsByTagName("div");
             for(var i = 0; i < options0.length; i++)
                 options0[i].value = options0[i].textContent.substr(0,  options0[i].textContent.indexOf(" "));
         }
 
-        function Prenota(){
-            form0.submit();
+        function ModificaCorso() {
+            if(select0.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
         }
     </script>
 </html>

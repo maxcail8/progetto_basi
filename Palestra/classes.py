@@ -201,8 +201,8 @@ class Course(Base):
         return "<Course(id = {0}, nome = {1}, iscrittimax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittimax, self.istruttore, self.stanza)
 
 
-class Sitting(Base):
-    __tablename__ = 'sedute'
+class CourseSitting(Base):
+    __tablename__ = 'sedutecorsi'
 
     id = Column(Integer, primary_key=True)
     corso = Column(Integer, ForeignKey(Course.id, ondelete='cascade'), nullable=False)
@@ -216,16 +216,16 @@ class Sitting(Base):
         self.dataseduta = dataseduta
 
     def __repr__(self):
-        return "<Session(id = {0}, corso = {1}, dataseduta = {2})>".format(self.id, self.corso, self.dataseduta)
+        return "<CourseSitting(id = {0}, corso = {1}, dataseduta = {2})>".format(self.id, self.corso, self.dataseduta)
 
 
-class SubscriberSession(Base):
-    __tablename__ = 'abbonatisedute'
+class SubscriberCourseSession(Base):
+    __tablename__ = 'abbonatisedutecorsi'
 
     abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
-    seduta = Column(Integer, ForeignKey(Sitting.id, ondelete='cascade'), primary_key=True)
+    seduta = Column(Integer, ForeignKey(CourseSitting.id, ondelete='cascade'), primary_key=True)
     subscriber = relationship(Subscriber, uselist=False)
-    sitting = relationship(Sitting, uselist=False)
+    sitting = relationship(CourseSitting, uselist=False)
 
     def __init__(self, abbonato, seduta):
         self.abbonato = abbonato
@@ -233,6 +233,40 @@ class SubscriberSession(Base):
 
     def __repr__(self):
         return "<SubScriberSession(abbonato = {0}, seduta = {1})>".format(self.abbonato, self.seduta)
+
+
+class WeightRoomSitting(Base):
+    __tablename__ = 'sedutesalepesi'
+
+    id = Column(Integer, primary_key=True)
+    salapesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), nullable=False)
+    dataseduta = Column(DateTime)
+    weightroom = relationship(WeightRoom, uselist=False)
+
+    # primary key progressiva
+    def __init__(self, id, salapesi, dataseduta):
+        self.id = id
+        self.salapesi = salapesi
+        self.dataseduta = dataseduta
+
+    def __repr__(self):
+        return "<WeightRoomSitting(id = {0}, salapesi = {1}, dataseduta = {2})>".format(self.id, self.salapesi, self.dataseduta)
+
+
+class SubscriberWeightRoomSession(Base):
+    __tablename__ = 'abbonatisedutesalepesi'
+
+    abbonato = Column(Integer, ForeignKey(Subscriber.id, ondelete='cascade'), primary_key=True)
+    seduta = Column(Integer, ForeignKey(WeightRoomSitting.id, ondelete='cascade'), primary_key=True)
+    subscriber = relationship(Subscriber, uselist=False)
+    sitting = relationship(WeightRoomSitting, uselist=False)
+
+    def __init__(self, abbonato, seduta):
+        self.abbonato = abbonato
+        self.seduta = seduta
+
+    def __repr__(self):
+        return "<SubscriberWeightRoomSession(abbonato = {0}, seduta = {1})>".format(self.abbonato, self.seduta)
 
 
 class Day(Base):

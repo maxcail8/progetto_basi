@@ -151,6 +151,15 @@
                 </section>
                 <hr>
                 <section>
+                    <form id="cancella_prenotazione" action="/cancel_reservation" method="POST">
+                        <div>
+                            <label>Cancella una prenotazione</label>
+                        </div>
+                        <input id="subCancPren" class="button" type="button" value="Cancella" onclick="CancellaPrenotazione()">
+                    </form>
+                </section>
+                <hr>
+                <section>
                     <form id="iscrizione" action="/subscribe_course" method="POST">
                         <div>
                             <label>Iscriviti ad un corso</label>
@@ -209,6 +218,7 @@
         var selectDurata = document.getElementById("select1");
         var cbxAbbonamento = document.getElementById("abbonamento");
         var informazioni = document.getElementById("informazioni");
+        var cancella_prenotazione = document.getElementById("cancella_prenotazione");
         var iscrizione = document.getElementById("iscrizione");
         var calendario = document.getElementById("calendario");
         var abbonati = document.getElementById("abbonati");
@@ -228,6 +238,10 @@
 
         function VisualizzaInformazioni(){
             informazioni.submit();
+        }
+
+        function CancellaPrenotazione(){
+            cancella_prenotazione.submit();
         }
 
         function IscrizioneCorso(){

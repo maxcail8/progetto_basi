@@ -3,8 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/book_day.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/book_day.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/book_slot.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/book_slot.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/private.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/private.html" afterDir="false" />
     </list>
     <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
     <option name="SHOW_DIALOG" value="false" />
@@ -58,7 +65,9 @@
       <workItem from="1629384275198" duration="382000" />
       <workItem from="1629385771723" duration="1063000" />
       <workItem from="1629454165109" duration="13283000" />
-      <workItem from="1629537155636" duration="7325000" />
+      <workItem from="1629537155636" duration="7497000" />
+      <workItem from="1629551507047" duration="10501000" />
+      <workItem from="1629625454000" duration="18690000" />
     </task>
     <servers />
   </component>
@@ -75,5 +84,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

@@ -11,7 +11,7 @@ CREATE PROCEDURE aggiungi_corsi_slot(idcorso INT, giorno INT, slot TIME) AS $$
     DECLARE seduta_c INT;
     DECLARE cs_iscrittimax INT;
     BEGIN
-        SELECT COALESCE(MAX(id),0) INTO seduta_c FROM sedute;
+        SELECT COALESCE(MAX(id),0) INTO seduta_c FROM sedutecorsi;
         SELECT iscrittimax INTO cs_iscrittimax FROM corsi where id=idcorso;
         WHILE giorno_buffer < giorno_finale LOOP
             SELECT EXTRACT(DOW FROM giorno_buffer) INTO giorno_settimana;
@@ -19,7 +19,7 @@ CREATE PROCEDURE aggiungi_corsi_slot(idcorso INT, giorno INT, slot TIME) AS $$
                 SELECT s.id INTO slot_c FROM slot s WHERE s.giorno = giorno_buffer AND s.orainizio = slot;
                 INSERT INTO corsislot VALUES (idcorso, slot_c, cs_iscrittimax);
                 seduta_c = seduta_c + 1;
-                INSERT INTO sedute(id, corso, dataseduta) VALUES(seduta_c, idcorso, giorno_buffer+slot);
+                INSERT INTO sedutecorsi(id, corso, dataseduta) VALUES(seduta_c, idcorso, giorno_buffer+slot);
                 giorno_buffer = giorno_buffer + 7;
             ELSE 
                 giorno_buffer = giorno_buffer + 1;
@@ -38,18 +38,25 @@ DROP PROCEDURE IF EXISTS aggiungi_salapesi_slot(idsala INT);
 CREATE PROCEDURE aggiungi_salapesi_slot(idsala INT) AS $$
     DECLARE giorno_finale DATE = CURRENT_DATE + 30;
     DECLARE giorno_buffer DATE = CURRENT_DATE + 1;
-    DECLARE sps_iscrittimax INT;
+    DECLARE slot_sp INT;
+    DECLARE seduta_sp INT;
+    DECLARE sp_iscrittimax INT;
+    DECLARE slot_s TIME = '05:30:00';
     DECLARE s slot%rowtype;
     BEGIN
-        SELECT iscrittimax INTO sps_iscrittimax FROM salepesi where id=idsala;
+        SELECT COALESCE(MAX(id),0) INTO seduta_sp FROM sedutesalepesi;
+        SELECT iscrittimax INTO sp_iscrittimax FROM salepesi where id=idsala;
         WHILE giorno_buffer < giorno_finale LOOP
-            FOR s IN SELECT * FROM slot WHERE giorno=giorno_buffer LOOP
-                INSERT INTO salapesislot VALUES(idsala, s.id, sps_iscrittimax);
+            FOR s IN SELECT * FROM slot WHERE giorno = giorno_buffer LOOP
+                INSERT INTO salapesislot VALUES (idsala, s.id, sp_iscrittimax);
+                seduta_sp = seduta_sp + 1;
+                INSERT INTO sedutesalepesi(id, salapesi, dataseduta) VALUES(seduta_sp, idsala, giorno_buffer+s.orainizio);
             END LOOP;
             giorno_buffer = giorno_buffer + 1;
         END LOOP;
     END;
 $$ LANGUAGE 'plpgsql';
+
 
 
 
@@ -308,16 +315,16 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
             END IF;
         END LOOP;
         --check_aggiungi_corsi_slot
-        SELECT COALESCE(MAX(id),0) INTO idSedute FROM sedute;
+        SELECT COALESCE(MAX(id),0) INTO idSedute FROM sedutecorsi;
         idSedute = idSedute + 1;
         FOR c IN SELECT * FROM corsi ORDER BY id LOOP
             FOR i IN 0..6 LOOP
-                SELECT se.dataseduta INTO data_tmp FROM sedute se WHERE se.corso=c.id AND i=(SELECT EXTRACT(DOW FROM se.dataseduta));
+                SELECT se.dataseduta INTO data_tmp FROM sedutecorsi se WHERE se.corso=c.id AND i=(SELECT EXTRACT(DOW FROM se.dataseduta));
                 IF (data_tmp IS NOT NULL) THEN
                     FOR j IN 0..3 LOOP
-                        IF (NOT EXISTS(SELECT * FROM sedute se WHERE se.corso=c.id AND se.dataseduta=(data_tmp + (INTERVAL '1 day' * 7*j)))) THEN
-                            INSERT INTO sedute VALUES(idSedute, c.id, data_tmp + (INTERVAL '1 day' * 7*j)); 
-                            SELECT dataseduta INTO data_buff FROM sedute WHERE id=idSedute;
+                        IF (NOT EXISTS(SELECT * FROM sedutecorsi se WHERE se.corso=c.id AND se.dataseduta=(data_tmp + (INTERVAL '1 day' * 7*j)))) THEN
+                            INSERT INTO sedutecorsi VALUES(idSedute, c.id, data_tmp + (INTERVAL '1 day' * 7*j)); 
+                            SELECT dataseduta INTO data_buff FROM sedutecorsi WHERE id=idSedute;
                             SELECT id INTO idSlot FROM slot WHERE giorno=(data_buff::date);
                             SELECT cs.iscrittimax INTO cs_iscrittimax 
                                                     FROM corsislot cs JOIN slot s ON cs.slot=s.id 
