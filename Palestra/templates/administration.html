@@ -185,6 +185,17 @@
                         <input id="subSale" class="button" type="button" value="Gestisci" onclick="GestisciSalePesi()">
                     </section>
                 </form>
+
+               <hr>
+               
+               <form id="form4" action="/contact_tracing" method="POST">
+                <section>ss
+                    <div>
+                        <label>Contact tracing</label>
+                    </div>
+                    <input id="subTracing" class="button" type="button" value="Esegui" onclick="EseguiContactTracing()">
+                </section>
+                </form>
             </section>
         </div>
         {% else %}
@@ -205,6 +216,7 @@
         var form1 = document.getElementById("form1");
         var form2 = document.getElementById("form2");
         var form3 = document.getElementById("form3");
+        var form4 = document.getElementById("form4");
 
         var spanControlli = document.getElementById("spanControlli");
         var spanAccessi = document.getElementById("spanAccessi");
@@ -274,6 +286,10 @@
         
         function GestisciSalePesi(){
             form3.submit();
+        }
+
+        function GestisciContactTracing(){
+            form4.submit();
         }
     </script>
 </html> 

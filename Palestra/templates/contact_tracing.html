@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Contact tracing</title>
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <style>
+            .clearfix{
+                overflow: auto;
+            }
+
+            .clearfix::after{
+                content: "";
+                clear: both;
+                display: table;
+            }
+
+            body{
+                /*font-family: 'Courier New', Courier, monospace;*/
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                background-color: #f3f2ee;
+            }
+
+            h1{
+                text-align: center;
+                font-size: 25pt;
+                color: #51bdd5;
+                font-weight: bold;
+                text-shadow: 1px 1px black;
+            }
+
+            h3{
+                font-family: "Comic Sans MS", cursive, sans-serif;
+                font-weight: bold;
+                margin-left: 3%;
+            }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            #sezione0{
+                background-color: white;
+                display: block;
+                width: 98%;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 section div{
+                display: inline-block;
+                width: 90%;
+            }
+
+            #sezione0 section label{
+                display: inline-block;
+                width: 12%;
+            }
+
+            #sezione0 input[type="button"]{
+                display: inline-block;
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+
+            select{
+                border: 1px solid black;
+            }
+
+            input[type=number]{
+                border: 1px solid black;
+                width: 5%;
+            }
+
+            input[type=text]{
+                border: 0.1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Contact Tracing</h1>
+
+        <div id="operazioniDisp">
+            <section id="sezione0" class="w3-container w3-card-4">
+                <form id="form0" action="/contact_tracing_slot" method="POST">
+                    <section>
+                        <div>
+                            <label>Scegli un giorno da ispezionare</label>
+                            <select id="select0" name="data">
+                                {% for g in days %}
+                                    <option value={{g.data}}>Giorno : {{ g.data }}</option>
+                                {% endfor %}
+                            </select>
+                            <select id="select1" name="idCliente">
+                                {% for c in clients %}
+                                    <option value={{c.id}}>Cliente #{{ c.id }}: username: {{ c.username }}, nome: {{ c.nome }}, cognome: {{ c.cognome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input class="button" type="button" value="Cancella" onclick="SelezionaGiorno()">
+                    </section>
+                </form>
+            </section>
+        </div>
+        <br>
+        <form action="/private">
+            Torna all'area di amministrazione: <input type="submit">
+        </form>
+        <br>
+    </body>
+    <script>
+        var form0 = document.getElementById("form0");
+        var select0 = document.getElementById("select0");
+
+        function ModificaCorso() {
+            if(select0.value != "")
+                form0.submit();
+            else
+                alert("I dati non sono stati inseritit correttamente");
+        }
+    </script>
+</html>

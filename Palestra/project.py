@@ -505,3 +505,26 @@ def update_weight_room():
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
+
+
+@app.route('/contact_tracing', methods=['GET', 'POST'])
+@login_required
+def contact_tracing():
+    if current_user == functions.get_admin_user():
+        giorni = functions.get_last_seven_days()
+        clienti = functions.get_clients()
+        return render_template("contact_tracing.html")
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/contact_tracing_result', methods=['GET', 'POST'])
+@login_required
+def contact_tracing_result():
+    if current_user == functions.get_admin_user():
+        giorno = request.form['data']
+        infetto = request.form['idCliente']
+        contagiati = functions.get_infected(giorno, infetto)
+        return render_template("contact_tracing_result.html")
+    else:
+        return redirect(url_for('wrong'))

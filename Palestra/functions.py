@@ -201,7 +201,7 @@ def get_trainers():
 
 
 def get_clients():
-    clients = session.query(classes.Client, classes.User).filter(classes.Client.id == classes.User.id).order_by(classes.Client.id.asc()).all()
+    clients = session.query(classes.User).filter(classes.Client.id == classes.User.id).order_by(classes.Client.id.asc()).all()
     '''conn = engine.connect()
     p_query = "SELECT * FROM clienti NATURAL JOIN utenti ORDER BY id ASC"
     clients = conn.engine.execute(p_query)
@@ -292,6 +292,23 @@ def get_reservations(idSub):
     reservations = conn.engine.execute(p_query, idSub)
     conn.close()'''
     return reservations
+
+
+def get_last_seven_days():
+    days = session.query(classes.Day).filter(and_(classes.Day.data > func.current_date() - 7, classes.Day.data <= func.current_date()))
+    return days
+
+
+def get_infected(giorno, infetto):
+    '''
+     (SELECT abbonato
+      FROM prenotazioni
+      WHERE slot IN (SELECT slot
+                    FROM prenotazioni JOIN slot
+                    WHERE abbonato = infetto AND slot.giorno >= giorno))
+    '''
+    slots = session.query(classes.Reservation.slot).filter(and_(classes.Reservation.abbonato == infetto, classes.Slot.giorno >= giorno))
+    infected = session.query(classes.Client).filter()
 
 
 # BOOLEANS
