@@ -132,7 +132,7 @@
                             <label>Rimuovi una stanza</label>
                             <select id="select1" name="idStanza">
                                 {% for r in rooms %}
-                                    <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                                    <option value={{r.id}}>Stanza #{{ r.id }} : {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -149,7 +149,7 @@
                             <label>Modifica una stanza</label>
                             <select id="select2" name="idStanza" onchange="AggiornaNomeDim()">
                                 {% for k in rooms2 %}
-                                    <option>{{ k.id + 1 }} ° stanza: {{ k.nome }}, dimensione: {{ k.dimensione }}</option>
+                                    <option value={{k.id}}>Stanza #{{ k.id }}: {{ k.nome }}, dimensione: {{ k.dimensione }}</option>
                                 {% endfor %}
                             </select>
                             Nome: <input id="txtNome2" type="text" name="nome" placeholder="Nome stanza">
@@ -175,13 +175,6 @@
 
 
         document.body.onload = function(){
-            var options = select1.getElementsByTagName("option");
-            for(var i = 0; i < options.length; i++)
-                options[i].value = options[i].textContent.substr(0,  options[i].textContent.indexOf(" ")) - 1;
-
-            var options2 = select2.getElementsByTagName("option");
-            for(var i = 0; i < options2.length; i++)
-                options2[i].value = options2[i].textContent.substr(0,  options2[i].textContent.indexOf(" ")) - 1;
             AggiornaNomeDim();
         }
 

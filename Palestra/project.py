@@ -15,6 +15,8 @@ from sqlalchemy.orm import sessionmaker
 # other-import
 from werkzeug.utils import redirect
 from datetime import datetime
+from array import array
+
 
 #######################
 # Parametri applicazione
@@ -33,9 +35,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 
 # Sessione
-Session = sessionmaker(bind=engine)
+'''Session = sessionmaker(bind=engine)
 Session.close_all()
-session = Session()
+session = Session()'''
+session = functions.session
 
 #############################
 # Variabili e costanti globali
@@ -47,12 +50,11 @@ admin_pwd = 'admin'
 #user-loader
 @login_manager.user_loader
 def load_user(user_id):
-    conn = engine.connect()
-    #rs = conn.execute('SELECT * FROM utenti WHERE id = %s' % user_id)
-    #user = rs.fetchone()
+    user = session.query(classes.User).filter(classes.User.id == user_id).first()
+    '''conn = engine.connec
     p_query = "SELECT * FROM utenti WHERE id = %s"
     user = conn.engine.execute(p_query, user_id).first()
-    conn.close()
+    conn.close()'''
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
 
@@ -118,10 +120,11 @@ def login():
     if request.method == 'POST':
         p_email = request.form['user']
         p_pass = request.form['pass']
-        conn = engine.connect()
+        real_pwd = session.query(classes.User.password).filter(classes.User.email == p_email).first()
+        '''conn = engine.connect()
         p_query = "SELECT password AS password FROM utenti WHERE email = %s"
         real_pwd = conn.engine.execute(p_query, p_email).first()
-        conn.close()
+        conn.close()'''
 
         if p_email == admin_email:
             if real_pwd is not None and p_pass == real_pwd['password']:
@@ -152,12 +155,6 @@ def private():
         sub = functions.is_subscriber(current_user.id)
         resp = make_response(render_template("private.html", current_user=current_user, sub=sub))
         return resp
-
-
-@app.route('/subscribe_course', methods=['GET', 'POST'])
-@login_required
-def subscribe_course():
-    return render_template("subscribe_course.html")
 
 
 @app.route('/subscribe', methods=['GET', 'POST'])
@@ -225,6 +222,7 @@ def book_slot():
 def book_weight_room():
     idSlot = request.form['idSlot']
     idSeduta = functions.get_weightroomsitting_id(idSlot, request.form['idSala'])
+    idSeduta = str(idSeduta)[1:-2]
     if functions.is_available_weight_room(idSeduta, idSlot):
         reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
         subscriber_session = classes.SubscriberWeightRoomSession(abbonato=current_user.id, seduta=idSeduta)
@@ -248,6 +246,7 @@ def cancel_reservation():
 def cancel_reservation_conf():
     if functions.is_reserved(current_user.id, request.form['idSlot']):
         functions.remove_reservation(current_user.id, request.form['idSlot'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -258,6 +257,7 @@ def cancel_reservation_conf():
 def book_course():
     idSlot = request.form['idSlot']
     idSeduta = functions.get_coursesitting_id(idSlot, request.form['idCorso'])
+    idSeduta = str(idSeduta)[1:-2]
     if functions.is_available_course(idSeduta, idSlot):
         reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
         subscriber_session = classes.SubscriberCourseSession(abbonato=current_user.id, seduta=idSeduta)
@@ -381,6 +381,7 @@ def add_course():
 def remove_course():
     if current_user == functions.get_admin_user():
         functions.remove_course(request.form['idCorso'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -403,6 +404,7 @@ def update_course():
 def update_course_conf():
     if current_user == functions.get_admin_user():
         functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -437,6 +439,7 @@ def add_room():
 def remove_room():
     if current_user == functions.get_admin_user():
         functions.remove_room(request.form['idStanza'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -447,6 +450,7 @@ def remove_room():
 def update_room():
     if current_user == functions.get_admin_user():
         functions.update_room(request.form['idStanza'], request.form['nome'], request.form['dim'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -486,6 +490,7 @@ def add_weight_room():
 def remove_weight_room():
     if current_user == functions.get_admin_user():
         functions.remove_weight_room(request.form['idSala'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
@@ -496,6 +501,7 @@ def remove_weight_room():
 def update_weight_room():
     if current_user == functions.get_admin_user():
         functions.update_weight_room(request.form['idSala'], request.form['dim'])
+        session.commit()
         return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))

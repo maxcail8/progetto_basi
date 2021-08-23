@@ -324,7 +324,7 @@ class CourseSlot(Base):
 
 
 class WeightRoomSlot(Base):
-    __tablename__ = 'salepesislot'
+    __tablename__ = 'salapesislot'
 
     salapesi = Column(Integer, ForeignKey(WeightRoom.id, ondelete='cascade'), primary_key=True)
     slot = Column(Integer, ForeignKey(Slot.id, ondelete='cascade'), primary_key=True)

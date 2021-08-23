@@ -7,12 +7,6 @@
         <title>Gestione corsi</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
-
             .clearfix{
                 overflow: auto;
             }
@@ -120,7 +114,7 @@
                             
                             Slots: <select id="select0" name="idSlot">
                                 {% for s in slots %}
-                                    <option>{{ s.id }} , slot:{{ s.orainizio }} - {{ s.orafine }}</option>
+                                    <option value={{s.id}}>Slot:{{ s.orainizio }} - {{ s.orafine }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -138,13 +132,6 @@
     <script>
         var form0 = document.getElementById("form0");
         var select0 = document.getElementById("select0");
-        
-        document.body.onload = function(){
-            var options0 = select0.getElementsByTagName("option");
-            var spans0 = select0.getElementsByTagName("div");
-            for(var i = 0; i < options0.length; i++)
-                options0[i].value = options0[i].textContent.substr(0,  options0[i].textContent.indexOf(" "));
-        }
 
         function Prenota(){
             form0.submit();

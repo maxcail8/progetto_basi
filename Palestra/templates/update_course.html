@@ -99,10 +99,6 @@
     <body>
         <h1>Modifica corso</h1>
         <h3>Modifica</h3>
-
-        <span id="spanIdCorso" style="visibility: hidden;">{{ course.id }}</span>
-        <span id="spanNome" style="visibility: hidden;">{{ course.nome }}</span>
-        <span id="spanIscritti" style="visibility: hidden;">{{ course.iscrittimax }}</span>
         <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
         <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
 
@@ -112,22 +108,22 @@
                     
                     <section>
                         <select id="selCorso" name="sCorso" style="visibility: hidden;">
-                            <option selected></option>
+                            <option value={{course.id}} selected></option>
                         </select>
                         <br><br>
-                        Nome: <input id="txtNome0" type="text" name="nome" placeholder="Nome corso">
+                        Nome: <input id="txtNome0" value={{course.nome}} type="text" name="nome" placeholder="Nome corso">
                         <br><br>
-                        Iscritti massimi: <input id="txtIscritti0" name="iscrittiMax" type="number" min="1" value="50">
+                        Iscritti massimi: <input id="txtIscritti0" value={{course.iscrittimax}} name="iscrittiMax" type="number" min="1" value="50">
                         <br><br>
                         Istruttore: <select id="select0i" name="idIstruttore">
                             {% for t in trainers %}
-                                <option>{{ t.id + 1 }} ° istruttore: {{ t.nome }}</option>
+                                <option value="{{t.id}}">Istruttore #{{t.id}}: {{ t.nome }}</option>
                             {% endfor %}
                         </select>
                         <br><br>
                         Stanza: <select id="select0s" name="idStanza">
                             {% for r in rooms %}
-                                <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                                <option value="{{r.id}}">Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
                             {% endfor %}
                         </select>
                         <br><br>
@@ -156,35 +152,18 @@
         document.body.onload = function(){
             var options0i = select0i.getElementsByTagName("option");
             for(var i = 0; i < options0i.length; i++)
-                options0i[i].value = options0i[i].textContent.substr(0,  options0i[i].textContent.indexOf(" ")) - 1;
-
-            for(var i = 0; i < options0i.length; i++)
                 if (options0i[i].value == spanIstruttore.textContent)
                     options0i[i].selected = "selected";
 
             var options0s = select0s.getElementsByTagName("option");
             for(var i = 0; i < options0s.length; i++)
-                options0s[i].value = options0s[i].textContent.substr(0,  options0s[i].textContent.indexOf(" ")) - 1;
-
-            for(var i = 0; i < options0s.length; i++)
                 if (options0s[i].value == spanStanza.textContent)
-                    options0s[i].selected = "selected";
-
-            var optionsid = selCorso.getElementsByTagName("option");
-            optionsid[0].value = spanIdCorso.textContent;
-            optionsid[0].textContent = spanIdCorso.textContent;
-                    
-            txtNome0.value = spanNome.textContent;
-            txtIscritti0.value = spanIscritti.textContent;
-            
+                    options0s[i].selected = "selected";            
         }
 
         function ModificaCorso() {
-            if(select0i.value != "" && select0s.value != "" && txtNome0.value.trim() != "" && txtIscritti0.value > 0){
-                console.log(selCorso.value + ", " + txtNome0.value + ", " + txtIscritti0.value + ", " + select0i.value + ", " + select0s.value);
-                alert();
+            if(select0i.value != "" && select0s.value != "" && txtNome0.value.trim() != "" && txtIscritti0.value > 0)
                 form0.submit();
-            }
             else
                 alert("I dati non sono stati inseritit correttamente");
         }

@@ -121,12 +121,12 @@
                                 Iscritti massimi: <input id="txtIscritti0" name="iscrittimax" type="number" min="1" value="50">
                                 Istruttore: <select id="select0i" name="idIstruttore">
                                     {% for t in trainers %}
-                                        <option>{{ t.id + 1 }} ° istruttore: {{ t.nome }}</option>
+                                        <option value={{t.id}}>Istruttore #{{t.id}}: {{ t.nome }}</option>
                                     {% endfor %}
                                 </select>
                                 Stanza: <select id="select0s" name="idStanza">
                                     {% for r in rooms %}
-                                        <option>{{ r.id + 1 }} ° stanza: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                                        <option value={{r.id}}>Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
                                     {% endfor %}
                                 </select>
                                 <br><br>
@@ -161,7 +161,7 @@
                             <label>Rimuovi un corso</label>
                             <select id="select1" name="idCorso">
                                 {% for c in courses %}
-                                    <option>{{ c.id + 1 }} ° corso: {{ c.nome }}</option>
+                                    <option value={{c.id}}>Corso #{{c.id}}: {{ c.nome }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -178,7 +178,7 @@
                             <label>Modifica un corso</label>
                             <select id="select2" name="idCorso">
                                 {% for k in courses2 %}
-                                    <option>{{ k.id + 1 }} ° corso: {{ k.nome }}</option>
+                                    <option value={{k.id}}>Corso #{{k.id}}: {{ k.nome }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -201,25 +201,6 @@
         var selectslot = document.getElementById("selectslot");
         var txtNome0 = document.getElementById("txtNome0");
         var txtIscritti0 = document.getElementById("txtIscritti0");
-
-
-        document.body.onload = function(){
-            var options0i = select0i.getElementsByTagName("option");
-            for(var i = 0; i < options0i.length; i++)
-                options0i[i].value = options0i[i].textContent.substr(0,  options0i[i].textContent.indexOf(" ")) - 1;
-
-            var options0s = select0s.getElementsByTagName("option");
-            for(var i = 0; i < options0s.length; i++)
-                options0s[i].value = options0s[i].textContent.substr(0,  options0s[i].textContent.indexOf(" ")) - 1;
-
-            var options1 = select1.getElementsByTagName("option");
-            for(var i = 0; i < options1.length; i++)
-                options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" ")) - 1;
-
-            var options2 = select2.getElementsByTagName("option");
-            for(var i = 0; i < options2.length; i++)
-                options2[i].value = options2[i].textContent.substr(0,  options2[i].textContent.indexOf(" ")) - 1;
-        }
 
 
         function AggiungiCorso() {

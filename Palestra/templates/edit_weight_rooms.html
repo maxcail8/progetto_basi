@@ -127,7 +127,7 @@
                             <label>Rimuovi una sala pesi</label>
                             <select id="select1" name="idSala">
                                 {% for w in weight_rooms %}
-                                    <option>{{ w.id + 1 }} ° sala, dimensione: {{ w.dimensione }}</option>
+                                    <option value={{w.id}}>Sala #{{ w.id }}, dimensione: {{ w.dimensione }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -144,7 +144,7 @@
                             <label>Modifica una sala pesi</label>
                             <select id="select2" name="idSala" onchange="AggiornaDim()">
                                 {% for k in weight_rooms2 %}
-                                    <option>{{ k.id + 1 }} ° sala, dimensione: {{ k.dimensione }}</option>
+                                    <option value={{k.id}}>Sala #{{ k.id }}, dimensione: {{ k.dimensione }}</option>
                                 {% endfor %}
                             </select>
                             Nuova dimensione (in metri quadri): <input id="txtDim2" name="dim" type="number" min="1">
@@ -167,13 +167,6 @@
 
 
         document.body.onload = function(){
-            var options = select1.getElementsByTagName("option");
-            for(var i = 0; i < options.length; i++)
-                options[i].value = options[i].textContent.substr(0,  options[i].textContent.indexOf(" ")) - 1;
-
-            var options2 = select2.getElementsByTagName("option");
-            for(var i = 0; i < options2.length; i++)
-                options2[i].value = options2[i].textContent.substr(0,  options2[i].textContent.indexOf(" ")) - 1;
             AggiornaDim();
         }
 

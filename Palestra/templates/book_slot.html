@@ -7,12 +7,6 @@
         <title>Gestione corsi</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
         <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
-
             .clearfix{
                 overflow: auto;
             }
@@ -118,8 +112,8 @@
                             
                             Sale pesi: <select id="select0" name="idSala">
                                 {% for w in weight_rooms %}
-                                    <option>{{ w.id + 1 }} ° sala: {{ w.dimensione }}</option>
-                                {% endfor %}
+                                    <option value={{w.id}}>Sala #{{w.id}}: {{ w.dimensione }}</option>
+                                {% endfor %}                                
                             </select>
                             <select id="selectSlot0" name="idSlot" style="visibility: hidden;">
                                 <option>{{ idSlot }}</option>
@@ -135,11 +129,11 @@
                             <label>Seleziona corso</label>
                             <select id="select1" name="idCorso">
                                 {% for c in courses %}
-                                    <option value={{c.id}}>{{ c.id + 1 }} ° corso: {{ c.nome }}</option>
+                                    <option value={{c.id}}>Corso #{{c.id}}: {{ c.nome }}</option>
                                 {% endfor %}
                             </select>
                             <select id="selectSlot1" name="idSlot" style="visibility: hidden;">
-                                <option>{{ idSlot }}</option>
+                                <option value={{idSlot}}></option>
                             </select>
                         </div>
                         <input class="button" type="button" value="Prenota" onclick="PrenotaCorso()">
@@ -160,22 +154,6 @@
         var selectSlot0 = document.getElementById("selectSlot0");
         var select1 = document.getElementById("select1");
         var selectSlot1 = document.getElementById("selectSlot1");
-        
-        document.body.onload = function(){
-            var options0 = select0.getElementsByTagName("option");
-            for(var i = 0; i < options0.length; i++)
-                options0[i].value = options0[i].textContent.substr(0,  options0[i].textContent.indexOf(" ")) - 1;
-
-            var optionsSpan0 = selectSlot0.getElementsByTagName("option");
-            optionsSpan0[0].value = optionsSpan0[i].textContent;
-
-            /*var options1 = select1.getElementsByTagName("option");
-            for(var i = 0; i < options1.length; i++) 
-                options1[i].value = options1[i].textContent.substr(0,  options1[i].textContent.indexOf(" ")) - 1;*/
-
-            var optionsSpan1 = selectSlot1.getElementsByTagName("option");
-            optionsSpan1[0].value = optionsSpan1[i].textContent;
-        }
 
         function PrenotaSala(){
             form0.submit();

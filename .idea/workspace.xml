@@ -2,18 +2,31 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/other.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/book_day.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/book_day.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/book_slot.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/book_slot.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/cancel_reservation.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/cancel_reservation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_weight_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_weight_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/f.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/private.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/private.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/subscribe_course.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/update_course.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/update_course.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/wrong.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/wrong.html" afterDir="false" />
     </list>
     <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
+    <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="">
+      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -30,6 +43,86 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/Palestra/functions.py">
+      <ranges>
+        <range start1="44" end1="45" start2="44" end2="45" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="53" end1="54" start2="53" end2="54" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="63" end1="64" start2="63" end2="64" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="75" end1="76" start2="75" end2="76" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="87" end1="88" start2="87" end2="88" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="99" end1="100" start2="99" end2="100" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="112" end1="113" start2="112" end2="113" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="131" end1="132" start2="131" end2="132" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="140" end1="141" start2="140" end2="141" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="149" end1="150" start2="149" end2="150" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="158" end1="159" start2="158" end2="159" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="167" end1="168" start2="167" end2="168" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="176" end1="177" start2="176" end2="177" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="185" end1="186" start2="185" end2="186" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="194" end1="195" start2="194" end2="195" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="203" end1="204" start2="203" end2="204" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="212" end1="213" start2="212" end2="213" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="221" end1="222" start2="221" end2="222" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="230" end1="231" start2="230" end2="231" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="242" end1="244" start2="242" end2="245" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="245" end1="245" start2="246" end2="247" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="255" end1="257" start2="257" end2="260" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="265" end1="267" start2="268" end2="270" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="275" end1="277" start2="278" end2="280" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="285" end1="286" start2="288" end2="289" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="295" end1="296" start2="298" end2="299" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="307" end1="308" start2="310" end2="311" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="319" end1="321" start2="322" end2="324" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="334" end1="338" start2="337" end2="341" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="353" end1="357" start2="356" end2="360" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="372" end1="377" start2="375" end2="380" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="378" end1="382" start2="381" end2="385" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="402" end1="404" start2="405" end2="407" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="418" end1="419" start2="421" end2="422" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="426" end1="427" start2="429" end2="430" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="434" end1="435" start2="437" end2="438" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="442" end1="443" start2="445" end2="446" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="450" end1="451" start2="453" end2="454" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="459" end1="461" start2="462" end2="464" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="469" end1="471" start2="472" end2="474" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="478" end1="482" start2="481" end2="485" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="490" end1="491" start2="493" end2="494" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="498" end1="499" start2="501" end2="502" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="506" end1="507" start2="509" end2="510" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="514" end1="515" start2="517" end2="518" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="520" end1="520" start2="523" end2="533" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="522" end1="529" start2="535" end2="545" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="541" end1="542" start2="557" end2="559" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="543" end1="545" start2="560" end2="562" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="547" end1="548" start2="564" end2="565" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="551" end1="552" start2="568" end2="569" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="553" end1="555" start2="570" end2="572" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="557" end1="558" start2="574" end2="575" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+      </ranges>
+    </file>
+    <file path="$PROJECT_DIR$/Palestra/project.py">
+      <ranges>
+        <range start1="17" end1="17" start2="17" end2="19" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="35" end1="36" start2="37" end2="38" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="37" end1="38" start2="39" end2="41" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="49" end1="52" start2="52" end2="54" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="54" end1="55" start2="56" end2="57" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="120" end1="121" start2="122" end2="124" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="123" end1="124" start2="126" end2="127" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
+        <range start1="154" end1="160" start2="157" end2="157" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="227" end1="227" start2="224" end2="225" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="250" end1="250" start2="248" end2="249" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="260" end1="260" start2="259" end2="260" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="383" end1="383" start2="383" end2="384" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="405" end1="405" start2="406" end2="407" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="439" end1="439" start2="441" end2="442" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="449" end1="449" start2="452" end2="453" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="488" end1="488" start2="492" end2="493" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+        <range start1="498" end1="498" start2="503" end2="504" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
+      </ranges>
+    </file>
+  </component>
   <component name="ProjectId" id="1saNpiFlj9WtaRyWjIQbrpdA1SR" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -38,7 +131,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -67,7 +162,8 @@
       <workItem from="1629454165109" duration="13283000" />
       <workItem from="1629537155636" duration="7497000" />
       <workItem from="1629551507047" duration="10501000" />
-      <workItem from="1629625454000" duration="18690000" />
+      <workItem from="1629625454000" duration="18934000" />
+      <workItem from="1629706036286" duration="25042000" />
     </task>
     <servers />
   </component>
