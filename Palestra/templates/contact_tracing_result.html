@@ -102,45 +102,16 @@
         </style>
     </head>
     <body>
-        <!--<h1>Prenotazioni giorno</h1>
-        <h3>{{ data }}</h3>
-        <div id="operazioniDisp">
-            <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/book_slot" method="POST">
-                    
-                    <section>
-                        <div>
-                            <label>Seleziona slot</label>
-                            
-                            Slots: <select id="select0" name="idSlot">
-                                {% for s in slots %}
-                                    <option value={{s.id}}>Slot:{{ s.orainizio }} - {{ s.orafine }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <input class="button" type="button" value="Prenota" onclick="Prenota()">
-                    </section>
-                </form>
-            </section>
-        </div>
-        <br>
-        <form action="/private">
-            Torna all'area di amministrazione: <input type="submit">
-        </form>
-        <br>-->
         <h1>Lista contagiati</h1>
         <ul>
             {% for c in contagiati %}
-            <li> #{{ c.id }}: id = {{c.username}}, nome = {{c.nome}}, cognome = {{c.cognome}}, email = {{c.email}}, data di nascita = {{c.datanascita}}</li>
+            <li> #{{ c.id }}: username = {{c.username}}, nome = {{c.nome}}, cognome = {{c.cognome}}, email = {{c.email}}, data di nascita = {{c.datanascita}}</li>
             {% endfor %}
         </ul>
+        <br>
+        <form action="/administration">
+            Torna all'area di amministrazione: <input type="submit">
+        </form>
+        <br>
     </body>
-    <!--<script>
-        var form0 = document.getElementById("form0");
-        var select0 = document.getElementById("select0");
-
-        function Prenota(){
-            form0.submit();
-        }
-    </script>-->
 </html>

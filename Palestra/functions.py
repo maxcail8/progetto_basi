@@ -314,11 +314,12 @@ def get_infected(giorno, infetto):
                                                 WHERE abbonato = infetto AND slot.giorno >= giorno))
 
     '''
-    sub_slots = session.query(classes.Reservation.slot).filter(
-        and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
-    notsub_slots = session.query(classes.NSReservation.slot).filter(
-        and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
-    slots = sub_slots.union(notsub_slots)
+    if is_subscriber(infetto):
+        slots = session.query(classes.Reservation.slot).filter(
+            and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
+    else:
+        slots = session.query(classes.NSReservation.slot).filter(
+            and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
     sub_infected = session.query(classes.User).filter(
         and_(classes.User.id == classes.Client.id, classes.Client.id != infetto, classes.Client.id == classes.Subscriber.id, classes.Client.id == classes.Reservation.abbonato, classes.Reservation.slot.in_(slots)))
     notsub_infected = session.query(classes.User).filter(
@@ -493,8 +494,7 @@ def set_information_personemq(personeMq):
 
 def update_weight_room(idSala, dimensione):
     pmq = get_information().personemq
-    session.query(classes.WeightRoom).filter(classes.WeightRoom.id == idSala).update({"dimensione": dimensione})
-    session.query(classes.WeightRoom).filter(classes.WeightRoom.id == idSala).update({"iscrittimax": int(dimensione)/pmq})
+    session.query(classes.WeightRoom).filter(classes.WeightRoom.id == idSala).update({"dimensione": dimensione, "iscrittimax": int(dimensione)/pmq})
     '''conn = engine.connect()
     pmq = get_information().personemq
     p_query = "UPDATE salepesi SET dimensione = %s, iscrittimax = %s WHERE id = %s"
@@ -503,8 +503,7 @@ def update_weight_room(idSala, dimensione):
 
 
 def update_room(idStanza, nome, dimensione):
-    session.query(classes.Room).filter(classes.Room.id == idStanza).update({"nome": nome})
-    session.query(classes.Room).filter(classes.Room.id == idStanza).update({"dimensione": dimensione})
+    session.query(classes.Room).filter(classes.Room.id == idStanza).update({"nome": nome, "dimensione": dimensione})
     '''conn = engine.connect()
     p_query = "UPDATE stanze SET nome = %s, dimensione = %s WHERE id = %s"
     conn.engine.execute(p_query, nome, dimensione, idStanza)
@@ -512,10 +511,7 @@ def update_room(idStanza, nome, dimensione):
 
 
 def update_course(idCorso, nome, iscrittiMax, idIstruttore, idStanza):
-    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"nome": nome})
-    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"iscrittimax": iscrittiMax})
-    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"istruttore": idIstruttore})
-    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"stanza": idStanza})
+    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"nome": nome, "iscrittimax": iscrittiMax, "istruttore": idIstruttore, "stanza": idStanza})
     '''conn = engine.connect()
     p_query = "UPDATE corsi SET nome = %s, iscrittimax = %s, istruttore = %s, stanza = %s WHERE id = %s"
     conn.engine.execute(p_query, nome, iscrittiMax, idIstruttore, idStanza, idCorso)
