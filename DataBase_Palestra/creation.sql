@@ -172,6 +172,15 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
 
+--PrenotazioniNonAbbonati
+CREATE TABLE prenotazioninonabbonati( --AbbonatiSlot
+	nonabbonato INT,
+	slot INT,
+	PRIMARY KEY(nonabbonato, slot),
+	FOREIGN KEY(nonabbonato) REFERENCES nonabbonati ON DELETE CASCADE,
+	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
+);
+
 --Informazioni
 CREATE TABLE informazioni(
 	accessisettimana INT CHECK(accessisettimana > 0),

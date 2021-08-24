@@ -102,7 +102,7 @@
         </style>
     </head>
     <body>
-        <h1>Prenotazioni giorno</h1>
+        <!--<h1>Prenotazioni giorno</h1>
         <h3>{{ data }}</h3>
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
@@ -127,14 +127,20 @@
         <form action="/private">
             Torna all'area di amministrazione: <input type="submit">
         </form>
-        <br>
+        <br>-->
+        <h1>Lista contagiati</h1>
+        <ul>
+            {% for c in contagiati %}
+            <li> #{{ c.id }}: id = {{c.username}}, nome = {{c.nome}}, cognome = {{c.cognome}}, email = {{c.email}}, data di nascita = {{c.datanascita}}</li>
+            {% endfor %}
+        </ul>
     </body>
-    <script>
+    <!--<script>
         var form0 = document.getElementById("form0");
         var select0 = document.getElementById("select0");
 
         function Prenota(){
             form0.submit();
         }
-    </script>
+    </script>-->
 </html>

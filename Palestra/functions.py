@@ -266,7 +266,7 @@ def get_slot_courses(idSlot, subscription):
 
 
 def get_coursesitting_id(idSlot, idCorso):
-    giorno = session.query(classes.Slot.giorno).filter(classes.Slot.giorno == idSlot)
+    giorno = session.query(classes.Slot.giorno).filter(classes.Slot.id == idSlot)
     id_sitting = session.query(classes.CourseSitting.id).filter(and_(func.DATE(classes.CourseSitting.dataseduta) == giorno, classes.CourseSitting.corso == idCorso)).first()
     '''conn = engine.connect()
     p_query = "SELECT id FROM sedutecorsi WHERE (dataseduta::date)=(SELECT giorno FROM slot WHERE id = %s) AND corso = %s"
@@ -303,12 +303,28 @@ def get_infected(giorno, infetto):
     '''
      (SELECT abbonato
       FROM prenotazioni
-      WHERE slot IN (SELECT slot
-                    FROM prenotazioni JOIN slot
-                    WHERE abbonato = infetto AND slot.giorno >= giorno))
+      WHERE abbonato <> infetto AND slot IN (SELECT slot
+                                            FROM prenotazioni JOIN slot
+                                            WHERE abbonato = infetto AND slot.giorno >= giorno))
+     UNION
+     SELECT nonabbonato
+     FORM prenotazioninonabbonati
+     WHERE nonabbonato <> infetto   AND slot IN (SELECT slot
+                                                FROM prenotazioni JOIN slot
+                                                WHERE abbonato = infetto AND slot.giorno >= giorno))
+
     '''
-    slots = session.query(classes.Reservation.slot).filter(and_(classes.Reservation.abbonato == infetto, classes.Slot.giorno >= giorno))
-    infected = session.query(classes.Client).filter()
+    sub_slots = session.query(classes.Reservation.slot).filter(
+        and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
+    notsub_slots = session.query(classes.NSReservation.slot).filter(
+        and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
+    slots = sub_slots.union(notsub_slots)
+    sub_infected = session.query(classes.User).filter(
+        and_(classes.User.id == classes.Client.id, classes.Client.id != infetto, classes.Client.id == classes.Subscriber.id, classes.Client.id == classes.Reservation.abbonato, classes.Reservation.slot.in_(slots)))
+    notsub_infected = session.query(classes.User).filter(
+        and_(classes.User.id == classes.Client.id, classes.Client.id != infetto, classes.Client.id == classes.NotSubscriber.id, classes.Client.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
+    infected = sub_infected.union(notsub_infected)
+    return infected
 
 
 # BOOLEANS

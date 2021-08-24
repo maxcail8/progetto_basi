@@ -513,7 +513,7 @@ def contact_tracing():
     if current_user == functions.get_admin_user():
         giorni = functions.get_last_seven_days()
         clienti = functions.get_clients()
-        return render_template("contact_tracing.html")
+        return render_template("contact_tracing.html", days=giorni, clients=clienti)
     else:
         return redirect(url_for('wrong'))
 
@@ -525,6 +525,6 @@ def contact_tracing_result():
         giorno = request.form['data']
         infetto = request.form['idCliente']
         contagiati = functions.get_infected(giorno, infetto)
-        return render_template("contact_tracing_result.html")
+        return render_template("contact_tracing_result.html", contagiati=contagiati)
     else:
         return redirect(url_for('wrong'))

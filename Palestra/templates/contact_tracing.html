@@ -106,10 +106,10 @@
 
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/contact_tracing_slot" method="POST">
+                <form id="form0" action="/contact_tracing_result" method="POST">
                     <section>
                         <div>
-                            <label>Scegli un giorno da ispezionare</label>
+                            <label>Tracciamento contagiati</label>
                             <select id="select0" name="data">
                                 {% for g in days %}
                                     <option value={{g.data}}>Giorno : {{ g.data }}</option>
@@ -121,7 +121,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <input class="button" type="button" value="Cancella" onclick="SelezionaGiorno()">
+                        <input class="button" type="button" value="Visualizza" onclick="MostraContagiati()">
                     </section>
                 </form>
             </section>
@@ -136,7 +136,7 @@
         var form0 = document.getElementById("form0");
         var select0 = document.getElementById("select0");
 
-        function ModificaCorso() {
+        function MostraContagiati() {
             if(select0.value != "")
                 form0.submit();
             else

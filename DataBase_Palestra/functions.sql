@@ -293,8 +293,13 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
     DECLARE sps_iscrittimax INT;
     DECLARE personemaxslot_buffer INT;
     BEGIN
+        --check_cancella_giorni
+        DELETE FROM giorni WHERE data < CURRENT_DATE - 7;
         --check_data_fine_abbonamento
         INSERT INTO nonabbonati (id) SELECT id FROM abbonati WHERE datafineabbonamento < CURRENT_DATE;
+        INSERT INTO prenotazioninonabbonati (nonabbonato, slot) SELECT p.abbonato, p.slot 
+                                                                FROM prenotazioni p JOIN slot s ON p.slot=s.id
+                                                                WHERE p.abbonato IN (SELECT * FROM nonabbonati) AND s.giorno > CURRENT_DATE - 7;
         DELETE FROM abbonati WHERE datafineabbonamento < CURRENT_DATE;
         --check_genera_giorno_e_slot
         SELECT personemaxslot INTO pms FROM informazioni;

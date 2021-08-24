@@ -357,6 +357,22 @@ class Reservation(Base):
         return "<Reservation(abbonato = {0}, slot = {1})>".format(self.abbonato, self.slot)
 
 
+class NSReservation(Base):
+    __tablename__ = 'prenotazioninonabbonati'
+
+    nonabbonato = Column(Integer, ForeignKey(NotSubscriber.id, ondelete='cascade'), primary_key=True)
+    slot = Column(Integer, ForeignKey(Slot.id, ondelete='cascade'), primary_key=True)
+    subscriber = relationship(NotSubscriber, uselist=False)
+    reservationslot = relationship(Slot, uselist=False)
+
+    def __init__(self, nonabbonato, slot):
+        self.nonabbonato = nonabbonato
+        self.slot = slot
+
+    def __repr__(self):
+        return "<Reservation(nonabbonato = {0}, slot = {1})>".format(self.nonabbonato, self.slot)
+
+
 class Information(Base):
     __tablename__ = 'informazioni'
 

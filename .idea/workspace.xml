@@ -3,13 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/classes.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/classes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/contact_tracing.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/contact_tracing.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/contact_tracing_result.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/contact_tracing_result.html" afterDir="false" />
     </list>
     <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
-    <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="">
-      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-    </list>
+    <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,7 +70,8 @@
       <workItem from="1629537155636" duration="7497000" />
       <workItem from="1629551507047" duration="10501000" />
       <workItem from="1629625454000" duration="18934000" />
-      <workItem from="1629706036286" duration="27154000" />
+      <workItem from="1629706036286" duration="27197000" />
+      <workItem from="1629795366044" duration="9277000" />
     </task>
     <servers />
   </component>
