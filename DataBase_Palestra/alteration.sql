@@ -15,3 +15,10 @@ ALTER TABLE stanze ADD nome VARCHAR(100);
 
 --Aggiungere personemq
 ALTER TABLE informazioni ADD personemq INT CHECK(personemq > 0);
+
+--Modificare lunghezza password
+ALTER TABLE utenti
+ALTER COLUMN password TYPE VARCHAR(512);
+
+ALTER TABLE utenti
+ALTER COLUMN password TYPE BYTEA;

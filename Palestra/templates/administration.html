@@ -13,11 +13,33 @@
                 background-color: #f3f2ee;
             }
 
+            header{
+                background-color: white;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
             #p0{
                 padding: 5px;
             }
 
             h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
                 text-align: center;
                 font-size: 25pt;
                 color: #51bdd5;
@@ -92,7 +114,18 @@
         </style>
     </head>
     <body>
-        <h1>Amministrazione</h1>
+        <header>
+            <nav>
+                <div id="div0">
+                </div>
+                <div id="div1">
+                    <h1>Amministrazione</h1>
+                </div>
+                <div id="div2">
+                    <a href="logout">Logout</a>
+                </div>
+            </nav>
+        </header>
         {% if current_user.is_authenticated and current_user.email == 'admin@palestra.it' %}
         <span id="spanControlli" style="visibility: hidden;">{{controllo}}</span> 
         <span id="spanAccessi" style="visibility: hidden;">{{accessi_settimana}}</span>
@@ -201,11 +234,6 @@
         {% else %}
         <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
         {% endif %}
-        <br>
-        <form action="/logout">
-            Disconnetti:<input type="submit">
-        </form>
-        <br>
     </body>
     <script>
         var formChecks = document.getElementById("formChecks");

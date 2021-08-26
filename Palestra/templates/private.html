@@ -17,6 +17,28 @@
                 padding: 5px;
             }
 
+            header{
+                background-color: white;
+                padding-bottom: 1%;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
             h1{
                 font-family: "Comic Sans MS", cursive, sans-serif;
                 text-align: center;
@@ -105,18 +127,65 @@
             #span1 select{
                 border: 1px solid black;
             }
+
+            table{
+                overflow: hidden;
+                text-align: center;
+                background-color: ivory;
+                /*box-shadow: 10px 10px 5px #dedede;*/
+                box-shadow: 5px 5px 5px black;
+            }
+
+            table th{
+                padding: 5px;
+                border: 1px solid black;
+            }
+
+            table th *{
+                display: inline-block;
+                vertical-align: middle;
+            }
+
+            table td{
+                padding: 5px;
+                border: 1px solid black;
+            }
         </style>
     </head>
     <body>
-        <h1>Area riservata</h1>
+        <header>
+            <nav>
+                <div id="div0">
+                </div>
+                <div id="div1">
+                    <h1>Area riservata</h1>
+                </div>
+                <div id="div2">
+                    <a href="logout">Logout</a>
+                </div>
+            </nav>
+        </header>
         {% if current_user.is_authenticated %}
         <h3>Informazioni utente {{ current_user.nome }} {{ current_user.cognome }}</h3>
         <div id="informazioniUtente">
-            <span>
-                <label>Nome: {{current_user.nome }}</label><label>Cognome: {{ current_user.cognome }}</label><label>Data di nascita: {{ current_user.datanascita }}</label>
-                
-                <label>Username: {{ current_user.username }}</label><label>Email: {{ current_user.email }}</label>
-            </span>
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Data di nascita</th>
+                    <th>Email</th>
+                </tr>
+                <tr>
+                    <td>{{ current_user.id }}</td>
+                    <td>{{ current_user.username }}</td>
+                    <td>{{ current_user.nome }}</td>
+                    <td>{{ current_user.cognome }}</td>
+                    <td>{{ current_user.datanascita }}</td>
+                    <td>{{ current_user.email }}</td>
+                </tr>
+            </table>
         </div>
         
         <h3>Operazioni disponibili</h3>
@@ -193,10 +262,6 @@
         {% else %}
         <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
         {% endif %}
-        <br>
-        <form action="/logout">
-            Disconnetti:<input type="submit">
-        </form>
     </body>
     <script>
         var span0 = document.getElementById("span0");

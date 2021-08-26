@@ -29,7 +29,30 @@
                 background-color: #f3f2ee;
             }
 
+            header{
+                background-color: white;
+                padding-bottom: 1%;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
+            }
+
             h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
                 text-align: center;
                 font-size: 25pt;
                 color: #51bdd5;
@@ -97,7 +120,18 @@
         </style>
     </head>    
     <body>
-        <h1>Modifica corso</h1>
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area amministrazione</a>
+                </div>
+                <div id="div1">
+                    <h1>Modifica corso</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
         <h3>Modifica</h3>
         <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
         <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
@@ -133,11 +167,6 @@
                 </form>
             </section>
         </div>
-        <br>
-        <form action="/administration">
-            Torna all'area di amministrazione: <input type="submit">
-        </form>
-        <br>
     </body>
     <script>
         var form0 = document.getElementById("form0");

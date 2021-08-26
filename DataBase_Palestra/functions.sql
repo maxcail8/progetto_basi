@@ -341,7 +341,7 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
         FOR sp IN SELECT * FROM salepesi ORDER BY id LOOP
             FOR g IN SELECT * FROM giorni ORDER BY data LOOP
                 FOR s IN SELECT * FROM slot WHERE giorno=g.data LOOP
-                    IF (NOT EXISTS(SELECT * FROM sedutesalepesi se WHERE se.salapesi=sp.id AND se.dataseduta=(s.giorno + s.orainizio) THEN
+                    IF (NOT EXISTS(SELECT * FROM sedutesalepesi se WHERE se.salapesi=sp.id AND se.dataseduta=(s.giorno + s.orainizio))) THEN
                         INSERT INTO sedutesalepesi VALUES(idSedute, sp.id, s.giorno + s.orainizio);
                         SELECT sps.iscrittimax INTO cs_iscrittimax
                                                 FROM salapesislot sps JOIN slot sl ON sps.slot=sl.id

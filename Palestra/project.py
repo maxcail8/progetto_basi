@@ -15,6 +15,7 @@ from sqlalchemy.orm import sessionmaker
 # other-import
 from werkzeug.utils import redirect
 from datetime import datetime
+from cryptography.fernet import Fernet
 from array import array
 
 
@@ -29,6 +30,10 @@ migrate = Migrate(app, db)
 # Secret key
 # app.config['SECRET_KEY'] = 'secret11'
 app.secret_key = 'secret14'
+
+#Cryptography
+key = Fernet.generate_key()
+fernet = Fernet(key)
 
 # Gestione login
 login_manager = LoginManager()
@@ -89,7 +94,8 @@ def signup():
 @app.route('/create', methods=['GET', 'POST'])
 def create_user():
     new_id = functions.get_id_increment()
-    user = classes.User(id=new_id, username=request.form['username'], password=request.form['password'], nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
+    pw = request.form['password']
+    user = classes.User(id=new_id, username=request.form['username'], password=fernet.encrypt(pw.encode()), nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
@@ -121,20 +127,23 @@ def login():
         p_email = request.form['user']
         p_pass = request.form['pass']
         real_pwd = session.query(classes.User.password).filter(classes.User.email == p_email).first()
+        real_pwd = real_pwd['password']
         '''conn = engine.connect()
         p_query = "SELECT password AS password FROM utenti WHERE email = %s"
         real_pwd = conn.engine.execute(p_query, p_email).first()
         conn.close()'''
 
         if p_email == admin_email:
-            if real_pwd is not None and p_pass == real_pwd['password']:
+            if real_pwd is not None and p_pass == fernet.decrypt(real_pwd).decode():
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user)
                 return redirect(url_for('administration'))
             else:
                 return redirect(url_for('wrong'))
         elif real_pwd is not None:
-            if p_pass == real_pwd['password']:
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            print(fernet.decrypt(cast(real_pwd, bytes)).decode())
+            if p_pass == fernet.decrypt(cast(real_pwd, bytes)).decode():
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))

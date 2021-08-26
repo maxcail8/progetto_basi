@@ -13,12 +13,35 @@
             }
 
             h1{
+                font-family: "Comic Sans MS", cursive, sans-serif;
                 text-align: center;
                 font-size: 25pt;
                 color: #51bdd5;
                 font-weight: bold;
                 text-shadow: 1px 1px black;
                 padding-top: 10px;
+            }
+
+            header{
+                background-color: white;
+                padding-bottom: 1%;
+            }
+
+            header div{
+                display: inline-block;
+                width: 32%;
+                text-align: center;
+            }
+
+            header a{
+                text-decoration: none;
+                font-size: 15pt;
+                font-weight: bold;
+                color: blue;
+            }
+
+            header a:hover{
+                text-decoration: underline;
             }
 
             #secS{ /*Sezione mese e anno*/
@@ -94,8 +117,19 @@
         </style>
     </head>
     <body>
+        <header>
+            <nav>
+                <div id="div0">
+                    <a href="reserved_private">Area personale</a>
+                </div>
+                <div id="div1">
+                    <h1>Calendario</h1>
+                </div>
+                <div id="div2">
+                </div>
+            </nav>
+        </header>
         {% if current_user.is_authenticated %}
-        <h1>Calendario</h1>
 
         <span id="spanMese" style="visibility: hidden;">{{month}}</span>
         <span id="spanAnno" style="visibility: hidden;">{{year}}</span>
@@ -129,11 +163,6 @@
         {% else %}
         <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato</label></p>
         {% endif %}
-        <br>
-        <form action="/private">
-            Torna all'area riservata:<input type="submit">
-        </form>
-        <br>
     </body>
     <script>
         var mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
@@ -204,10 +233,12 @@
                     
                     var str = new String(value);
                     var v = new Date(value);
-                    var oggi = new Date();
-                    var settimana = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate()+7);
+                    var o = new Date();
+                    var oggi = new Date(o.getFullYear(), o.getMonth(), o.getDate(), 00, 00, 00);
+                    var settimana = new Date();
+                    settimana.setDate(settimana.getDate() + 7);
                     
-                    if(v >= oggi && v.getTime() <= settimana.getTime()){
+                    if(v.getTime() >= oggi.getTime() && v.getTime() <= settimana.getTime()){
                         if(v.getDate() == oggi.getDate())
                             cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                         else
@@ -271,8 +302,10 @@
         function SubmitTestCalendar(value){
             var v = new Date(value);
             var oggi = new Date();
-            var settimana = new Date(oggi.getFullYear(), oggi.getMonth(), oggi.getDate()+7);
-            if(v.getDate() > oggi.getDate() && v.getDate() <= settimana.getDate())
+            var settimana = new Date();
+            settimana.setDate(settimana.getDate() + 7);
+            console.log("oggi: " + oggi + ", settimana: " + settimana);
+            if(v.getTime() > oggi.getTime() && v.getTime() <= settimana.getTime())
                 SubmitData(value);
             else
                 alert("Impossibile effettuare prenotazioni nella data selezionata: " + value);
