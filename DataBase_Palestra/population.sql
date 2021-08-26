@@ -4,18 +4,8 @@ INSERT INTO informazioni VALUES (4, 2, 30, 2);
 INSERT INTO controlli VALUES (0);
 
 --istruttori
-INSERT INTO utenti VALUES (1, 'maxcail8', 'p', 'Massimo', 'Cailotto', 'max@palestra.it', DATE '2000-01-07');
-INSERT INTO istruttori VALUES (1);
-
-INSERT INTO utenti VALUES (2, 'matteomin', 'p', 'Matteo', 'Minardi', 'matte@palestra.it', DATE '2000-10-04');
-INSERT INTO istruttori VALUES (2);
 
 --altri
-INSERT INTO utenti VALUES (0, 'admin', 'admin', 'admin', 'admin', 'admin@palestra.it', DATE '1000-01-01');
-INSERT INTO altri VALUES (0);
-
-INSERT INTO utenti VALUES (3, 'antonio', 'p', 'Antonio', 'Marenguzzo', 'anto@palestra.it', DATE '1900-04-01');
-INSERT INTO altri VALUES (3);
 
 --clienti X
 

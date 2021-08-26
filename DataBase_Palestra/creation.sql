@@ -6,7 +6,7 @@ ALTER USER postgres PASSWORD 'postgres';
 CREATE TABLE utenti(
 	id INT PRIMARY KEY,
 	username VARCHAR(50),
-	password VARCHAR(256),
+	password VARCHAR(100),
 	nome VARCHAR(100),
 	cognome VARCHAR(100),
 	email VARCHAR(100),

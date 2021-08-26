@@ -1,6 +1,7 @@
 # modules-import
 import classes
 import functions
+import hashlib
 
 # flask-import
 from flask import Flask, render_template, request, url_for, make_response
@@ -15,7 +16,6 @@ from sqlalchemy.orm import sessionmaker
 # other-import
 from werkzeug.utils import redirect
 from datetime import datetime
-from cryptography.fernet import Fernet
 from array import array
 
 
@@ -31,13 +31,10 @@ migrate = Migrate(app, db)
 # app.config['SECRET_KEY'] = 'secret11'
 app.secret_key = 'secret14'
 
-#Cryptography
-key = Fernet.generate_key()
-fernet = Fernet(key)
-
 # Gestione login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
 
 # Sessione
 '''Session = sessionmaker(bind=engine)
@@ -49,7 +46,7 @@ session = functions.session
 # Variabili e costanti globali
 first_id_client = 100
 admin_email = 'admin@palestra.it'
-admin_pwd = 'admin'
+admin_pwd = hashlib.md5(("admin" + admin_email).encode()).hexdigest()
 
 
 #user-loader
@@ -66,6 +63,7 @@ def load_user(user_id):
 # Routes
 @app.route('/')
 def home():
+    functions.create_admin()
     i = datetime.now()
     mydate = classes.MyDate(i.year, i.month, i.day)
     return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
@@ -94,8 +92,8 @@ def signup():
 @app.route('/create', methods=['GET', 'POST'])
 def create_user():
     new_id = functions.get_id_increment()
-    pw = request.form['password']
-    user = classes.User(id=new_id, username=request.form['username'], password=fernet.encrypt(pw.encode()), nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
+    pw = request.form['password'] + request.form['email']
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(), nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
@@ -125,25 +123,21 @@ def reserved():
 def login():
     if request.method == 'POST':
         p_email = request.form['user']
-        p_pass = request.form['pass']
+        p_pass = hashlib.md5((request.form['pass'] + p_email).encode()).hexdigest()
+
         real_pwd = session.query(classes.User.password).filter(classes.User.email == p_email).first()
-        real_pwd = real_pwd['password']
-        '''conn = engine.connect()
-        p_query = "SELECT password AS password FROM utenti WHERE email = %s"
-        real_pwd = conn.engine.execute(p_query, p_email).first()
-        conn.close()'''
 
         if p_email == admin_email:
-            if real_pwd is not None and p_pass == fernet.decrypt(real_pwd).decode():
+            real_pwd = str(real_pwd)[2:-3]
+            if real_pwd is not None and p_pass == real_pwd:
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user)
                 return redirect(url_for('administration'))
             else:
                 return redirect(url_for('wrong'))
         elif real_pwd is not None:
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-            print(fernet.decrypt(cast(real_pwd, bytes)).decode())
-            if p_pass == fernet.decrypt(cast(real_pwd, bytes)).decode():
+            real_pwd = str(real_pwd)[2:-3]
+            if p_pass == real_pwd:
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user) # chiamata a Flask - Login
                 return redirect(url_for('private'))
@@ -219,8 +213,14 @@ def book_slot():
         sub = functions.get_subscriber_by_id(current_user.id)
         if sub is not None:
             subscription = functions.get_subscription_by_id(sub.abbonamento)
-            weight_rooms = functions.get_slot_weight_rooms(idSlot, subscription)
-            courses = functions.get_slot_courses(idSlot, subscription)
+            weight_rooms = functions.get_slot_weight_rooms(idSlot, subscription['tipo'])
+            courses = functions.get_slot_courses(idSlot, subscription['tipo'])
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+            print(subscription)
+            print(subscription['tipo'])
+            print(weight_rooms)
+            print(courses)
+            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             return render_template("book_slot.html", idSlot=idSlot, weight_rooms=weight_rooms, courses=courses)
     else:
         return redirect(url_for('wrong'))
@@ -366,6 +366,84 @@ def edit_courses():
         courses = functions.get_courses()
         courses2 = functions.get_courses()
         return render_template("edit_courses.html", trainers=trainers, rooms=rooms, courses=courses, courses2=courses2)
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/edit_trainers', methods=['GET', 'POST'])
+@login_required
+def edit_trainers():
+    trainers = functions.get_trainers()
+    return render_template("edit_trainers.html", trainers=trainers)
+
+
+@app.route('/edit_others', methods=['GET', 'POST'])
+@login_required
+def edit_others():
+    others = functions.get_others()
+    return render_template("edit_others.html", others=others)
+
+
+@app.route('/add_trainer', methods=['GET', 'POST'])
+@login_required
+def add_trainer():
+    return render_template("add_trainer.html")
+
+
+@app.route('/add_trainer_conf', methods=['GET', 'POST'])
+@login_required
+def add_trainer_conf():
+    new_id = functions.get_id_staff_increment()
+    pw = request.form['password'] + request.form['email']
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                        datanascita=request.form['dataNascita'])
+    trainer = classes.Trainer(id=new_id)
+    session.add(user)
+    session.add(trainer)
+    session.commit()
+    return redirect(url_for('confirm'))
+
+
+@app.route('/remove_trainer', methods=['GET', 'POST'])
+@login_required
+def remove_trainer():
+    if current_user == functions.get_admin_user():
+        functions.remove_user(request.form['idIstruttore'])
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
+
+
+@app.route('/add_other', methods=['GET', 'POST'])
+@login_required
+def add_other():
+    return render_template("add_other.html")
+
+
+@app.route('/add_other_conf', methods=['GET', 'POST'])
+@login_required
+def add_other_conf():
+    new_id = functions.get_id_staff_increment()
+    pw = request.form['password'] + request.form['email']
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                        datanascita=request.form['dataNascita'])
+    other = classes.Other(id=new_id)
+    session.add(user)
+    session.add(other)
+    session.commit()
+    return redirect(url_for('confirm'))
+
+
+@app.route('/remove_other', methods=['GET', 'POST'])
+@login_required
+def remove_other():
+    if current_user == functions.get_admin_user():
+        functions.remove_user(request.form['idAltro'])
+        session.commit()
+        return redirect(url_for('confirm'))
     else:
         return redirect(url_for('wrong'))
 

@@ -170,7 +170,7 @@
                     <section>
                             <div>
                                 <label>Modifica numero persone massime</label>
-                                <input id="txtPersone" name="personeMassime" type="number" min="1" value="1">
+                                <input id="txtPersone" name="personeMassime" type="number" min="1" max={{persone_max}} value="1">
                             </div>
                             <input id="subPersone" class="button" type="button" value="Modifica" onclick="ModificaPersone()">
                     </section>
@@ -183,6 +183,28 @@
                                 <input id="txtPersoneMq" name="personeMq" type="number" min="1" value="2">
                             </div>
                             <input id="subPersoneMq" class="button" type="button" value="Modifica" onclick="ModificaPersoneMq()">
+                    </section>
+                </form>
+
+                <hr>
+
+                <form id="form5" action="/edit_trainers" method="POST">
+                    <section>
+                        <div>
+                            <label>Gestione degli istruttori</label>
+                        </div>
+                        <input id="subIstruttori" class="button" type="button" value="Gestisci" onclick="GestisciIstruttori()">
+                    </section>
+                </form>
+
+                <hr>
+
+                <form id="form6" action="/edit_others" method="POST">
+                    <section>
+                        <div>
+                            <label>Gestione dello staff</label>
+                        </div>
+                        <input id="subAltri" class="button" type="button" value="Gestisci" onclick="GestisciAltri()">
                     </section>
                 </form>
 
@@ -245,6 +267,8 @@
         var form2 = document.getElementById("form2");
         var form3 = document.getElementById("form3");
         var form4 = document.getElementById("form4");
+        var form5 = document.getElementById("form5");
+        var form6 = document.getElementById("form6");
 
         var spanControlli = document.getElementById("spanControlli");
         var spanAccessi = document.getElementById("spanAccessi");
@@ -314,6 +338,14 @@
         
         function GestisciSalePesi(){
             form3.submit();
+        }
+
+        function GestisciIstruttori(){
+            form5.submit();
+        }
+
+        function GestisciAltri(){
+            form6.submit();
         }
 
         function EseguiContactTracing(){

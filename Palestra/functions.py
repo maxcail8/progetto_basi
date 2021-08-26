@@ -1,5 +1,6 @@
 #modules-import
 import classes
+import hashlib
 
 # flask-import
 from flask import Flask
@@ -40,6 +41,20 @@ first_id_client = 100
 
 
 # Functions
+def create_admin():
+    exists = session.query(classes.Other).filter(classes.Other.id == 0).first()
+    if not exists:
+        new_id = 0
+        pw = 'admin' + 'admin@palestra.it'
+        user = classes.User(id=new_id, username="admin", password=hashlib.md5(pw.encode()).hexdigest(),
+                            nome="admin", cognome="admin", email="admin@palestra.it",
+                            datanascita='1000-01-01')
+        admin = classes.Other(new_id)
+        session.add(user)
+        session.add(admin)
+        session.commit()
+
+
 # GETTERS
 def get_subscriber_by_id(id):
     subscriber = session.query(classes.Subscriber).filter(classes.Subscriber.id == id).first()
@@ -66,6 +81,14 @@ def get_id_increment():
     p_query = "SELECT * FROM utenti WHERE id>=100 ORDER BY id DESC"
     user = conn.engine.execute(p_query).first()
     conn.close()'''
+    if user:
+        return user.id + 1
+    else:
+        return first_id_client
+
+
+def get_id_staff_increment():
+    user = session.query(classes.User).filter(classes.User.id < 100).order_by(classes.User.id.desc()).first()
     if user:
         return user.id + 1
     else:
@@ -138,12 +161,12 @@ def get_subscription(subscription):
 
 
 def get_subscription_by_id(id):
-    sub = session.query(classes.Subscription).filter(classes.Subscription.id == id).first()
+    sub = session.query(classes.Subscription.tipo).filter(classes.Subscription.id == id).first()
     '''conn = engine.connect()
     p_query = "SELECT * FROM abbonamenti WHERE id = %s"
     sub = conn.engine.execute(p_query, id).first()
     conn.close()'''
-    return classes.Subscription(sub.id, sub.tipo, sub.costo)
+    return sub
 
 
 def get_courses():
@@ -200,6 +223,11 @@ def get_trainers():
     return trainers
 
 
+def get_others():
+    others = session.query(classes.User).filter(and_(classes.Other.id == classes.User.id, classes.User.id != 0)).order_by(classes.Other.id.asc()).all()
+    return others
+
+
 def get_clients():
     clients = session.query(classes.User).filter(classes.Client.id == classes.User.id).order_by(classes.Client.id.asc()).all()
     '''conn = engine.connect()
@@ -237,8 +265,8 @@ def get_slot_from_date(data):
 
 
 def get_slot_weight_rooms(idSlot, subscription):
-    if subscription=='corsi':
-        return None
+    if subscription == 'corsi':
+        return []
     else:
         weightrooms = session.query(classes.WeightRoom).filter(classes.WeightRoom.id.in_(
             session.query(classes.WeightRoomSlot.salapesi).filter(classes.WeightRoomSlot.slot == idSlot)
@@ -252,8 +280,8 @@ def get_slot_weight_rooms(idSlot, subscription):
 
 
 def get_slot_courses(idSlot, subscription):
-    if subscription=='sala_pesi':
-        return None
+    if subscription == 'sala_pesi':
+        return []
     else:
         courses = session.query(classes.Course).filter(classes.Course.id.in_(
             session.query(classes.CourseSlot.corso).filter(classes.CourseSlot.slot == idSlot)
@@ -541,6 +569,10 @@ def remove_course(idCorso):
     p_query = "DELETE FROM corsi WHERE id = %s"
     conn.engine.execute(p_query, idCorso)
     conn.close()'''
+
+
+def remove_user(idUser):
+    session.query(classes.User).filter(classes.User.id == idUser).delete()
 
 
 def remove_not_subscriber(idCliente):

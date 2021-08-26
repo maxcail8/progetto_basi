@@ -125,22 +125,47 @@ EXECUTE FUNCTION trigger_iscrittimax_corso_stanza();
 DROP TRIGGER IF EXISTS t_personemaxslot ON informazioni CASCADE;
 DROP FUNCTION IF EXISTS trigger_personemaxslot();
 CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
+    DECLARE valori INT;
     DECLARE totale INT;
     DECLARE totale_corsi INT;
     DECLARE totale_sale INT;
     DECLARE s slot%rowtype;
+    DECLARE corso_r corsi%rowtype;
+    DECLARE sala_r salepesi%rowtype;
     DECLARE i INT = 0;
     DECLARE guardia_corsi BOOLEAN = TRUE;
     DECLARE guardia_salepesi BOOLEAN = TRUE;
     BEGIN
-        IF (NEW.personemaxslot <= (SELECT personemaxslot FROM informazioni)) THEN
+        contatore = (numero di corsi in quello slot) + (numero di sale pesi in quello slot)
+        valori = NEw.personemaxslot / contatore;
+        for ogni corso in quello slot
+            iscrittimax = valori
+        for ogni salapesi 
+            iscrittimax = v
+        FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
+            SELECT COUNT(DISTINCT(c.corso)) INTO totale_corsi FROM corsislot c WHERE c.slot = s.id;
+            SELECT COUNT(DISTINCT(sp.salapesi)) INTO totale_sale FROM salapesislot sp WHERE sp.slot = s.id;
+            totale = 1 + totale_corsi + totale_sale;
+            valori = NEW.personemaxslot / totale;
+            FOR corso_r IN SELECT corso FROM corsislot WHERE slot=s.id LOOP
+                UPDATE corsislot SET iscrittimax = valori WHERE corso=corso_r.id AND iscrittimax > 1;
+            END LOOP;
+            FOR sala_r IN SELECT salapesi FROM salepesislot WHERE slot=s.id LOOP
+                UPDATE corsislot SET iscrittimax = valori WHERE corso=corso_r.id AND iscrittimax > 1;        
+            END LOOP;
+        END LOOP;
+        /*IF (NEW.personemaxslot <= (SELECT personemaxslot FROM informazioni)) THEN
             FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
                 SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
                 SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
                 totale = totale_corsi + totale_sale;
                 WHILE totale > NEW.personemaxslot LOOP
-                    UPDATE corsislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
-                    UPDATE salapesislot SET iscrittimax = iscrittimax - 1 WHERE slot=s.id;
+                    FOR idcorso IN SELECT corso FROM corsislot LOOP
+                        UPDATE corsislot SET iscrittimax = iscrittimax - 1 WHERE corso=idcorso AND slot=s.id AND iscrittimax > 1;
+                    END LOOP;
+                    FOR idsala IN SELECT salapesi FROM salapesislot LOOP
+                        UPDATE salapesislot SET iscrittimax = iscrittimax - 1 WHERE salapesi=idsala AND slot=s.id AND iscrittimax > 1;
+                    END LOOP;                    
                     SELECT COALESCE(SUM(iscrittimax),0) INTO totale_corsi FROM corsislot WHERE slot=s.id;
                     SELECT COALESCE(SUM(iscrittimax),0) INTO totale_sale FROM salapesislot WHERE slot=s.id;
                     totale = totale_corsi + totale_sale;
@@ -179,14 +204,14 @@ CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
                     i = i + 1;
                 END LOOP;
             END LOOP;  
-        END IF;
+        END IF;*/
         UPDATE slot SET personemax =(SELECT COALESCE(SUM(iscrittimax),0) 
                                     FROM corsislot WHERE slot=s.id) 
                                     + 
                                     (SELECT COALESCE(SUM(iscrittimax),0)
                                     FROM salapesislot WHERE slot=s.id) 
                     WHERE id=s.id;
-
+        
         RETURN NEW;      
     END;
 $$ LANGUAGE 'plpgsql';
@@ -204,7 +229,7 @@ DROP TRIGGER IF EXISTS t_username_diversi_utenti ON utenti CASCADE;
 DROP FUNCTION IF EXISTS trigger_username_diversi_utenti();
 CREATE FUNCTION trigger_username_diversi_utenti() RETURNS trigger AS $$
     BEGIN
-        IF (EXISTS (SELECT * FROM utenti u WHERE u.username=NEW.username)) THEN
+        IF (EXISTS (SELECT * FROM utenti u WHERE u.username=NEW.username OR u.email=NEW.email)) THEN
             RETURN NULL;
         END IF;
         RETURN NEW;
