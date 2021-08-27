@@ -12,24 +12,28 @@ CREATE TABLE utenti(
 	email VARCHAR(100),
 	datanascita DATE CHECK (datanascita < CURRENT_DATE)
 );
+CREATE INDEX ON utenti (id);
 
 --Istruttori
 CREATE TABLE istruttori(
 	id INT PRIMARY KEY,
 	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
+CREATE INDEX ON istruttori (id);
 
 --Altri
 CREATE TABLE altri(
 	id INT PRIMARY KEY,
 	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
+CREATE INDEX ON altri (id);
 
 --Clienti
 CREATE TABLE clienti(
 	id INT PRIMARY KEY,
 	FOREIGN KEY(id) REFERENCES utenti ON DELETE CASCADE
 );
+CREATE INDEX ON clienti (id);
 
 --Abbonamenti
 CREATE TABLE abbonamenti( --controllare
@@ -37,6 +41,7 @@ CREATE TABLE abbonamenti( --controllare
 	tipo VARCHAR(10),
 	costo REAL CHECK(costo > 0)
 );
+CREATE INDEX ON abbonamenti (id);
 
 --Abbonati
 CREATE TABLE abbonati(
@@ -49,12 +54,14 @@ CREATE TABLE abbonati(
 	FOREIGN KEY(abbonamento) REFERENCES abbonamenti ON DELETE CASCADE,
 	CHECK (datafineabbonamento > datainizioabbonamento)
 );
+CREATE INDEX ON abbonati (id);
 
 --NonAbbonati
 CREATE TABLE nonabbonati(
 	id INT PRIMARY KEY,
 	FOREIGN KEY(id) REFERENCES clienti ON DELETE CASCADE
 );
+CREATE INDEX ON nonabbonati (id);
 
 --Stanze
 CREATE SEQUENCE stanze_id_seq;
@@ -65,6 +72,7 @@ CREATE TABLE stanze(
 	PRIMARY KEY(id)
 );
 ALTER SEQUENCE stanze_id_seq OWNED BY stanze.id;
+CREATE INDEX ON stanze (id);
 
 --SalePesi
 CREATE SEQUENCE salepesi_id_seq;
@@ -75,6 +83,7 @@ CREATE TABLE salepesi(
 	PRIMARY KEY(id)
 );
 ALTER SEQUENCE salepesi_id_seq OWNED BY salepesi.id;
+CREATE INDEX ON salepesi (id);
 
 --Corsi
 CREATE SEQUENCE corsi_id_seq;
@@ -89,6 +98,8 @@ CREATE TABLE corsi(
 	FOREIGN KEY(stanza) REFERENCES stanze ON DELETE CASCADE
 );
 ALTER SEQUENCE corsi_id_seq OWNED BY corsi.id;
+CREATE INDEX ON corsi (id);
+CREATE INDEX ON corsi (stanza);
 
 --SeduteCorsi
 CREATE TABLE sedutecorsi(
@@ -97,6 +108,7 @@ CREATE TABLE sedutecorsi(
 	dataseduta TIMESTAMP, --log persone per covid
 	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE
 );
+CREATE INDEX ON sedutecorsi (id);
 
 --AbbonatiSeduteCorsi
 CREATE TABLE abbonatisedutecorsi(
@@ -106,6 +118,7 @@ CREATE TABLE abbonatisedutecorsi(
 	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
 	FOREIGN KEY(seduta) REFERENCES sedutecorsi ON DELETE CASCADE
 );
+CREATE INDEX ON abbonatisedutecorsi (seduta, abbonato);
 
 --SeduteSalePesi
 CREATE TABLE sedutesalepesi(
@@ -114,6 +127,8 @@ CREATE TABLE sedutesalepesi(
 	dataseduta TIMESTAMP, --log persone per covid
 	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE
 );
+CREATE INDEX ON sedutesalepesi (id);
+CREATE INDEX ON sedutesalepesi (salapesi);
 
 --AbbonatiSeduteSalePesi
 CREATE TABLE abbonatisedutesalepesi(
@@ -123,11 +138,13 @@ CREATE TABLE abbonatisedutesalepesi(
 	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
 	FOREIGN KEY(seduta) REFERENCES sedutesalepesi ON DELETE CASCADE
 );
+CREATE INDEX ON abbonatisedutesalepesi (seduta, abbonato);
 
 --Giorni
 CREATE TABLE giorni(
 	data DATE PRIMARY KEY
 );
+CREATE INDEX ON giorni (data);
 
 --Slot
 CREATE SEQUENCE slot_id_seq;
@@ -142,6 +159,8 @@ CREATE TABLE slot(
 	CHECK (orafine > orainizio) 
 );
 ALTER SEQUENCE slot_id_seq OWNED BY slot.id;
+CREATE INDEX ON slot (id);
+CREATE INDEX ON slot (giorno);
 
 --CorsiSlot
 CREATE TABLE corsislot(
@@ -152,6 +171,7 @@ CREATE TABLE corsislot(
 	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
+CREATE INDEX ON corsislot (corso, slot);
 
 --SalaPesiSlot
 CREATE TABLE salapesislot(
@@ -162,6 +182,7 @@ CREATE TABLE salapesislot(
 	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
+CREATE INDEX ON salapesislot (salapesi, slot);
 
 --Prenotazioni
 CREATE TABLE prenotazioni( --AbbonatiSlot
@@ -171,6 +192,7 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 	FOREIGN KEY(abbonato) REFERENCES abbonati ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
+CREATE INDEX ON prenotazioni (abbonato, slot);
 
 --PrenotazioniNonAbbonati
 CREATE TABLE prenotazioninonabbonati( --AbbonatiSlot
@@ -180,6 +202,7 @@ CREATE TABLE prenotazioninonabbonati( --AbbonatiSlot
 	FOREIGN KEY(nonabbonato) REFERENCES nonabbonati ON DELETE CASCADE,
 	FOREIGN KEY(slot) REFERENCES slot ON DELETE CASCADE
 );
+CREATE INDEX ON prenotazioninonabbonati (nonabbonato, slot);
 
 --Informazioni
 CREATE TABLE informazioni(

@@ -231,6 +231,103 @@ EXECUTE FUNCTION trigger_insert_clienti();
 
 
 
+DROP PROCEDURE IF EXISTS check_genera_giorno_e_slot();
+CREATE PROCEDURE check_genera_giorno_e_slot() AS $$
+    DECLARE pms INT; 
+    DECLARE idSlot INT;
+    DECLARE giorno_tmp DATE;
+    DECLARE oraIn TIME = '05:30:00';
+	DECLARE oraFin TIME = '08:50:00';
+    BEGIN
+        SELECT personemaxslot INTO pms FROM informazioni;
+        SELECT MAX(id) INTO idSlot FROM slot;
+        idSlot = idSlot + 1;
+        FOR i IN 1..30 LOOP
+            giorno_tmp = CURRENT_DATE + i;
+            IF (NOT EXISTS(SELECT * FROM giorni WHERE data = giorno_tmp)) THEN
+                INSERT INTO giorni VALUES(giorno_tmp);
+                FOR j IN 0..5 LOOP
+                    INSERT INTO slot VALUES(idSlot, pms, giorno_tmp, oraIn, oraFin);
+                    idSlot = idSlot + 1;
+                    oraIn = oraFin + '00:10:00';
+                    oraFin = oraIn + '02:50:00';
+                END LOOP;
+                oraIn = '05:30:00';
+                oraFin = '08:50:00';
+            END IF;
+        END LOOP;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+
+
+
+
+
+DROP PROCEDURE IF EXISTS check_aggiungi_corsi_slot();
+CREATE PROCEDURE check_aggiungi_corsi_slot() AS $$
+    DECLARE idSedute INT;
+    DECLARE idSlot INT;
+    DECLARE c corsi%rowtype;
+    DECLARE data_tmp TIMESTAMP;
+    DECLARE data_buff TIMESTAMP;
+    BEGIN
+        SELECT COALESCE(MAX(id),0) INTO idSedute FROM sedutecorsi;
+        idSedute = idSedute + 1;
+        FOR c IN SELECT * FROM corsi ORDER BY id LOOP
+            FOR i IN 0..6 LOOP
+                SELECT se.dataseduta INTO data_tmp FROM sedutecorsi se WHERE se.corso=c.id AND i=(SELECT EXTRACT(DOW FROM se.dataseduta));
+                IF (data_tmp IS NOT NULL) THEN
+                    FOR j IN 0..3 LOOP
+                        IF (NOT EXISTS(SELECT * FROM sedutecorsi se WHERE se.corso=c.id AND se.dataseduta=(data_tmp + (INTERVAL '1 day' * 7*j)))) THEN
+                            INSERT INTO sedutecorsi VALUES(idSedute, c.id, data_tmp + (INTERVAL '1 day' * 7*j)); 
+                            SELECT dataseduta INTO data_buff FROM sedutecorsi WHERE id=idSedute;
+                            SELECT id INTO idSlot FROM slot WHERE giorno=(data_buff::date) AND orainizio=(data_buff::time);
+                            IF (NOT EXISTS (SELECT * FROM corsislot WHERE corso=c.id AND slot=idSlot)) THEN
+                                INSERT INTO corsislot VALUES(c.id, idSlot, c.iscrittimax);
+                            END IF;
+                            idSedute = idSedute + 1;
+                        END IF;
+                    END LOOP; 
+                END IF;
+            END LOOP;    
+        END LOOP;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+
+
+
+
+
+DROP PROCEDURE IF EXISTS check_aggiungi_salepesi_slot();
+CREATE PROCEDURE check_aggiungi_salepesi_slot() AS $$
+    DECLARE idSedute INT;
+    DECLARE sp salepesi%rowtype;
+    DECLARE g giorni%rowtype;
+    DECLARE s slot%rowtype;
+    BEGIN
+        SELECT COALESCE(MAX(id),0) INTO idSedute FROM sedutesalepesi;
+        idSedute = idSedute + 1;
+        FOR sp IN SELECT * FROM salepesi ORDER BY id LOOP
+            FOR g IN SELECT * FROM giorni ORDER BY data LOOP
+                FOR s IN SELECT * FROM slot WHERE giorno=g.data LOOP
+                    IF (NOT EXISTS(SELECT * FROM sedutesalepesi se WHERE se.salapesi=sp.id AND se.dataseduta=(s.giorno + s.orainizio))) THEN
+                        INSERT INTO sedutesalepesi VALUES(idSedute, sp.id, s.giorno + s.orainizio);
+                        IF (NOT EXISTS (SELECT * FROM salapesislot WHERE salapesi=sp.id AND slot=s.id)) THEN
+                            INSERT INTO salapesislot VALUES(sp.id, s.id, sp.iscrittimax);
+                        END IF;
+                        idSedute = idSedute + 1;
+                    END IF;
+                END LOOP;
+            END LOOP;
+        END LOOP;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+
+
+
 
 DROP TRIGGER IF EXISTS check_data_fine_abbonamento ON controlli CASCADE;
 DROP FUNCTION IF EXISTS trigger_check_data_fine_abbonamento();
@@ -259,7 +356,7 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
                                                                 FROM prenotazioni p JOIN slot sl ON p.slot=sl.id
                                                                 WHERE p.abbonato IN (SELECT * FROM nonabbonati) AND sl.giorno >= CURRENT_DATE - 7;
         DELETE FROM abbonati WHERE datafineabbonamento < CURRENT_DATE;
-        --check_genera_giorno_e_slot
+        /*--check_genera_giorno_e_slot
         SELECT personemaxslot INTO pms FROM informazioni;
         SELECT MAX(id) INTO idSlot FROM slot;
         idSlot = idSlot + 1;
@@ -313,7 +410,10 @@ CREATE FUNCTION trigger_check_data_fine_abbonamento() RETURNS trigger AS $$
                     END IF;
                 END LOOP;
             END LOOP;
-        END LOOP;
+        END LOOP;*/
+        CALL check_genera_giorno_e_slot();
+        CALL check_aggiungi_corsi_slot();
+        CALL check_aggiungi_salepesi_slot();
         SELECT personemaxslot INTO personemaxslot_buffer FROM informazioni;
         UPDATE informazioni SET personemaxslot = personemaxslot_buffer;
 
