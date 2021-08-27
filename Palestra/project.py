@@ -17,6 +17,7 @@ from sqlalchemy.orm import sessionmaker
 from werkzeug.utils import redirect
 from datetime import datetime
 from array import array
+from PIL import Image
 
 
 #######################
@@ -81,7 +82,10 @@ def wrong():
 
 @app.route('/signin')
 def signin():
-    return render_template("signin.html")
+    if current_user.is_authenticated:
+        return redirect(url_for('private'))
+    else:
+        return render_template("signin.html")
 
 
 @app.route('/signup')

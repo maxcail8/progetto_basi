@@ -1,181 +1,160 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Aggiungi istruttore</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
+{% extends "base.html" %}
 
-            .clearfix{
-                overflow: auto;
-            }
+{% block pagehead %}
+    <title>Aggiungi istruttore</title>
+    <style>
+        #sezione0{
+            background-color: white!important;
+            width: 50%!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 20px!important;
+        }
 
-            .clearfix::after{
-                content: "";
-                clear: both;
-                display: table;
-            }
+        #sezione0 section{
+            margin: 5px!important;
+        }
 
-            body{
-                /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                background-color: #f3f2ee;
-            }
+        #sezione0 section div{
+            box-sizing: border-box!important;
+            display: inline-block!important;
+            width: 70%!important;
+        }
 
-            h1{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
-                font-size: 25pt;
-                color: #51bdd5;
-                font-weight: bold;
-                text-shadow: 1px 1px black;
-            }
+        #divCheck{
+            margin-top: 10px!important;
+        }
 
-            #sezione0{
-                background-color: white;
-                width: 50%;
-                display: block;
-                margin: 0 auto;
-            }
+        #sezione0 section label{
+            display: inline-block!important;
+            width: 25%!important;
+        }
 
-            #sezione0 section{
-                margin: 5px;
-            }
+        #sezione0 input[type="text"], input[type="password"], input[type="email"], input[type="date"]{
+            width: 100%!important;
+            border: 0.1px solid black!important;
+            padding: 10px!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+            font-size: 12pt!important;
+        }
 
-            #sezione0 section div{
-                box-sizing: border-box;
-                display: inline-block;
-                width: 70%;
-            }
+        #sezione0 input[type="button"]{
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 30px!important;
+            margin-bottom: 30px!important;
+            padding: 10px 20px 10px 20px!important;
+            border-radius: 5px!important;
+            font-size: 20pt!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+            width: 25%!important;
+        }
 
-            #divCheck{
-                margin-top: 10px;
-            }
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
 
-            #sezione0 section label{
-                display: inline-block;
-                width: 25%;
-            }
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
 
-            #sezione0 input[type="text"], input[type="password"], input[type="email"], input[type="date"]{
-                width: 100%;
-                border: 0.1px solid black;
-                padding: 10px;
-                margin: 0 auto;
-                margin-top: 10px;
-                font-size: 12pt;
-            }
+        #span0{
+            padding-left: 5%!important;
+        }
 
-            #sezione0 input[type="button"]{
-                display: block;
-                margin: 0 auto;
-                margin-top: 30px;
-                margin-bottom: 30px;
-                padding: 10px 20px 10px 20px;
-                border-radius: 5px;
-                font-size: 20pt;
-                border: 1px solid black;
-                background-color: #4eb99f;
-            }
+        #span0 select{
+            border: 1px solid black!important;
+        }
 
-            #sezione0 input[type="button"]:hover{
-                border: 2px solid blue;
-                background-color: #5febc8;
-            }
+        #span1{
+            padding-left: 5%!important;
+        }
 
-            #sezione0 a{
-                text-align: center;
-                color: blue;
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-            }
+        #span1 select{
+            border: 1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="/">Homepage</a>
+            </div>
+            <div id="div1">
+                <h1>Registrazione istruttore</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
 
-            #span0{
-                padding-left: 5%;
-            }
-
-            #span0 select{
-                border: 1px solid black;
-            }
-
-            #span1{
-                padding-left: 5%;
-            }
-
-            #span1 select{
-                border: 1px solid black;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Registrazione nuovo istruttore</h1>
-
-        <section id="sezione0">
-            <form id="form0" class="w3-container w3-card-4" action="/add_trainer_conf" method="POST">
+    <section id="sezione0">
+        <form id="form0" class="w3-container w3-card-4" action="/add_trainer_conf" method="POST">
+            <section>
                 <section>
-                    <section>
-                        <label>Nome:</label>
-                        <div>
-                            <input id="nome" type="text" name="nome" placeholder="Inserisci qui il tuo nome">
-                        </div>
-                    </section>
-                    
-                    <section>
-                        <label>Cognome:</label>
-                        <div>
-                            <input id="cognome" type="text" name="cognome"  placeholder="Inserisci qui il tuo cognome">
-                        </div>
-                    </section>
-                    
-                    <section>
-                        <label>Data di nascita:</label>
-                        <div>
-                            <input id="data" type="date" name="dataNascita">
-                        </div>
-                    </section>
-                
-                    <section>
-                        <label>Email:</label>
-                        <div>
-                            <input id="email" type="email" name="email" placeholder="Inserisci qui la tua email">
-                        </div>
-                    </section>
-                    
-                    
-                    <section>
-                        <label>Username:</label>
-                        <div>
-                            <input id="username" type="text" name="username"  placeholder="Inserisci qui il tuo username">
-                        </div>
-                    </section>
-                    
-                    <section>
-                        <label>Password:</label>
-                        <div>
-                            <input id="pwd" type="password" name="password"  placeholder="Inserisci qui la tua password" oninput="ControllaPass()">
-                        </div>
-                    </section>
-                    
-                    <section>
-                        <label>Conferma password:</label>
-                        <div>
-                            <input id="conf" type="password" name="conf"  placeholder="Conferma qui la tua password"  oninput="ControllaPass()">
-                        </div>
-                    </section>
-
-                    <input id="sub0" class="button" type="button" value="Conferma" onclick="ControllaConferma()">
+                    <label>Nome:</label>
+                    <div>
+                        <input id="nome" type="text" name="nome" placeholder="Inserisci qui il tuo nome">
+                    </div>
                 </section>
-            </form>
-        </section>
-    </body>
+                
+                <section>
+                    <label>Cognome:</label>
+                    <div>
+                        <input id="cognome" type="text" name="cognome"  placeholder="Inserisci qui il tuo cognome">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Data di nascita:</label>
+                    <div>
+                        <input id="data" type="date" name="dataNascita">
+                    </div>
+                </section>
+            
+                <section>
+                    <label>Email:</label>
+                    <div>
+                        <input id="email" type="email" name="email" placeholder="Inserisci qui la tua email">
+                    </div>
+                </section>
+                
+                
+                <section>
+                    <label>Username:</label>
+                    <div>
+                        <input id="username" type="text" name="username"  placeholder="Inserisci qui il tuo username">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Password:</label>
+                    <div>
+                        <input id="pwd" type="password" name="password"  placeholder="Inserisci qui la tua password" oninput="ControllaPass()">
+                    </div>
+                </section>
+                
+                <section>
+                    <label>Conferma password:</label>
+                    <div>
+                        <input id="conf" type="password" name="conf"  placeholder="Conferma qui la tua password"  oninput="ControllaPass()">
+                    </div>
+                </section>
+
+                <input id="sub0" class="button" type="button" value="Conferma" onclick="ControllaConferma()">
+            </section>
+        </form>
+    </section>
+{% endblock %}
+{% block pagescript %}
     <script>
         var form0 = document.getElementById("form0");
         var pulsante = document.getElementById("sub0");
@@ -217,4 +196,4 @@
             return txtPwd.value.trim() == txtConf.value.trim();
         }
     </script>
-</html>
+{% endblock %}

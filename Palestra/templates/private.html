@@ -1,268 +1,138 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Area riservata</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
-            body{
-                /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif!important;;
-                background-color: #f3f2ee;
-            }
+{% extends "base.html" %}
 
-            #p0{
-                padding: 5px;
-            }
+{% block pagehead %}
+    <title>Area riservata</title>
+    
+    <style>
+        #span0{
+            padding-left: 3%!important;
+        }
 
-            header{
-                background-color: white;
-                padding-bottom: 1%;
-            }
+        #span0 select{
+            border: 1px solid black!important;
+        }
 
-            header div{
-                display: inline-block;
-                width: 32%;
-                text-align: center;
-            }
+        #span1{
+            padding-left: 3%!important;
+        }
 
-            header a{
-                text-decoration: none;
-                font-size: 15pt;
-                font-weight: bold;
-                color: blue;
-            }
-
-            header a:hover{
-                text-decoration: underline;
-            }
-
-            h1{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
-                font-size: 25pt;
-                color: #51bdd5;
-                font-weight: bold;
-                text-shadow: 1px 1px black;
-            }
-
-            h3{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-weight: bold;
-                margin-left: 3%;
-            }
-
-            #informazioniUtente{
-                margin-left: 3%;
-            }
-
-            #informazioniUtente label{
-                display: block;
-            }
-
-            #operazioniDisp{
-                margin-left: 3%;
-            }
-
-            #sezione0{
-                background-color: white;
-                width: 90%;
-                display: block;
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-
-            #sezione0 section{
-                margin: 5px;
-                padding: 5px;
-            }
-
-            #sezione0 section div{
-                display: inline-block;
-                width: 90%;
-            }
-
-            #sezione0 section label{
-                display: inline-block;
-                width: 45%;
-            }
-
-            #sezione0 input[type="button"]{
-                display: inline-block;
-                width: 8%;
-                margin-right: 0 auto;
-                padding: 5px 10px 5px 10px;
-                border-radius: 5px;
-                border: 1px solid black;
-                background-color: #4eb99f;
-            }
-
-            #sezione0 input[type="button"]:hover{
-                border: 2px solid blue;
-                background-color: #5febc8;
-            }
-
-            #sezione0 a{
-                text-align: center;
-                color: blue;
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-            }
-
-            #span0{
-                padding-left: 3%;
-            }
-
-            #span0 select{
-                border: 1px solid black;
-            }
-
-            #span1{
-                padding-left: 3%;
-            }
-
-            #span1 select{
-                border: 1px solid black;
-            }
-
-            table{
-                overflow: hidden;
-                text-align: center;
-                background-color: ivory;
-                /*box-shadow: 10px 10px 5px #dedede;*/
-                box-shadow: 5px 5px 5px black;
-            }
-
-            table th{
-                padding: 5px;
-                border: 1px solid black;
-            }
-
-            table th *{
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            table td{
-                padding: 5px;
-                border: 1px solid black;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <div id="div0">
-                </div>
-                <div id="div1">
-                    <h1>Area riservata</h1>
-                </div>
-                <div id="div2">
-                    <a href="logout">Logout</a>
-                </div>
-            </nav>
-        </header>
-        {% if current_user.is_authenticated %}
-        <h3>Informazioni utente {{ current_user.nome }} {{ current_user.cognome }}</h3>
-        <div id="informazioniUtente">
-            <table>
-                <tr>
-                    <th>Id</th>
-                    <th>Username</th>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Data di nascita</th>
-                    <th>Email</th>
-                </tr>
-                <tr>
-                    <td>{{ current_user.id }}</td>
-                    <td>{{ current_user.username }}</td>
-                    <td>{{ current_user.nome }}</td>
-                    <td>{{ current_user.cognome }}</td>
-                    <td>{{ current_user.datanascita }}</td>
-                    <td>{{ current_user.email }}</td>
-                </tr>
-            </table>
-        </div>
-        
-        <h3>Operazioni disponibili</h3>
-        <div id="operazioniDisp">
-            <section id="sezione0" class="w3-container w3-card-4">
-                <section>
-                    <form id="informazioni" action="/info_user" method="POST">
-                        <div>
-                            <label>Ulteriori informazioni</label>
-                        </div>
-                        <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
-                    </form>
-                </section>
-                <hr>
-                {% if sub==True %}
-                <section>
-                    <form id="calendario" action="/calendar" method="POST">
-                        <div>
-                            <label>Effettua una prenotazione</label>
-                        </div>
-                        <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
-                        <select name="anno" id="spanAnno" style="visibility: hidden;">
-                            <option></option>
-                        </select>
-                        <select name="mese" id="spanMese" style="visibility: hidden;">
-                            <option></option>
-                        </select>
-                        <select name="giorno" id="spanGiorno" style="visibility: hidden;">
-                            <option></option>
-                        </select>
-                    </form>
-                </section>
-                <hr>
-                <section>
-                    <form id="cancella_prenotazione" action="/cancel_reservation" method="POST">
-                        <div>
-                            <label>Cancella una prenotazione</label>
-                        </div>
-                        <input id="subCancPren" class="button" type="button" value="Cancella" onclick="CancellaPrenotazione()">
-                    </form>
-                </section>
-                {% else %}
-                <section>
-                    <form id="abbonati" action="/subscribe" method="POST">
-                        <div id="divCheck">
-                            <label>Effettua abbonamento</label>
-                            <input id="abbonamento" type="checkbox" onchange="ControllaCheck()"/>Abbonati
-                            <span id="span0" style="visibility: hidden;">
-                                <select id="select0" name="abb">
-                                    <option value="null" selected hidden>Seleziona abbonamento</option>
-                                    <option value="sala_pesi">Sala pesi</option>
-                                    <option value="corsi">Corsi</option>
-                                    <option value="completo">Completo</option>
-                                    <option value="prova">Prova</option>
-                                </select>
-                            </span>
-                            <span id="span1" style="visibility: hidden;">
-                                <select id="select1" name="durata">
-                                    <option value="0" selected hidden>Seleziona durata</option>
-                                    <option value="30">1 mese</option>
-                                    <option value="90">3 mesi</option>
-                                    <option value="180">6 mesi</option>
-                                    <option value="365">1 anno</option>
-                                </select>
-                            </span>
-                            <span id="spanIdUtente" name="idUtente" style="visibility: hidden;">{{current_user.id}}</span>
-                        </div>
-                        <input id="subAbb" class="button" type="button" value="Abbonati" onclick="Abbonati()">
-                    </form>
-                </section>
-                {% endif %}
+        #span1 select{
+            border: 1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+            </div>
+            <div id="div1">
+                <h1>Area riservata</h1>
+            </div>
+            <div id="div2">
+                <a href="logout">Logout</a>
+            </div>
+        </nav>
+    </header>
+    {% if current_user.is_authenticated %}
+    <h3>Informazioni utente {{ current_user.nome }} {{ current_user.cognome }}</h3>
+    <div id="informazioniUtente">
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Data di nascita</th>
+                <th>Email</th>
+            </tr>
+            <tr>
+                <td>{{ current_user.id }}</td>
+                <td>{{ current_user.username }}</td>
+                <td>{{ current_user.nome }}</td>
+                <td>{{ current_user.cognome }}</td>
+                <td>{{ current_user.datanascita }}</td>
+                <td>{{ current_user.email }}</td>
+            </tr>
+        </table>
+    </div>
+    
+    <h3>Operazioni disponibili</h3>
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <section>
+                <form id="informazioni" action="/info_user" method="POST">
+                    <div>
+                        <label>Ulteriori informazioni</label>
+                    </div>
+                    <input id="subInfo" class="button" type="button" value="Visualizza" onclick="VisualizzaInformazioni()">
+                </form>
             </section>
-        </div>
-        {% else %}
-        <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
-        {% endif %}
-    </body>
+            <hr>
+            {% if sub==True %}
+            <section>
+                <form id="calendario" action="/calendar" method="POST">
+                    <div>
+                        <label>Effettua una prenotazione</label>
+                    </div>
+                    <input id="subCal" class="button" type="button" value="Prenota" onclick="PrenotaCalendario()">
+                    <select name="anno" id="spanAnno" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                    <select name="mese" id="spanMese" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                    <select name="giorno" id="spanGiorno" style="visibility: hidden;">
+                        <option></option>
+                    </select>
+                </form>
+            </section>
+            <hr>
+            <section>
+                <form id="cancella_prenotazione" action="/cancel_reservation" method="POST">
+                    <div>
+                        <label>Cancella una prenotazione</label>
+                    </div>
+                    <input id="subCancPren" class="button" type="button" value="Cancella" onclick="CancellaPrenotazione()">
+                </form>
+            </section>
+            {% else %}
+            <section>
+                <form id="abbonati" action="/subscribe" method="POST">
+                    <div id="divCheck">
+                        <label>Effettua abbonamento</label>
+                        <input id="abbonamento" type="checkbox" onchange="ControllaCheck()"/>Abbonati
+                        <span id="span0" style="visibility: hidden;">
+                            <select id="select0" name="abb">
+                                <option value="null" selected hidden>Seleziona abbonamento</option>
+                                <option value="sala_pesi">Sala pesi</option>
+                                <option value="corsi">Corsi</option>
+                                <option value="completo">Completo</option>
+                                <option value="prova">Prova</option>
+                            </select>
+                        </span>
+                        <span id="span1" style="visibility: hidden;">
+                            <select id="select1" name="durata">
+                                <option value="0" selected hidden>Seleziona durata</option>
+                                <option value="30">1 mese</option>
+                                <option value="90">3 mesi</option>
+                                <option value="180">6 mesi</option>
+                                <option value="365">1 anno</option>
+                            </select>
+                        </span>
+                        <span id="spanIdUtente" name="idUtente" style="visibility: hidden;">{{current_user.id}}</span>
+                    </div>
+                    <input id="subAbb" class="button" type="button" value="Abbonati" onclick="Abbonati()">
+                </form>
+            </section>
+            {% endif %}
+        </section>
+    </div>
+    {% else %}
+    <p id="p0"><label id="lab0">Per essere benvenuto devi essere autenticato.</label></p>
+    {% endif %}
+{% endblock %}
+{% block pagescript %}
     <script>
         var span0 = document.getElementById("span0");
         var span1 = document.getElementById("span1");
@@ -326,4 +196,4 @@
             abbonati.submit();
         }
     </script>
-</html> 
+{% endblock %}

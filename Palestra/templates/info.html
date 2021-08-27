@@ -1,203 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Info palestra</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
+{% extends "base.html" %}
 
-            .clearfix{
-                overflow: auto;
-            }
+{% block pagehead %}
+    <title>Info palestra</title>
+{% endblock %}
+{% block pagebody %}
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="/">Homepage</a>
+            </div>
+            <div id="div1">
+                <h1>Informazioni palestra</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    
+    <hr>
+    <h3>Corsi</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Iscritti massimi</th>
+            <th>Id istruttore</th>
+            <th>Id stanza</th>
+        </tr>
+        {% for c in courses %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.iscrittimax }}</td>
+            <td>{{ c.istruttore }}</td>
+            <td>{{ c.stanza }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            .clearfix::after{
-                content: "";
-                clear: both;
-                display: table;
-            }
+    <h3>Stanze</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Dimensione</th>
+        </tr>
+        {% for r in rooms %}
+        <tr>
+            <td>{{ r.id }}</td>
+            <td>{{ r.nome }}</td>
+            <td>{{ r.dimensione }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            body{
-                /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                background-color: #f3f2ee;
-            }
+    <h3>Sale pesi</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Dimensione</th>
+            <th>Iscritti massimi</th>
+        </tr>
+        {% for w in weight_rooms %}
+        <tr>
+            <td>{{ w.id }}</td>
+            <td>{{ w.dimensione }}</td>
+            <td>{{ w.iscrittimax }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            header{
-                background-color: white;
-                padding-bottom: 1%;
-            }
+    <h3>Istruttori</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Data di nascita</th>
+            <th>Email</th>
+        </tr>
+        {% for t in trainers %}
+        <tr>
+            <td>{{ t.id }}</td>
+            <td>{{ t.nome }}</td>
+            <td>{{ t.cognome }}</td>
+            <td>{{ t.datanascita }}</td>
+            <td>{{ t.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
-            header div{
-                display: inline-block;
-                width: 32%;
-                text-align: center;
-            }
-
-            header a{
-                text-decoration: none;
-                font-size: 15pt;
-                font-weight: bold;
-                color: blue;
-            }
-
-            header a:hover{
-                text-decoration: underline;
-            }
-
-            h1{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
-                font-size: 25pt;
-                color: #51bdd5;
-                font-weight: bold;
-                text-shadow: 1px 1px black;
-            }
-
-            h3{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-weight: bold;
-                margin-left: 3%;
-            }
-
-            table{
-                margin-left: 3%;
-                overflow: hidden;
-                text-align: center;
-                background-color: ivory;
-                /*box-shadow: 10px 10px 5px #dedede;*/
-                box-shadow: 5px 5px 5px black;
-            }
-
-            table th{
-                padding: 5px;
-                border: 1px solid black;
-            }
-
-            table th *{
-                display: inline-block;
-                vertical-align: middle;
-            }
-
-            table td{
-                padding: 5px;
-                border: 1px solid black;
-            }
-        </style>
-    </head>
-    <body>
-        <header>
-            <nav>
-                <div id="div0">
-                    <a href="/">Homepage</a>
-                </div>
-                <div id="div1">
-                    <h1>Informazioni palestra</h1>
-                </div>
-                <div id="div2">
-                </div>
-            </nav>
-        </header>
-        
-        <hr>
-        <h3>Corsi</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Iscritti massimi</th>
-                <th>Id istruttore</th>
-                <th>Id stanza</th>
-            </tr>
-            {% for c in courses %}
-            <tr>
-                <td>{{ c.id }}</td>
-                <td>{{ c.nome }}</td>
-                <td>{{ c.iscrittimax }}</td>
-                <td>{{ c.istruttore }}</td>
-                <td>{{ c.stanza }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <h3>Stanze</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Dimensione</th>
-            </tr>
-            {% for r in rooms %}
-            <tr>
-                <td>{{ r.id }}</td>
-                <td>{{ r.nome }}</td>
-                <td>{{ r.dimensione }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <h3>Sale pesi</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Dimensione</th>
-                <th>Iscritti massimi</th>
-            </tr>
-            {% for w in weight_rooms %}
-            <tr>
-                <td>{{ w.id }}</td>
-                <td>{{ w.dimensione }}</td>
-                <td>{{ w.iscrittimax }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <h3>Istruttori</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Data di nascita</th>
-                <th>Email</th>
-            </tr>
-            {% for t in trainers %}
-            <tr>
-                <td>{{ t.id }}</td>
-                <td>{{ t.nome }}</td>
-                <td>{{ t.cognome }}</td>
-                <td>{{ t.datanascita }}</td>
-                <td>{{ t.email }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-
-        <h3>Clienti</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>Username</th>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Data di nascita</th>
-                <th>Email</th>
-            </tr>
-            {% for c in clients %}
-            <tr>
-                <td>{{ c.id }}</td>
-                <td>{{ c.username }}</td>
-                <td>{{ c.nome }}</td>
-                <td>{{ c.cognome }}</td>
-                <td>{{ c.datanascita }}</td>
-                <td>{{ c.email }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-    </body>
-</html>
+    <h3>Clienti</h3>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>Nome</th>
+            <th>Cognome</th>
+            <th>Data di nascita</th>
+            <th>Email</th>
+        </tr>
+        {% for c in clients %}
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.username }}</td>
+            <td>{{ c.nome }}</td>
+            <td>{{ c.cognome }}</td>
+            <td>{{ c.datanascita }}</td>
+            <td>{{ c.email }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
+{% block pagescript %}
+{% endblock %}

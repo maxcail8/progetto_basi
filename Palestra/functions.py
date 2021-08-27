@@ -259,7 +259,7 @@ def get_checks():
 
 
 def get_slot_from_date(data):
-    slots = session.query(classes.Slot).filter(classes.Slot.giorno == data).all()
+    slots = session.query(classes.Slot).filter(classes.Slot.giorno == data).order_by(classes.Slot.orainizio).all()
     '''conn = engine.connect()
     p_query = "SELECT * FROM slot WHERE giorno = DATE %s"
     slots = conn.engine.execute(p_query, data)
@@ -317,7 +317,7 @@ def get_weightroomsitting_id(idSlot, idSala):
 
 
 def get_reservations(idSub):
-    reservations = session.query(classes.Slot.giorno, classes.Slot.orainizio, classes.Slot.orafine).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub, classes.Slot.giorno > func.current_date())).all()
+    reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio, classes.Slot.orafine).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub, classes.Slot.giorno > func.current_date())).order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
     '''conn = engine.connect()
     p_query = "SELECT * FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE p.abbonato = %s AND s.giorno > CURRENT_DATE"
     reservations = conn.engine.execute(p_query, idSub)

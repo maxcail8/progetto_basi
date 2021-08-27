@@ -1,16 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Info utente</title>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        {% block pagehead %}
+        {% endblock %}
         <style>
             *{
-                padding: 0;
-                margin: 0;
+                margin: 0px;
+                padding: 0px;
                 border: none;
+            }
+
+            #p0{
+                padding: 5px;
             }
 
             .clearfix{
@@ -31,7 +36,7 @@
 
             header{
                 background-color: white;
-                padding-bottom: 1%;
+                top: 0;
             }
 
             header div{
@@ -51,9 +56,12 @@
                 text-decoration: underline;
             }
 
+            #div0 a{
+                padding-left: 4%;
+            }
+
             h1{
                 font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
                 font-size: 25pt;
                 color: #51bdd5;
                 font-weight: bold;
@@ -63,11 +71,17 @@
             h3{
                 font-family: "Comic Sans MS", cursive, sans-serif;
                 font-weight: bold;
-                margin-left: 3%;
+                margin-left: 7%;
+            }
+
+            img{
+                display: block;
+                margin: 0 auto;
+                padding: 1%;
             }
 
             table{
-                margin-left: 3%;
+                margin-left: 7%;
                 overflow: hidden;
                 text-align: center;
                 background-color: ivory;
@@ -89,42 +103,72 @@
                 padding: 5px;
                 border: 1px solid black;
             }
+
+            #operazioniDisp{
+                margin-left: 3%;
+            }
+
+            #sezione0{
+                margin-left: 3%;
+                background-color: white;
+                width: 90%;
+                display: block;
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #sezione0 section{
+                margin: 5px;
+                padding: 5px;
+            }
+
+            #sezione0 section div{
+                display: inline-block;
+                width: 90%;
+            }
+
+            #sezione0 section label{
+                display: inline-block;
+                width: 30%;
+            }
+
+            #sezione0 input[type="button"]{
+                display: inline-block;
+                width: 8%;
+                margin-right: 0 auto;
+                padding: 5px 10px 5px 10px;
+                border-radius: 5px;
+                border: 1px solid black;
+                background-color: #4eb99f;
+            }
+
+            #sezione0 input[type="button"]:hover{
+                border: 2px solid blue;
+                background-color: #5febc8;
+            }
+
+            #sezione0 a{
+                text-align: center;
+                color: blue;
+                display: block;
+                margin: 0 auto;
+                margin-top: 10px;
+            }
+
+            input[type=number]{
+                border: 1px solid black;
+                width: 5%;
+            }
+
+            select{
+                border: 1px solid black;
+            }
         </style>
     </head>
     <body>
-        <header>
-            <nav>
-                <div id="div0">
-                    <a href="reserved_private">Area personale</a>
-                </div>
-                <div id="div1">
-                    <h1>Informazioni utente</h1>
-                </div>
-                <div id="div2">
-                </div>
-            </nav>
-        </header>
-        {% if subscriber %}
-        <h3>Abbonamento: tipo "{{ subscription }}", scadenza: "{{ subscriber.datafineabbonamento }}"</h3>
-        <h3>Prenotazioni effettuate</h3>
-        <table>
-            <tr>
-                <th>Id slot</th>
-                <th>Giorno</th>
-                <th>Ora inizio</th>
-                <th>Ora fine</th>
-            </tr>
-            {% for p in reservations %}
-            <tr>
-                <td>{{ p.slot }}</td>
-                <td>{{ p.giorno }}</td>
-                <td>{{ p.orainizio }}</td>
-                <td>{{ p.orafine }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <h3>Utente non abbonato</h3>
-        {% endif %}
+        {% block pagebody %}
+        {% endblock %}
     </body>
+    {% block pagescript %}
+    {% endblock %}
 </html>

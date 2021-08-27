@@ -1,113 +1,59 @@
-{% if current_user.is_authenticated %}
-<meta http-equiv = "refresh" content = "0; url = /private" />
-{% endif %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block pagehead %}
         <title>Sign in</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        
         <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
-
-            .clearfix{
-                overflow: auto;
-            }
-
-            .clearfix::after{
-                content: "";
-                clear: both;
-                display: table;
-            }
-
-            body{
-                /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                background-color: #f3f2ee;
-            }
-
-            header{
-                padding-bottom: 1%;
-            }
-
-            header div{
-                display: inline-block;
-                width: 32%;
-                text-align: center;
-            }
-
-            header a{
-                text-decoration: none;
-                font-size: 15pt;
-                font-weight: bold;
-                color: blue;
-            }
-
-            header a:hover{
-                text-decoration: underline;
-            }
-
-            h1{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
-                font-size: 25pt;
-                color: #51bdd5;
-                font-weight: bold;
-                text-shadow: 1px 1px black;
-            }
-
             #sezione0{
-                width: 100%;
+                width: 100%!important;
+                background-color: #f3f2ee!important;
             }
 
             #sezione0 div{
-                width: 40%;
-                display: block;
-                margin: 0 auto;
+                width: 40%!important;
+                display: block!important;
+                margin: 0 auto!important;
             }
 
             #sezione0 div input[type="email"], input[type="password"]{
-                width: 100%;
-                border: 0.1px solid black;
-                padding: 10px;
-                margin-top: 10px;
-                font-size: 12pt;
+                width: 100%!important;
+                border: 0.1px solid black!important;
+                padding: 10px!important;
+                margin-top: 10px!important;
+                font-size: 12pt!important;
+            }
+
+            #sezione0 div input[type="email"]{
+                margin-top: 20px!important;
             }
 
             #sezione0 input[type="submit"]{
-                width: 20%;
-                display: block;
-                margin: 0 auto;
-                margin-top: 30px;
-                padding: 10px 20px 10px 20px;
-                border-radius: 5px;
-                font-size: 20pt;
-                border: 1px solid black;
-                background-color: #4eb99f;
+                width: 20%!important;
+                display: block!important;
+                margin: 0 auto!important;
+                margin-top: 30px!important;
+                padding: 10px 20px 10px 20px!important;
+                border-radius: 5px!important;
+                font-size: 20pt!important;
+                border: 1px solid black!important;
+                background-color: #4eb99f!important;
             }
 
             #sezione0 input[type="submit"]:hover{
-                border: 2px solid blue;
-                background-color: #5febc8;
+                border: 2px solid blue!important;
+                background-color: #5febc8!important;
             }
 
             #sezione0 div a{
-                text-align: center;
-                color: blue;
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
+                text-align: center!important;
+                color: blue!important;
+                display: block!important;
+                margin: 0 auto!important;
+                margin-top: 10px!important;
             }
         </style>
-    </head>
-    <body>
+{% endblock %}        
+{% block pagebody %}
         <header>
             <nav>
                 <div id="div0">
@@ -121,7 +67,7 @@
             </nav>
         </header>
         
-        <section id="sezione0" class="clearfix">
+        <section id="sezione0">
             <form action="/login" method="POST">
             
                 <div>
@@ -139,5 +85,6 @@
                 </div>
             </form>
         </section>
-    </body>
-</html>
+{% endblock %}
+{% block pagescript %}
+{% endblock %}

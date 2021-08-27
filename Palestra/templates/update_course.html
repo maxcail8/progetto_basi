@@ -1,173 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Modifica corso</title>
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-        <style>
-            *{
-                padding: 0;
-                margin: 0;
-                border: none;
-            }
+{% extends "base.html" %}
 
-            .clearfix{
-                overflow: auto;
-            }
+{% block pagehead %}
+    <title>Modifica corso</title>
+    
+    <style>
+        #sezione0{
+            background-color: white!important;
+            display: block!important;
+            width: 90%!important;
+            padding-top: 10px!important;
+            padding-bottom: 10px!important;
+        }
 
-            .clearfix::after{
-                content: "";
-                clear: both;
-                display: table;
-            }
+        #sezione0 section{
+            margin: 5px!important;
+            padding: 5px!important;
+        }
 
-            body{
-                /*font-family: 'Courier New', Courier, monospace;*/
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                background-color: #f3f2ee;
-            }
+        #sezione0 input[type="button"]{
+            width: 8%!important;
+            margin-right: 0 auto!important;
+            padding: 5px 10px 5px 10px!important;
+            border-radius: 5px!important;
+            border: 1px solid black!important;
+            background-color: #4eb99f!important;
+        }
 
-            header{
-                background-color: white;
-                padding-bottom: 1%;
-            }
+        #sezione0 input[type="button"]:hover{
+            border: 2px solid blue!important;
+            background-color: #5febc8!important;
+        }
 
-            header div{
-                display: inline-block;
-                width: 32%;
-                text-align: center;
-            }
+        #sezione0 a{
+            text-align: center!important;
+            color: blue!important;
+            display: block!important;
+            margin: 0 auto!important;
+            margin-top: 10px!important;
+        }
 
-            header a{
-                text-decoration: none;
-                font-size: 15pt;
-                font-weight: bold;
-                color: blue;
-            }
+        select{
+            border: 1px solid black!important;
+        }
 
-            header a:hover{
-                text-decoration: underline;
-            }
+        input[type=number]{
+            border: 1px solid black!important;
+            width: 5%!important;
+        }
 
-            h1{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                text-align: center;
-                font-size: 25pt;
-                color: #51bdd5;
-                font-weight: bold;
-                text-shadow: 1px 1px black;
-            }
+        input[type=text]{
+            border: 0.1px solid black!important;
+        }
+    </style>
+{% endblock %}
+{% block pagebody %}  
+    <header>
+        <nav>
+            <div id="div0">
+                <a href="reserved_private">Area amministrazione</a>
+            </div>
+            <div id="div1">
+                <h1>Modifica corso</h1>
+            </div>
+            <div id="div2">
+            </div>
+        </nav>
+    </header>
+    <h3>Modifica</h3>
+    <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
+    <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
 
-            h3{
-                font-family: "Comic Sans MS", cursive, sans-serif;
-                font-weight: bold;
-                margin-left: 3%;
-            }
-
-            #operazioniDisp{
-                margin-left: 3%;
-            }
-
-            #sezione0{
-                background-color: white;
-                display: block;
-                width: 90%;
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-
-            #sezione0 section{
-                margin: 5px;
-                padding: 5px;
-            }
-
-            #sezione0 input[type="button"]{
-                width: 8%;
-                margin-right: 0 auto;
-                padding: 5px 10px 5px 10px;
-                border-radius: 5px;
-                border: 1px solid black;
-                background-color: #4eb99f;
-            }
-
-            #sezione0 input[type="button"]:hover{
-                border: 2px solid blue;
-                background-color: #5febc8;
-            }
-
-            #sezione0 a{
-                text-align: center;
-                color: blue;
-                display: block;
-                margin: 0 auto;
-                margin-top: 10px;
-            }
-
-            select{
-                border: 1px solid black;
-            }
-
-            input[type=number]{
-                border: 1px solid black;
-                width: 5%;
-            }
-
-            input[type=text]{
-                border: 0.1px solid black;
-            }
-        </style>
-    </head>    
-    <body>
-        <header>
-            <nav>
-                <div id="div0">
-                    <a href="reserved_private">Area amministrazione</a>
-                </div>
-                <div id="div1">
-                    <h1>Modifica corso</h1>
-                </div>
-                <div id="div2">
-                </div>
-            </nav>
-        </header>
-        <h3>Modifica</h3>
-        <span id="spanIstruttore" style="visibility: hidden;">{{ course.istruttore }}</span>
-        <span id="spanStanza" style="visibility: hidden;">{{ course.stanza }}</span>
-
-        <div id="operazioniDisp">
-            <section id="sezione0" class="w3-container w3-card-4">
-                <form id="form0" action="/update_course_conf" method="POST">
+    <div id="operazioniDisp">
+        <section id="sezione0" class="w3-container w3-card-4">
+            <form id="form0" action="/update_course_conf" method="POST">
+                
+                <section>
+                    <select id="selCorso" name="sCorso" style="visibility: hidden;">
+                        <option value={{course.id}} selected></option>
+                    </select>
+                    <br><br>
+                    Nome: <input id="txtNome0" value={{course.nome}} type="text" name="nome" placeholder="Nome corso">
+                    <br><br>
+                    Iscritti massimi: <input id="txtIscritti0" value={{course.iscrittimax}} name="iscrittiMax" type="number" min="1" value="50">
+                    <br><br>
+                    Istruttore: <select id="select0i" name="idIstruttore">
+                        {% for t in trainers %}
+                            <option value="{{t.id}}">Istruttore #{{t.id}}: {{ t.nome }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
+                    Stanza: <select id="select0s" name="idStanza">
+                        {% for r in rooms %}
+                            <option value="{{r.id}}">Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
+                        {% endfor %}
+                    </select>
+                    <br><br>
                     
-                    <section>
-                        <select id="selCorso" name="sCorso" style="visibility: hidden;">
-                            <option value={{course.id}} selected></option>
-                        </select>
-                        <br><br>
-                        Nome: <input id="txtNome0" value={{course.nome}} type="text" name="nome" placeholder="Nome corso">
-                        <br><br>
-                        Iscritti massimi: <input id="txtIscritti0" value={{course.iscrittimax}} name="iscrittiMax" type="number" min="1" value="50">
-                        <br><br>
-                        Istruttore: <select id="select0i" name="idIstruttore">
-                            {% for t in trainers %}
-                                <option value="{{t.id}}">Istruttore #{{t.id}}: {{ t.nome }}</option>
-                            {% endfor %}
-                        </select>
-                        <br><br>
-                        Stanza: <select id="select0s" name="idStanza">
-                            {% for r in rooms %}
-                                <option value="{{r.id}}">Stanza #{{r.id}}: {{ r.nome }}, dimensione: {{ r.dimensione }}</option>
-                            {% endfor %}
-                        </select>
-                        <br><br>
-                        
-                        <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
-                    </section>
-                </form>
-            </section>
-        </div>
-    </body>
+                    <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
+                </section>
+            </form>
+        </section>
+    </div>
+{% endblock %}
+{% block pagescript %}
     <script>
         var form0 = document.getElementById("form0");
 
@@ -202,4 +137,4 @@
                 alert("I dati non sono stati inseritit correttamente");
         }
     </script>
-</html>
+{% endblock %}
