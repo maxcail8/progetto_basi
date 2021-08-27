@@ -62,7 +62,10 @@ def get_subscriber_by_id(id):
     p_query = "SELECT * FROM abbonati WHERE id = %s"
     subscriber = conn.engine.execute(p_query, id).first()
     conn.close()'''
-    return classes.Subscriber(subscriber.id, subscriber.abbonamento, subscriber.datafineabbonamento, subscriber.datafineabbonamento, subscriber.durata)
+    if subscriber:
+        return classes.Subscriber(subscriber.id, subscriber.abbonamento, subscriber.datafineabbonamento, subscriber.datafineabbonamento, subscriber.durata)
+    else:
+        return None
 
 
 def get_user_by_email(email):
@@ -314,7 +317,7 @@ def get_weightroomsitting_id(idSlot, idSala):
 
 
 def get_reservations(idSub):
-    reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio, classes.Slot.orafine).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub, classes.Slot.giorno > func.current_date())).all()
+    reservations = session.query(classes.Slot.giorno, classes.Slot.orainizio, classes.Slot.orafine).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub, classes.Slot.giorno > func.current_date())).all()
     '''conn = engine.connect()
     p_query = "SELECT * FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE p.abbonato = %s AND s.giorno > CURRENT_DATE"
     reservations = conn.engine.execute(p_query, idSub)

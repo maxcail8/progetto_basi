@@ -182,7 +182,17 @@ def subscribe():
 @app.route('/info_user', methods=['GET', 'POST'])
 @login_required
 def info_user():
-    return render_template("info_user.html")
+    subscriber = functions.get_subscriber_by_id(current_user.id)
+    if subscriber is not None:
+        reservations = functions.get_reservations(current_user.id)
+        subscription = functions.get_subscription_by_id(subscriber.abbonamento)
+        return render_template("info_user.html", subscription=subscription['tipo'], subscriber=subscriber,
+                               reservations=reservations)
+    else:
+        reservations = []
+        subscription = None
+        return render_template("info_user.html", subscription=subscription, subscriber=subscriber, reservations=reservations)
+
 
 
 @app.route('/calendar', methods=['GET', 'POST'])

@@ -132,16 +132,10 @@ CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
     DECLARE s slot%rowtype;
     DECLARE corso_r corsi%rowtype;
     DECLARE sala_r salepesi%rowtype;
-    DECLARE i INT = 0;
+    /*DECLARE i INT = 0;
     DECLARE guardia_corsi BOOLEAN = TRUE;
-    DECLARE guardia_salepesi BOOLEAN = TRUE;
+    DECLARE guardia_salepesi BOOLEAN = TRUE;*/
     BEGIN
-        contatore = (numero di corsi in quello slot) + (numero di sale pesi in quello slot)
-        valori = NEw.personemaxslot / contatore;
-        for ogni corso in quello slot
-            iscrittimax = valori
-        for ogni salapesi 
-            iscrittimax = v
         FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE ORDER BY giorno LOOP
             SELECT COUNT(DISTINCT(c.corso)) INTO totale_corsi FROM corsislot c WHERE c.slot = s.id;
             SELECT COUNT(DISTINCT(sp.salapesi)) INTO totale_sale FROM salapesislot sp WHERE sp.slot = s.id;

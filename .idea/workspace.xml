@@ -3,17 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/population.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/population.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/signin.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/signin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/info_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/info_user.html" afterDir="false" />
     </list>
     <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
     <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="">
-      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,38 +27,6 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/Palestra/project.py">
-      <ranges>
-        <range start1="3" end1="3" start2="3" end2="4" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="17" end1="18" start2="18" end2="18" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="32" end1="36" start2="32" end2="32" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="40" end1="40" start2="36" end2="37" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="51" end1="52" start2="48" end2="49" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="68" end1="68" start2="65" end2="66" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="96" end1="98" start2="94" end2="96" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="127" end1="128" start2="125" end2="127" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="129" end1="134" start2="128" end2="128" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="136" end1="137" start2="130" end2="132" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="143" end1="146" start2="138" end2="140" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="221" end1="223" start2="215" end2="223" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
-        <range start1="371" end1="371" start2="371" end2="449" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/Palestra/functions.py">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="3" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="42" end1="42" start2="43" end2="57" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="72" end1="72" start2="87" end2="95" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
-        <range start1="140" end1="141" start2="163" end2="164" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="145" end1="146" start2="168" end2="169" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="200" end1="200" start2="223" end2="228" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-        <range start1="239" end1="241" start2="267" end2="269" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
-        <range start1="254" end1="256" start2="282" end2="284" changelist="ae060175-8801-4a99-bf39-43002419b5e0" />
-        <range start1="543" end1="543" start2="571" end2="575" changelist="31a78ec6-d090-43f3-bb26-91fa9c557486" />
-      </ranges>
-    </file>
-  </component>
   <component name="ProjectId" id="1saNpiFlj9WtaRyWjIQbrpdA1SR" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -76,6 +39,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="codeWithMe.voiceChat.enabledByDefault" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -107,6 +71,7 @@
       <workItem from="1629706036286" duration="27197000" />
       <workItem from="1629795366044" duration="16258000" />
       <workItem from="1629981263949" duration="17392000" />
+      <workItem from="1630049357911" duration="2699000" />
     </task>
     <servers />
   </component>
