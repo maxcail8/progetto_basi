@@ -3,14 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/alteration.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/alteration.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/info_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/info_user.html" afterDir="false" />
-    </list>
-    <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
-    <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="">
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
     </list>
+    <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
+    <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

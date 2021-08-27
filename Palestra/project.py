@@ -225,12 +225,6 @@ def book_slot():
             subscription = functions.get_subscription_by_id(sub.abbonamento)
             weight_rooms = functions.get_slot_weight_rooms(idSlot, subscription['tipo'])
             courses = functions.get_slot_courses(idSlot, subscription['tipo'])
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-            print(subscription)
-            print(subscription['tipo'])
-            print(weight_rooms)
-            print(courses)
-            print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
             return render_template("book_slot.html", idSlot=idSlot, weight_rooms=weight_rooms, courses=courses)
     else:
         return redirect(url_for('wrong'))
