@@ -26,7 +26,7 @@
                         
                         <select id="select0" name="idSala">
                             {% for w in weight_rooms %}
-                                <option value={{w.id}}>Sala #{{w.id}}: {{ w.dimensione }}</option>
+                                <option value={{w.id}}>Sala #{{w.id}}, dimensione: {{ w.dimensione }}</option>
                             {% endfor %}                                
                         </select>
                         <select id="selectSlot0" name="idSlot" style="visibility: hidden;">

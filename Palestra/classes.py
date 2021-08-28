@@ -13,6 +13,7 @@ Base = declarative_base()
 
 
 # Dichiarazione Classi-Tabelle
+
 class User(Base, UserMixin):
     __tablename__ = 'utenti'
 
@@ -35,7 +36,8 @@ class User(Base, UserMixin):
         self.datanascita = datanascita
 
     def __repr__(self):
-        return "<User(id = {0}, username = {1}, nome= {2}, cognome = {3}, email = {4})>".format(self.id, self.username, self.nome, self.cognome, self.email)
+        return "<User(id = {0}, username = {1}, nome= {2}, cognome = {3}, email = {4})>".\
+            format(self.id, self.username, self.nome, self.cognome, self.email)
 
 
 class Trainer(Base):
@@ -48,7 +50,8 @@ class Trainer(Base):
         self.id = id
 
     def __repr__(self):
-        return "<Trainer(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
+        return "<Trainer(username = {0}, nome= {1}, cognome = {2}, email = {3})>".\
+            format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
 class Other(Base):
@@ -61,7 +64,8 @@ class Other(Base):
         self.id = id
 
     def __repr__(self):
-        return "<Other(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
+        return "<Other(username = {0}, nome= {1}, cognome = {2}, email = {3})>".\
+            format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
 class Client(Base):
@@ -120,7 +124,8 @@ class Subscriber(Base):
         self.durata = durata
 
     def __repr__(self):
-        return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
+        return "<Subscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".\
+            format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
 class NotSubscriber(Base):
@@ -133,7 +138,8 @@ class NotSubscriber(Base):
         self.id = id
 
     def __repr__(self):
-        return "<NotSubscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
+        return "<NotSubscriber(username = {0}, nome= {1}, cognome = {2}, email = {3})>".\
+            format(self.user.username, self.user.nome, self.user.cognome, self.user.email)
 
 
 class Room(Base):
@@ -172,7 +178,8 @@ class WeightRoom(Base):
         self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<WeightRoom(id = {0}, dimensione = {1}, iscrittimax = {2})>".format(self.id, self.dimensione, self.iscrittimax)
+        return "<WeightRoom(id = {0}, dimensione = {1}, iscrittimax = {2})>".\
+            format(self.id, self.dimensione, self.iscrittimax)
 
 
 class Course(Base):
@@ -198,7 +205,8 @@ class Course(Base):
         self.stanza = stanza
 
     def __repr__(self):
-        return "<Course(id = {0}, nome = {1}, iscrittimax = {2}, istruttore = {3}, stanza = {4})>".format(self.id, self.nome, self.iscrittimax, self.istruttore, self.stanza)
+        return "<Course(id = {0}, nome = {1}, iscrittimax = {2}, istruttore = {3}, stanza = {4})>".\
+            format(self.id, self.nome, self.iscrittimax, self.istruttore, self.stanza)
 
 
 class CourseSitting(Base):
@@ -250,7 +258,8 @@ class WeightRoomSitting(Base):
         self.dataseduta = dataseduta
 
     def __repr__(self):
-        return "<WeightRoomSitting(id = {0}, salapesi = {1}, dataseduta = {2})>".format(self.id, self.salapesi, self.dataseduta)
+        return "<WeightRoomSitting(id = {0}, salapesi = {1}, dataseduta = {2})>".\
+            format(self.id, self.salapesi, self.dataseduta)
 
 
 class SubscriberWeightRoomSession(Base):
@@ -302,7 +311,8 @@ class Slot(Base):
         self.orafine = orafine
 
     def __repr__(self):
-        return "<Slot(id = {0}, personemax = {1}, giorno = {2}, orainizio = {3}, orafine = {4})>".format(self.id, self.personemax, self.giorno, self.orainizio, self.orafine)
+        return "<Slot(id = {0}, personemax = {1}, giorno = {2}, orainizio = {3}, orafine = {4})>".\
+            format(self.id, self.personemax, self.giorno, self.orainizio, self.orafine)
 
 
 class CourseSlot(Base):
@@ -320,7 +330,8 @@ class CourseSlot(Base):
         self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<CourseSlot(corso = {0}, slot = {1}, iscrittimax = {2})>".format(self.corso, self.slot, self.iscrittimax)
+        return "<CourseSlot(corso = {0}, slot = {1}, iscrittimax = {2})>".\
+            format(self.corso, self.slot, self.iscrittimax)
 
 
 class WeightRoomSlot(Base):
@@ -338,7 +349,8 @@ class WeightRoomSlot(Base):
         self.iscrittimax = iscrittimax
 
     def __repr__(self):
-        return "<WeightRoomSlot(sala = {0}, slot = {1}, iscrittimax = {2})>".format(self.salapesi, self.slot, self.iscrittimax)
+        return "<WeightRoomSlot(sala = {0}, slot = {1}, iscrittimax = {2})>".\
+            format(self.salapesi, self.slot, self.iscrittimax)
 
 
 class Reservation(Base):
@@ -388,7 +400,8 @@ class Information(Base):
         self.personemq = personemq
 
     def __repr__(self):
-        return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2}, personemq = {3})>".format(self.abbonato, self.slot, self.personemaxslot, self.personemq)
+        return "<Information(accessisettimana = {0}, slotgiorno = {1}, personemaxslot = {2}, personemq = {3})>".\
+            format(self.abbonato, self.slot, self.personemaxslot, self.personemq)
 
 
 class Checks(Base):
@@ -403,7 +416,7 @@ class Checks(Base):
         return "<Checks(controllo = {0})>".format(self.controllo)
 
 
-class MyDate():
+class MyDate:
     first_column = Integer
     last_day = Integer
 
@@ -412,5 +425,5 @@ class MyDate():
         first = datetime(i.year, i.month, 1)
         last = datetime(i.year, i.month, i.day) + relativedelta(day=31)  # torna l'utlimo giorno del mese
         first_column_days = 7 - first.weekday()
-        self.first_column = 7 - first_column_days
+        self.first_column = 7 - first_column_days  # colonne da "colorare" nel calendario prima del giorno corretto
         self.last_day = last.day

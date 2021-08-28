@@ -36,7 +36,7 @@ CREATE TABLE clienti(
 CREATE INDEX ON clienti (id);
 
 --Abbonamenti
-CREATE TABLE abbonamenti( --controllare
+CREATE TABLE abbonamenti(
 	id INT PRIMARY KEY,
 	tipo VARCHAR(10),
 	costo REAL CHECK(costo > 0)
@@ -105,7 +105,7 @@ CREATE INDEX ON corsi (stanza);
 CREATE TABLE sedutecorsi(
 	id INT PRIMARY KEY,
 	corso INT NOT NULL,
-	dataseduta TIMESTAMP, --log persone per covid
+	dataseduta TIMESTAMP,
 	FOREIGN KEY(corso) REFERENCES corsi ON DELETE CASCADE
 );
 CREATE INDEX ON sedutecorsi (id);
@@ -124,7 +124,7 @@ CREATE INDEX ON abbonatisedutecorsi (seduta, abbonato);
 CREATE TABLE sedutesalepesi(
 	id INT PRIMARY KEY,
 	salapesi INT NOT NULL,
-	dataseduta TIMESTAMP, --log persone per covid
+	dataseduta TIMESTAMP,
 	FOREIGN KEY(salapesi) REFERENCES salepesi ON DELETE CASCADE
 );
 CREATE INDEX ON sedutesalepesi (id);
@@ -185,7 +185,7 @@ CREATE TABLE salapesislot(
 CREATE INDEX ON salapesislot (salapesi, slot);
 
 --Prenotazioni
-CREATE TABLE prenotazioni( --AbbonatiSlot
+CREATE TABLE prenotazioni(
 	abbonato INT,
 	slot INT,
 	PRIMARY KEY(abbonato, slot),
@@ -195,7 +195,7 @@ CREATE TABLE prenotazioni( --AbbonatiSlot
 CREATE INDEX ON prenotazioni (abbonato, slot);
 
 --PrenotazioniNonAbbonati
-CREATE TABLE prenotazioninonabbonati( --AbbonatiSlot
+CREATE TABLE prenotazioninonabbonati(
 	nonabbonato INT,
 	slot INT,
 	PRIMARY KEY(nonabbonato, slot),
@@ -206,10 +206,10 @@ CREATE INDEX ON prenotazioninonabbonati (nonabbonato, slot);
 
 --Informazioni
 CREATE TABLE informazioni(
-	accessisettimana INT CHECK(accessisettimana > 0),
-	slotgiorno INT CHECK(slotgiorno > 0 AND slotgiorno < 6),
-	personemaxslot INT CHECK(personemaxslot > 0),
-	personemq INT CHECK(personemq > 0),
+	accessisettimana INT CHECK(accessisettimana > 0), --accessi alla settimana
+	slotgiorno INT CHECK(slotgiorno > 0 AND slotgiorno < 6), --slot prenotabili al giorno
+	personemaxslot INT CHECK(personemaxslot > 0), --persone massime in uno slot
+	personemq INT CHECK(personemq > 0), --metri quadri garantiti a persona
 	PRIMARY KEY(accessisettimana, slotgiorno, personemaxslot, personemq)
 );
 

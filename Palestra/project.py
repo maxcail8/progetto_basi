@@ -17,7 +17,6 @@ from werkzeug.utils import redirect
 from datetime import datetime
 
 
-#######################
 # Parametri applicazione
 app = Flask(__name__)
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/progetto_palestra', echo=True)
@@ -26,35 +25,26 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # Secret key
-# app.config['SECRET_KEY'] = 'secret11'
 app.secret_key = 'secret14'
 
 # Gestione login
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
 # Sessione
-'''Session = sessionmaker(bind=engine)
-Session.close_all()
-session = Session()'''
 session = functions.session
 
-#############################
+
 # Variabili e costanti globali
 first_id_client = 100
 admin_email = 'admin@palestra.it'
 admin_pwd = hashlib.md5(("admin" + admin_email).encode()).hexdigest()
 
 
-#user-loader
+# user_loader
 @login_manager.user_loader
 def load_user(user_id):
     user = session.query(classes.User).filter(classes.User.id == user_id).first()
-    '''conn = engine.connec
-    p_query = "SELECT * FROM utenti WHERE id = %s"
-    user = conn.engine.execute(p_query, user_id).first()
-    conn.close()'''
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
 
@@ -101,7 +91,7 @@ def create_user():
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
-    if request.form['abb'] != "null":
+    if request.form['abb'] != "null":  # controllo se è stato scelto oppure no un abbonamento
         sub = functions.get_subscription(request.form['abb'])
         if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id,
@@ -134,11 +124,9 @@ def login():
     if request.method == 'POST':
         p_email = request.form['user']
         p_pass = hashlib.md5((request.form['pass'] + p_email).encode()).hexdigest()
-
         real_pwd = session.query(classes.User.password).filter(classes.User.email == p_email).first()
-
-        if p_email == admin_email:
-            real_pwd = str(real_pwd)[2:-3]
+        if p_email == admin_email:  # controllo se l'utente è l'admin
+            real_pwd = real_pwd['password']
             if real_pwd is not None and p_pass == real_pwd:
                 user = functions.get_user_by_email(request.form['user'])
                 login_user(user)
@@ -146,10 +134,10 @@ def login():
             else:
                 return redirect(url_for('wrong'))
         elif real_pwd is not None:
-            real_pwd = str(real_pwd)[2:-3]
+            real_pwd = real_pwd['password']
             if p_pass == real_pwd:
                 user = functions.get_user_by_email(request.form['user'])
-                login_user(user) # chiamata a Flask - Login
+                login_user(user)
                 return redirect(url_for('private'))
             else:
                 return redirect(url_for('wrong'))
@@ -174,7 +162,7 @@ def private():
 @login_required
 def subscribe():
     user_id = current_user.id
-    if not functions.is_subscriber(user_id) and request.form['abb'] != 'null':
+    if not functions.is_subscriber(user_id) and request.form['abb'] != 'null':  # controllo che non sia abbonato
         sub = functions.get_subscription(request.form['abb'])
         if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id,
@@ -209,7 +197,6 @@ def info_user():
         subscription = None
         return render_template("info_user.html", subscription=subscription, subscriber=subscriber,
                                reservations=reservations)
-
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -254,8 +241,8 @@ def book_slot():
 def book_weight_room():
     idSlot = request.form['idSlot']
     idSeduta = functions.get_weightroomsitting_id(idSlot, request.form['idSala'])
-    idSeduta = str(idSeduta)[1:-2]
-    if functions.is_available_weight_room(idSeduta, idSlot):
+    idSeduta = idSeduta['id']
+    if functions.is_available_weight_room(idSeduta, idSlot):  # controllo che la prenotazione si possa effettuare
         reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
         subscriber_session = classes.SubscriberWeightRoomSession(abbonato=current_user.id, seduta=idSeduta)
         session.add(subscriber_session)
@@ -289,8 +276,8 @@ def cancel_reservation_conf():
 def book_course():
     idSlot = request.form['idSlot']
     idSeduta = functions.get_coursesitting_id(idSlot, request.form['idCorso'])
-    idSeduta = str(idSeduta)[1:-2]
-    if functions.is_available_course(idSeduta, idSlot):
+    idSeduta = idSeduta['id']
+    if functions.is_available_course(idSeduta, idSlot):  # controllo che la prenotazione si possa effettuare
         reservation = classes.Reservation(abbonato=current_user.id, slot=idSlot)
         subscriber_session = classes.SubscriberCourseSession(abbonato=current_user.id, seduta=idSeduta)
         session.add(subscriber_session)
@@ -401,36 +388,48 @@ def edit_courses():
 @app.route('/edit_trainers', methods=['GET', 'POST'])
 @login_required
 def edit_trainers():
-    trainers = functions.get_trainers()
-    return render_template("edit_trainers.html", trainers=trainers)
+    if current_user == functions.get_admin_user():
+        trainers = functions.get_trainers()
+        return render_template("edit_trainers.html", trainers=trainers)
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/edit_others', methods=['GET', 'POST'])
 @login_required
 def edit_others():
-    others = functions.get_others()
-    return render_template("edit_others.html", others=others)
+    if current_user == functions.get_admin_user():
+        others = functions.get_others()
+        return render_template("edit_others.html", others=others)
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_trainer', methods=['GET', 'POST'])
 @login_required
 def add_trainer():
-    return render_template("add_trainer.html")
+    if current_user == functions.get_admin_user():
+        return render_template("add_trainer.html")
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_trainer_conf', methods=['GET', 'POST'])
 @login_required
 def add_trainer_conf():
-    new_id = functions.get_id_staff_increment()
-    pw = request.form['password'] + request.form['email']
-    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
-                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
-                        datanascita=request.form['dataNascita'])
-    trainer = classes.Trainer(id=new_id)
-    session.add(user)
-    session.add(trainer)
-    session.commit()
-    return redirect(url_for('confirm'))
+    if current_user == functions.get_admin_user():
+        new_id = functions.get_id_staff_increment()
+        pw = request.form['password'] + request.form['email']
+        user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                            nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                            datanascita=request.form['dataNascita'])
+        trainer = classes.Trainer(id=new_id)
+        session.add(user)
+        session.add(trainer)
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/remove_trainer', methods=['GET', 'POST'])
@@ -447,22 +446,28 @@ def remove_trainer():
 @app.route('/add_other', methods=['GET', 'POST'])
 @login_required
 def add_other():
-    return render_template("add_other.html")
+    if current_user == functions.get_admin_user():
+        return render_template("add_other.html")
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/add_other_conf', methods=['GET', 'POST'])
 @login_required
 def add_other_conf():
-    new_id = functions.get_id_staff_increment()
-    pw = request.form['password'] + request.form['email']
-    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
-                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
-                        datanascita=request.form['dataNascita'])
-    other = classes.Other(id=new_id)
-    session.add(user)
-    session.add(other)
-    session.commit()
-    return redirect(url_for('confirm'))
+    if current_user == functions.get_admin_user():
+        new_id = functions.get_id_staff_increment()
+        pw = request.form['password'] + request.form['email']
+        user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                            nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                            datanascita=request.form['dataNascita'])
+        other = classes.Other(id=new_id)
+        session.add(user)
+        session.add(other)
+        session.commit()
+        return redirect(url_for('confirm'))
+    else:
+        return redirect(url_for('wrong'))
 
 
 @app.route('/remove_other', methods=['GET', 'POST'])
