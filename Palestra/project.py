@@ -11,13 +11,10 @@ from flask_migrate import Migrate
 # sqlalchemy-import
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
 
 # other-import
 from werkzeug.utils import redirect
 from datetime import datetime
-from array import array
-from PIL import Image
 
 
 #######################
@@ -67,7 +64,8 @@ def home():
     functions.create_admin()
     i = datetime.now()
     mydate = classes.MyDate(i.year, i.month, i.day)
-    return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column, last_day=mydate.last_day)
+    return render_template("index.html", month=i.month, year=i.year, day=i.day, first_column=mydate.first_column,
+                           last_day=mydate.last_day)
 
 
 @app.route('/confirm')
@@ -97,17 +95,25 @@ def signup():
 def create_user():
     new_id = functions.get_id_increment()
     pw = request.form['password'] + request.form['email']
-    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(), nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'], datanascita=request.form['dataNascita'])
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                        datanascita=request.form['dataNascita'])
     client = classes.Client(id=new_id)
     session.add(user)
     session.add(client)
     if request.form['abb'] != "null":
         sub = functions.get_subscription(request.form['abb'])
         if request.form['abb'] == 'prova':
-            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id,
+                                            datainizioabbonamento=functions.get_current_date(),
+                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
+                                            durata=null)
             session.add(subscriber)
         else:
-            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id,
+                                            datainizioabbonamento=functions.get_current_date(),
+                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
+                                            durata=request.form['durata'])
             session.add(subscriber)
     else:
         not_subscriber = classes.NotSubscriber(id=new_id)
@@ -171,10 +177,16 @@ def subscribe():
     if not functions.is_subscriber(user_id) and request.form['abb'] != 'null':
         sub = functions.get_subscription(request.form['abb'])
         if request.form['abb'] == 'prova':
-            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=null)
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id,
+                                            datainizioabbonamento=functions.get_current_date(),
+                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
+                                            durata=null)
             session.add(subscriber)
         else:
-            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id, datainizioabbonamento=functions.get_current_date(), datafineabbonamento=functions.get_increment_date(int(request.form['durata'])), durata=request.form['durata'])
+            subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id,
+                                            datainizioabbonamento=functions.get_current_date(),
+                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
+                                            durata=request.form['durata'])
             session.add(subscriber)
         functions.remove_not_subscriber(user_id)
         session.commit()
@@ -195,7 +207,8 @@ def info_user():
     else:
         reservations = []
         subscription = None
-        return render_template("info_user.html", subscription=subscription, subscriber=subscriber, reservations=reservations)
+        return render_template("info_user.html", subscription=subscription, subscriber=subscriber,
+                               reservations=reservations)
 
 
 
@@ -204,7 +217,8 @@ def info_user():
 def calendar():
     if functions.is_subscriber(current_user.id):
         mydate = classes.MyDate(request.form['anno'], request.form['mese'], request.form['giorno'])
-        return render_template("calendar.html", year=request.form['anno'], month=request.form['mese'], day=request.form['giorno'], first_column=mydate.first_column, last_day=mydate.last_day)
+        return render_template("calendar.html", year=request.form['anno'], month=request.form['mese'],
+                               day=request.form['giorno'], first_column=mydate.first_column, last_day=mydate.last_day)
     else:
         return redirect(url_for('wrong'))
 
@@ -212,7 +226,8 @@ def calendar():
 @app.route('/book_day', methods=['GET', 'POST'])
 @login_required
 def book_day():
-    if (not functions.has_exceeded_accessisettimana(current_user.id, request.form['datapassata'])) and (not functions.has_exceeded_slotgiorno(current_user.id, request.form['datapassata'])):
+    if (not functions.has_exceeded_accessisettimana(current_user.id, request.form['datapassata'])) and \
+            (not functions.has_exceeded_slotgiorno(current_user.id, request.form['datapassata'])):
         slots = functions.get_slot_from_date(request.form['datapassata'])
         return render_template("book_day.html", slots=slots, data=request.form['datapassata'])
     else:
@@ -295,7 +310,9 @@ def logout():
 
 @app.route('/info')
 def info():
-    return render_template("info.html", courses=functions.get_courses(), rooms=functions.get_rooms(), weight_rooms=functions.get_weight_rooms(), trainers=functions.get_trainers(), clients=functions.get_clients())
+    return render_template("info.html", courses=functions.get_courses(), rooms=functions.get_rooms(),
+                           weight_rooms=functions.get_weight_rooms(), trainers=functions.get_trainers(),
+                           clients=functions.get_clients())
 
 
 @app.route('/administration')
@@ -304,7 +321,10 @@ def administration():
     if current_user == functions.get_admin_user():
         info = functions.get_information()
         checks = functions.get_checks()
-        resp = make_response(render_template("administration.html", current_user=current_user, controllo=checks.controllo, accessi_settimana=info.accessisettimana, slot_giorno=info.slotgiorno, persone_max=info.personemaxslot, personemq=info.personemq))
+        resp = make_response(render_template("administration.html", current_user=current_user,
+                                             controllo=checks.controllo, accessi_settimana=info.accessisettimana,
+                                             slot_giorno=info.slotgiorno, persone_max=info.personemaxslot,
+                                             personemq=info.personemq))
         return resp
     else:
         return redirect(url_for('private'))
@@ -461,7 +481,8 @@ def remove_other():
 def add_course():
     if current_user == functions.get_admin_user():
         new_id = functions.get_course_id_increment()
-        course = classes.Course(id=new_id, nome=request.form['nome'], iscrittimax=request.form['iscrittimax'], istruttore=request.form['idIstruttore'], stanza=request.form['idStanza'])
+        course = classes.Course(id=new_id, nome=request.form['nome'], iscrittimax=request.form['iscrittimax'],
+                                istruttore=request.form['idIstruttore'], stanza=request.form['idStanza'])
         session.add(course)
         session.commit()
         functions.add_course_slot(new_id, request.form['primoGiorno'], request.form['slot'])
@@ -498,7 +519,8 @@ def update_course():
 @login_required
 def update_course_conf():
     if current_user == functions.get_admin_user():
-        functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'], request.form['idIstruttore'], request.form['idStanza'])
+        functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'],
+                                request.form['idIstruttore'], request.form['idStanza'])
         session.commit()
         return redirect(url_for('confirm'))
     else:

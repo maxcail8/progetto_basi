@@ -56,34 +56,23 @@ def create_admin():
 
 
 # GETTERS
-def get_subscriber_by_id(id):
-    subscriber = session.query(classes.Subscriber).filter(classes.Subscriber.id == id).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM abbonati WHERE id = %s"
-    subscriber = conn.engine.execute(p_query, id).first()
-    conn.close()'''
-    if subscriber:
-        return classes.Subscriber(subscriber.id, subscriber.abbonamento, subscriber.datafineabbonamento, subscriber.datafineabbonamento, subscriber.durata)
-    else:
-        return None
-
-
 def get_user_by_email(email):
     user = session.query(classes.User).filter(classes.User.email == email).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE email = %s"
-    user = conn.engine.execute(p_query, email).first()
-    conn.close()'''
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
+
+
+def get_subscriber_by_id(id):
+    subscriber = session.query(classes.Subscriber).filter(classes.Subscriber.id == id).first()
+    if subscriber:
+        return classes.Subscriber(subscriber.id, subscriber.abbonamento, subscriber.datafineabbonamento,
+                                  subscriber.datafineabbonamento, subscriber.durata)
+    else:
+        return None
 
 
 # Funzione per autoincrementare id tramite query
 def get_id_increment():
     user = session.query(classes.User).filter(classes.User.id >= 100).order_by(classes.User.id.desc()).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE id>=100 ORDER BY id DESC"
-    user = conn.engine.execute(p_query).first()
-    conn.close()'''
     if user:
         return user.id + 1
     else:
@@ -100,10 +89,6 @@ def get_id_staff_increment():
 
 def get_course_id_increment():
     course = session.query(classes.Course).order_by(classes.Course.id.desc()).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM corsi ORDER BY id DESC"
-    course = conn.engine.execute(p_query).first()
-    conn.close()'''
     if course:
         return course.id + 1
     else:
@@ -112,10 +97,6 @@ def get_course_id_increment():
 
 def get_room_id_increment():
     room = session.query(classes.Room).order_by(classes.Room.id.desc()).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM stanze ORDER BY id DESC"
-    room = conn.engine.execute(p_query).first()
-    conn.close()'''
     if room:
         return room.id + 1
     else:
@@ -124,10 +105,6 @@ def get_room_id_increment():
 
 def get_weight_room_id_increment():
     weight_room = session.query(classes.WeightRoom).order_by(classes.WeightRoom.id.desc()).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM salepesi ORDER BY id DESC"
-    weight_room = conn.engine.execute(p_query).first()
-    conn.close()'''
     if weight_room:
         return weight_room.id + 1
     else:
@@ -137,10 +114,6 @@ def get_weight_room_id_increment():
 # Funzione per tornare l'utente amministratore
 def get_admin_user():
     user = session.query(classes.User).filter(classes.User.id == 0).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM utenti WHERE id = 0"
-    user = conn.engine.execute(p_query).first()
-    conn.close()'''
     return classes.User(user.id, user.username, user.password, user.nome, user.cognome, user.email, user.datanascita)
 
 
@@ -156,114 +129,69 @@ def get_increment_date(giorni):
 
 def get_subscription(subscription):
     sub = session.query(classes.Subscription).filter(classes.Subscription.tipo == subscription).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM abbonamenti WHERE tipo = %s"
-    sub = conn.engine.execute(p_query, subscription).first()
-    conn.close()'''
     return classes.Subscription(sub.id, sub.tipo, sub.costo)
 
 
 def get_subscription_by_id(id):
     sub = session.query(classes.Subscription.tipo).filter(classes.Subscription.id == id).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM abbonamenti WHERE id = %s"
-    sub = conn.engine.execute(p_query, id).first()
-    conn.close()'''
     return sub
 
 
 def get_courses():
     courses = session.query(classes.Course).order_by(classes.Course.id.asc()).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM corsi ORDER BY id ASC"
-    courses = conn.engine.execute(p_query)
-    conn.close()'''
     return courses
 
 
 def get_course(idCorso):
     course = session.query(classes.Course).filter(classes.Course.id == idCorso).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM corsi WHERE id = %s"
-    course = conn.engine.execute(p_query, idCorso).first()
-    conn.close()'''
     return classes.Course(course.id, course.nome, course.iscrittimax, course.istruttore, course.stanza)
 
 
 def get_last_id_course():
     course = session.query(classes.Course).order_by(classes.Course.id.desc()).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM corsi ORDER BY id DESC"
-    course = conn.engine.execute(p_query).first()
-    conn.close()'''
     return course.id
 
 
 def get_rooms():
     rooms = session.query(classes.Room).order_by(classes.Room.id.asc()).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM stanze ORDER BY id ASC"
-    rooms = conn.engine.execute(p_query)
-    conn.close()'''
     return rooms
 
 
 def get_weight_rooms():
     weight_rooms = session.query(classes.WeightRoom).order_by(classes.WeightRoom.id.asc()).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM salepesi ORDER BY id ASC"
-    weight_rooms = conn.engine.execute(p_query)
-    conn.close()'''
     return weight_rooms
 
 
 def get_trainers():
-    trainers = session.query(classes.User).filter(classes.Trainer.id == classes.User.id).order_by(classes.Trainer.id.asc()).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM istruttori NATURAL JOIN utenti ORDER BY id ASC"
-    trainers = conn.engine.execute(p_query)
-    conn.close()'''
+    trainers = session.query(classes.User).filter(classes.Trainer.id == classes.User.id).\
+        order_by(classes.Trainer.id.asc()).all()
     return trainers
 
 
 def get_others():
-    others = session.query(classes.User).filter(and_(classes.Other.id == classes.User.id, classes.User.id != 0)).order_by(classes.Other.id.asc()).all()
+    others = session.query(classes.User).\
+        filter(and_(classes.Other.id == classes.User.id, classes.User.id != 0)).order_by(classes.Other.id.asc()).all()
     return others
 
 
 def get_clients():
-    clients = session.query(classes.User).filter(classes.Client.id == classes.User.id).order_by(classes.Client.id.asc()).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM clienti NATURAL JOIN utenti ORDER BY id ASC"
-    clients = conn.engine.execute(p_query)
-    conn.close()'''
+    clients = session.query(classes.User).\
+        filter(classes.Client.id == classes.User.id).order_by(classes.Client.id.asc()).all()
     return clients
 
 
 def get_information():
     info = session.query(classes.Information).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM informazioni"
-    info = conn.engine.execute(p_query).first()
-    conn.close()'''
     return classes.Information(info.accessisettimana, info.slotgiorno, info.personemaxslot, info.personemq)
 
 
 def get_checks():
     checks = session.query(classes.Checks).first()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM controlli"
-    checks = conn.engine.execute(p_query).first()
-    conn.close()'''
     return classes.Checks(checks.controllo)
 
 
 def get_slot_from_date(data):
     slots = session.query(classes.Slot).filter(classes.Slot.giorno == data).order_by(classes.Slot.orainizio).all()
-    '''conn = engine.connect()
-    p_query = "SELECT * FROM slot WHERE giorno = DATE %s"
-    slots = conn.engine.execute(p_query, data)
-    conn.close()'''
     return slots
 
 
@@ -274,11 +202,6 @@ def get_slot_weight_rooms(idSlot, subscription):
         weightrooms = session.query(classes.WeightRoom).filter(classes.WeightRoom.id.in_(
             session.query(classes.WeightRoomSlot.salapesi).filter(classes.WeightRoomSlot.slot == idSlot)
         )).all()
-        '''conn = engine.connect()
-        
-        p_query = "SELECT * FROM salepesi WHERE id IN (SELECT salapesi FROM salapesislot WHERE slot= %s)"
-        weightrooms = conn.engine.execute(p_query, idSlot)
-        conn.close()'''
         return weightrooms
 
 
@@ -289,18 +212,16 @@ def get_slot_courses(idSlot, subscription):
         courses = session.query(classes.Course).filter(classes.Course.id.in_(
             session.query(classes.CourseSlot.corso).filter(classes.CourseSlot.slot == idSlot)
         )).all()
-        '''conn = engine.connect()
-        p_query = "SELECT * FROM corsi WHERE id IN (SELECT corso FROM corsislot WHERE slot= %s)"
-        courses = conn.engine.execute(p_query, idSlot)
-        conn.close()'''
         return courses
 
 
 def get_coursesitting_id(idSlot, idCorso):
     giorno = session.query(classes.Slot.giorno).filter(classes.Slot.id == idSlot)
-    id_sitting = session.query(classes.CourseSitting.id).filter(and_(func.DATE(classes.CourseSitting.dataseduta) == giorno, classes.CourseSitting.corso == idCorso)).first()
+    id_sitting = session.query(classes.CourseSitting.id).\
+        filter(and_(func.DATE(classes.CourseSitting.dataseduta) == giorno, classes.CourseSitting.corso == idCorso)).\
+        first()
     '''conn = engine.connect()
-    p_query = "SELECT id FROM sedutecorsi WHERE (dataseduta::date)=(SELECT giorno FROM slot WHERE id = %s) AND corso = %s"
+    p_query = ""
     id_sitting = conn.engine.execute(p_query, idSlot, idCorso).first()
     conn.close()'''
     return id_sitting
@@ -308,7 +229,9 @@ def get_coursesitting_id(idSlot, idCorso):
 
 def get_weightroomsitting_id(idSlot, idSala):
     giorno = session.query(classes.Slot.giorno).filter(classes.Slot.id == idSlot)
-    id_sitting = session.query(classes.WeightRoomSitting.id).filter(and_(func.DATE(classes.WeightRoomSitting.dataseduta) == giorno, classes.WeightRoomSitting.salapesi == idSala)).first()
+    id_sitting = session.query(classes.WeightRoomSitting.id).\
+        filter(and_(func.DATE(classes.WeightRoomSitting.dataseduta) == giorno,
+                    classes.WeightRoomSitting.salapesi == idSala)).first()
     '''conn = engine.connect()
     p_query = "SELECT id FROM sedutesalepesi WHERE (dataseduta::date)=(SELECT giorno FROM slot WHERE id = %s) AND salapesi = %s"
     id_sitting = conn.engine.execute(p_query, idSlot, idSala).first()
@@ -317,7 +240,11 @@ def get_weightroomsitting_id(idSlot, idSala):
 
 
 def get_reservations(idSub):
-    reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio, classes.Slot.orafine).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub, classes.Slot.giorno > func.current_date())).order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
+    reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio,
+                                 classes.Slot.orafine).\
+        filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub,
+                    classes.Slot.giorno > func.current_date())).\
+        order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
     '''conn = engine.connect()
     p_query = "SELECT * FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE p.abbonato = %s AND s.giorno > CURRENT_DATE"
     reservations = conn.engine.execute(p_query, idSub)
@@ -326,7 +253,8 @@ def get_reservations(idSub):
 
 
 def get_last_seven_days():
-    days = session.query(classes.Day).filter(and_(classes.Day.data > func.current_date() - 7, classes.Day.data <= func.current_date()))
+    days = session.query(classes.Day).\
+        filter(and_(classes.Day.data > func.current_date() - 7, classes.Day.data <= func.current_date()))
     return days
 
 
@@ -346,15 +274,21 @@ def get_infected(giorno, infetto):
 
     '''
     if is_subscriber(infetto):
-        slots = session.query(classes.Reservation.slot).filter(
-            and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
+        slots = session.query(classes.Reservation.slot).\
+            filter(and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id,
+                        classes.Slot.giorno >= giorno))
     else:
-        slots = session.query(classes.NSReservation.slot).filter(
-            and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id, classes.Slot.giorno >= giorno))
-    sub_infected = session.query(classes.User).filter(
-        and_(classes.User.id == classes.Client.id, classes.Client.id != infetto, classes.Client.id == classes.Subscriber.id, classes.Client.id == classes.Reservation.abbonato, classes.Reservation.slot.in_(slots)))
-    notsub_infected = session.query(classes.User).filter(
-        and_(classes.User.id == classes.Client.id, classes.Client.id != infetto, classes.Client.id == classes.NotSubscriber.id, classes.Client.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
+        slots = session.query(classes.NSReservation.slot).\
+            filter(and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id,
+                        classes.Slot.giorno >= giorno))
+    sub_infected = session.query(classes.User).\
+        filter(and_(classes.User.id == classes.Client.id, classes.Client.id != infetto,
+                    classes.Client.id == classes.Subscriber.id, classes.Client.id == classes.Reservation.abbonato,
+                    classes.Reservation.slot.in_(slots)))
+    notsub_infected = session.query(classes.User).\
+        filter(and_(classes.User.id == classes.Client.id, classes.Client.id != infetto,
+                    classes.Client.id == classes.NotSubscriber.id,
+                    classes.Client.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
     infected = sub_infected.union(notsub_infected)
     return infected
 
@@ -373,7 +307,8 @@ def is_subscriber(user_id):
 
 
 def is_reserved(user_id, idSlot):
-    res = session.query(classes.Reservation).filter(and_(classes.Reservation.abbonato == user_id, classes.Reservation.slot == idSlot)).first()
+    res = session.query(classes.Reservation).\
+        filter(and_(classes.Reservation.abbonato == user_id, classes.Reservation.slot == idSlot)).first()
     '''conn = engine.connect()
     p_query = "SELECT * FROM prenotazioni WHERE abbonato = %s AND slot = %s"
     res = conn.engine.execute(p_query, user_id, idSlot).first()
@@ -403,7 +338,8 @@ def is_available_course(idSeduta, idSlot):
     res = session.query(func.count()).filter(classes.SubscriberCourseSession.seduta == idSeduta).first()
     corso = session.query(classes.CourseSitting.corso).filter(classes.CourseSitting.id == idSeduta)
     iscrittimax_corso = session.query(classes.Course.iscrittimax).filter(classes.Course.id == corso).first()
-    iscrittimax_corsislot = session.query(classes.CourseSlot.iscrittimax).filter(and_(classes.CourseSlot.corso == corso, classes.CourseSlot.slot == idSlot)).first()
+    iscrittimax_corsislot = session.query(classes.CourseSlot.iscrittimax).\
+        filter(and_(classes.CourseSlot.corso == corso, classes.CourseSlot.slot == idSlot)).first()
     '''conn = engine.connect()
     p_query = "SELECT COUNT(*) FROM abbonatisedutecorsi WHERE seduta = %s"
     res = conn.engine.execute(p_query, idSeduta).first()
@@ -422,7 +358,8 @@ def is_available_weight_room(idSeduta, idSlot):
     res = session.query(func.count()).filter(classes.SubscriberWeightRoomSession.seduta == idSeduta).first()
     sala = session.query(classes.WeightRoomSitting.salapesi).filter(classes.WeightRoomSitting.id == idSeduta)
     iscrittimax_sala = session.query(classes.WeightRoom.iscrittimax).filter(classes.WeightRoom.id == sala).first()
-    iscrittimax_salapesislot = session.query(classes.WeightRoomSlot.iscrittimax).filter(and_(classes.WeightRoomSlot.salapesi == sala, classes.WeightRoomSlot.slot == idSlot)).first()
+    iscrittimax_salapesislot = session.query(classes.WeightRoomSlot.iscrittimax).\
+        filter(and_(classes.WeightRoomSlot.salapesi == sala, classes.WeightRoomSlot.slot == idSlot)).first()
     '''conn = engine.connect()
     p_query = "SELECT COUNT(*) FROM abbonatisedutesalepesi WHERE seduta = %s"
     res = conn.engine.execute(p_query, idSeduta).first()
@@ -440,13 +377,16 @@ def is_available_weight_room(idSeduta, idSlot):
 def has_exceeded_accessisettimana(user_id, giorno):
     res1 = session.query(func.extract('dow', func.DATE(giorno))).first()
     if int(str(res1)[1:2]) > 0:
-        res2 = session.query(func.count(classes.Slot.giorno.distinct())).filter(
-            and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id, classes.Slot.giorno > func.DATE(giorno) - int(str(res1)[1:2]),
-                 classes.Slot.giorno <= func.DATE(giorno) + (7 - int(str(res1)[1:2])), classes.Slot.giorno != func.DATE(giorno))).first()
+        res2 = session.query(func.count(classes.Slot.giorno.distinct())).\
+            filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id,
+                        classes.Slot.giorno > func.DATE(giorno) - int(str(res1)[1:2]),
+                        classes.Slot.giorno <= func.DATE(giorno) + (7 - int(str(res1)[1:2])),
+                        classes.Slot.giorno != func.DATE(giorno))).first()
     else:
-        res2 = session.query(func.count(classes.Slot.giorno.distinct())).filter(
-            and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id, classes.Slot.giorno >= func.DATE(giorno) - 6,
-                 classes.Slot.giorno <= func.DATE(giorno), classes.Slot.giorno != func.DATE(giorno))).first()
+        res2 = session.query(func.count(classes.Slot.giorno.distinct())).\
+            filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id,
+                        classes.Slot.giorno >= func.DATE(giorno) - 6, classes.Slot.giorno <= func.DATE(giorno),
+                        classes.Slot.giorno != func.DATE(giorno))).first()
     res3 = session.query(classes.Information.accessisettimana).first()
 
     '''conn = engine.connect()
@@ -468,7 +408,9 @@ def has_exceeded_accessisettimana(user_id, giorno):
 
 
 def has_exceeded_slotgiorno(user_id, giorno):
-    res1 = session.query(func.count()).filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id, classes.Slot.giorno == func.DATE(giorno))).first()
+    res1 = session.query(func.count()).\
+        filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == user_id,
+                    classes.Slot.giorno == func.DATE(giorno))).first()
     res2 = session.query(classes.Information.slotgiorno).first()
     '''conn = engine.connect()
     p_query1 = "SELECT COUNT(*) FROM prenotazioni p JOIN slot s ON p.slot=s.id WHERE abbonato = %s AND s.giorno = %s"
@@ -525,7 +467,8 @@ def set_information_personemq(personeMq):
 
 def update_weight_room(idSala, dimensione):
     pmq = get_information().personemq
-    session.query(classes.WeightRoom).filter(classes.WeightRoom.id == idSala).update({"dimensione": dimensione, "iscrittimax": int(dimensione)/pmq})
+    session.query(classes.WeightRoom).\
+        filter(classes.WeightRoom.id == idSala).update({"dimensione": dimensione, "iscrittimax": int(dimensione)/pmq})
     '''conn = engine.connect()
     pmq = get_information().personemq
     p_query = "UPDATE salepesi SET dimensione = %s, iscrittimax = %s WHERE id = %s"
@@ -542,7 +485,9 @@ def update_room(idStanza, nome, dimensione):
 
 
 def update_course(idCorso, nome, iscrittiMax, idIstruttore, idStanza):
-    session.query(classes.Course).filter(classes.Course.id == idCorso).update({"nome": nome, "iscrittimax": iscrittiMax, "istruttore": idIstruttore, "stanza": idStanza})
+    session.query(classes.Course).\
+        filter(classes.Course.id == idCorso).update({"nome": nome, "iscrittimax": iscrittiMax,
+                                                     "istruttore": idIstruttore, "stanza": idStanza})
     '''conn = engine.connect()
     p_query = "UPDATE corsi SET nome = %s, iscrittimax = %s, istruttore = %s, stanza = %s WHERE id = %s"
     conn.engine.execute(p_query, nome, iscrittiMax, idIstruttore, idStanza, idCorso)
@@ -587,9 +532,11 @@ def remove_not_subscriber(idCliente):
 
 
 def is_reserved_course(idSub, idSlot):
-    res = session.query(classes.SubscriberCourseSession.abbonato).filter(
-        and_(classes.SubscriberCourseSession.abbonato == idSub, classes.SubscriberCourseSession.seduta == classes.CourseSitting.id,
-             classes.CourseSitting.corso == classes.Course.id, classes.Course.id == classes.CourseSlot.corso, classes.CourseSlot.slot == idSlot)).first()
+    res = session.query(classes.SubscriberCourseSession.abbonato).\
+        filter(and_(classes.SubscriberCourseSession.abbonato == idSub,
+                    classes.SubscriberCourseSession.seduta == classes.CourseSitting.id,
+                    classes.CourseSitting.corso == classes.Course.id, classes.Course.id == classes.CourseSlot.corso,
+                    classes.CourseSlot.slot == idSlot)).first()
     if res is not None:
         return True
     else:
@@ -597,16 +544,21 @@ def is_reserved_course(idSub, idSlot):
 
 
 def remove_reservation(idSub, idSlot):
-    session.query(classes.Reservation).filter(and_(classes.Reservation.abbonato == idSub, classes.Reservation.slot == idSlot)).delete()
+    session.query(classes.Reservation).\
+        filter(and_(classes.Reservation.abbonato == idSub, classes.Reservation.slot == idSlot)).delete()
     if is_reserved_course(idSub, idSlot):
-        session.query(classes.SubscriberCourseSession).filter(
-            and_(classes.SubscriberCourseSession.abbonato == idSub, classes.SubscriberCourseSession.seduta == classes.CourseSitting.id,
-                 classes.CourseSitting.corso == classes.Course.id, classes.Course.id == classes.CourseSlot.corso, classes.CourseSlot.slot == idSlot)).delete(synchronize_session='fetch')
+        session.query(classes.SubscriberCourseSession).\
+            filter(and_(classes.SubscriberCourseSession.abbonato == idSub,
+                        classes.SubscriberCourseSession.seduta == classes.CourseSitting.id,
+                        classes.CourseSitting.corso == classes.Course.id, classes.Course.id == classes.CourseSlot.corso,
+                        classes.CourseSlot.slot == idSlot)).delete(synchronize_session='fetch')
     else:
-        session.query(classes.SubscriberWeightRoomSession).filter(
-            and_(classes.SubscriberWeightRoomSession.abbonato == idSub, classes.SubscriberWeightRoomSession.seduta == classes.WeightRoomSitting.id,
-                 classes.WeightRoomSitting.salapesi == classes.WeightRoom.id, classes.WeightRoom.id == classes.WeightRoomSlot.salapesi,
-                 classes.WeightRoomSlot.slot == idSlot)).delete(synchronize_session='fetch')
+        session.query(classes.SubscriberWeightRoomSession).\
+            filter(and_(classes.SubscriberWeightRoomSession.abbonato == idSub,
+                        classes.SubscriberWeightRoomSession.seduta == classes.WeightRoomSitting.id,
+                        classes.WeightRoomSitting.salapesi == classes.WeightRoom.id,
+                        classes.WeightRoom.id == classes.WeightRoomSlot.salapesi,
+                        classes.WeightRoomSlot.slot == idSlot)).delete(synchronize_session='fetch')
     '''conn = engine.connect()
     p_query1 = "DELETE FROM prenotazioni WHERE abbonato = %s AND slot = %s"
     conn.engine.execute(p_query1, idSub, idSlot)
