@@ -1,6 +1,4 @@
 --DataBase 'progetto_palestra'
---Creazione
-ALTER USER postgres PASSWORD 'postgres';
 
 --Utenti
 CREATE TABLE utenti(

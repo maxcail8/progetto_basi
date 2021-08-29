@@ -468,25 +468,3 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER cancella_istruttore_occupato BEFORE DELETE ON utenti
 FOR EACH ROW
 EXECUTE FUNCTION trigger_cancella_istruttore_occupato();
-
-
-
-
-/*
-Quando viene eliminato un abbonamento, tutti gli abbonati con quel determinato abbonamento vengono spostati in non abbonati e le loro prenotazioni vengono salvate in prenotazioninonabbonati.
-*/
-/*DROP TRIGGER IF EXISTS cancella_abbonamento ON abbonamenti CASCADE;
-DROP FUNCTION IF EXISTS trigger_cancella_abbonamento();
-CREATE FUNCTION trigger_cancella_abbonamento() RETURNS trigger AS $$
-    BEGIN
-        INSERT INTO nonabbonati (id) SELECT id FROM abbonati WHERE abbonamento = OLD.id;
-        INSERT INTO prenotazioninonabbonati (nonabbonato, slot) SELECT abbonato, slot 
-                                                                FROM prenotazioni 
-                                                                WHERE abbonato = (SELECT id FROM abbonati WHERE abbonamento = OLD.id);
-        RETURN OLD;
-    END;
-$$ LANGUAGE 'plpgsql';
-
-CREATE TRIGGER cancella_abbonamento BEFORE DELETE ON abbonamenti
-FOR EACH ROW
-EXECUTE FUNCTION trigger_cancella_abbonamento();*/
