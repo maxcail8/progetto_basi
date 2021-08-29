@@ -275,32 +275,19 @@ def get_last_seven_days():
 
 # Funzione per ottenere i possibili contagiati da un infetto
 def get_infected(giorno, infetto):
-    if is_subscriber(infetto):
-        slots = session.query(classes.Reservation.slot).\
-            filter(and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id,
-                        classes.Slot.giorno >= giorno))
-    else:
-        slots = session.query(classes.NSReservation.slot).\
-            filter(and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id,
-                        classes.Slot.giorno >= giorno))
+    slots1 = session.query(classes.Reservation.slot).\
+        filter(and_(classes.Reservation.abbonato == infetto, classes.Reservation.slot == classes.Slot.id,
+                    classes.Slot.giorno >= giorno))
+    slots2 = session.query(classes.NSReservation.slot).\
+        filter(and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id,
+                    classes.Slot.giorno >= giorno))
+    slots = slots1.union(slots2)
     sub_infected = session.query(classes.User).\
         filter(and_(classes.User.id != infetto, classes.User.id == classes.Subscriber.id,
                     classes.User.id == classes.Reservation.abbonato, classes.Reservation.slot.in_(slots)))
     notsub_infected = session.query(classes.User).\
         filter(and_(classes.User.id != infetto, classes.User.id == classes.NotSubscriber.id,
                     classes.User.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("Infetto")
-    print(infetto)
-    print(sub_infected.all())
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print(notsub_infected.all())
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
     infected = sub_infected.union(notsub_infected).all()
     return infected
 

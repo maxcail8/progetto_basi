@@ -441,13 +441,19 @@ EXECUTE FUNCTION trigger_cancella_stanza_occupata();
 
 
 
-
+/*
+Testare sta roba!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Istruttori
+Abbonamenti
+*/
 DROP TRIGGER IF EXISTS cancella_abbonamento ON abbonamenti CASCADE;
 DROP FUNCTION IF EXISTS trigger_cancella_abbonamento();
 CREATE FUNCTION trigger_cancella_abbonamento() RETURNS trigger AS $$
     BEGIN
         INSERT INTO nonabbonati (id) SELECT id FROM abbonati WHERE abbonamento = OLD.id;
-        INSERT INTO prenotazioninonabbonati 
+        INSERT INTO prenotazioninonabbonati (nonabbonato, slot) SELECT abbonato, slot 
+                                                                FROM prenotazioni 
+                                                                WHERE abbonato = (SELECT id FROM abbonati WHERE abbonamento = OLD.id);
         RETURN OLD;
     END;
 $$ LANGUAGE 'plpgsql';
@@ -455,9 +461,3 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER cancella_abbonamento BEFORE DELETE ON abbonamenti
 FOR EACH ROW
 EXECUTE FUNCTION trigger_cancella_abbonamento();
-
-/*
-Testare sta roba!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Istruttori
-Abbonamenti
-*/

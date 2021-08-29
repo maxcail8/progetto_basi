@@ -78,7 +78,6 @@
     <div id="operazioniDisp">
         <section id="sezione0" class="w3-container w3-card-4">
             <form id="form0" action="/add_weight_room" method="POST">
-                
                 <section>
                         <div>
                             <label>Aggiungi una sala pesi</label>
@@ -86,11 +85,11 @@
                         </div>
                         <input class="button" type="button" value="Aggiungi" onclick="AggiungiSalaPesi()">
                 </section>
-
             </form>
+
+            {% if weight_rooms %}
             <hr>
             <form id="form1" action="/remove_weight_room" method="POST">
-                
                 <section>
                     <div>
                         <label>Rimuovi una sala pesi</label>
@@ -102,11 +101,10 @@
                     </div>
                     <input class="button" type="button" value="Rimuovi" onclick="RimuoviSalaPesi()">
                 </section>
-
             </form>
-
+            {% endif %}
+            {% if weight_rooms %}
             <hr>
-
             <form id="form2" action="/update_weight_room" method="POST">
                 <section>
                     <div>
@@ -121,6 +119,7 @@
                     <input class="button" type="button" value="Modifica" onclick="ModificaSalaPesi()">
                 </section>
             </form>
+            {% endif %}
         </section>
     </div>
 {% endblock %}

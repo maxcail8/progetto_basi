@@ -19,6 +19,7 @@
     <h3>Scegli il tipo di prenotazione</h3>
     <div id="operazioniDisp">
         <section id="sezione0" class="w3-container w3-card-4">
+            {% if weight_rooms %}
             <form id="form0" action="/book_weight_room" method="POST">
                 <section>
                     <div>
@@ -36,6 +37,8 @@
                     <input class="button" type="button" value="Prenota" onclick="PrenotaSala()">
                 </section>
             </form>
+            {% endif %}
+            {% if courses %}
             <hr>
             <form id="form1" action="/book_course" method="POST">
                 <section>
@@ -53,6 +56,7 @@
                     <input class="button" type="button" value="Prenota" onclick="PrenotaCorso()">
                 </section>
             </form>
+            {% endif %}
         </section>
     </div>
 {% endblock %}

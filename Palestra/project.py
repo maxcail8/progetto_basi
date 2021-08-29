@@ -298,8 +298,7 @@ def logout():
 @app.route('/info')
 def info():
     return render_template("info.html", courses=functions.get_courses(), rooms=functions.get_rooms(),
-                           weight_rooms=functions.get_weight_rooms(), trainers=functions.get_trainers(),
-                           clients=functions.get_clients())
+                           weight_rooms=functions.get_weight_rooms(), trainers=functions.get_trainers())
 
 
 @app.route('/administration')
@@ -647,10 +646,6 @@ def contact_tracing_result():
         giorno = request.form['data']
         infetto = request.form['idCliente']
         contagiati = functions.get_infected(giorno, infetto)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
-        print(contagiati)
         return render_template("contact_tracing_result.html", contagiati=contagiati)
     else:
         return redirect(url_for('wrong'))

@@ -124,8 +124,8 @@
                         </div>
                         <input class="button" type="button" value="Aggiungi" onclick="AggiungiCorso()">
                 </section>
-
             </form>
+            {% if courses %}
             <hr>
             <form id="form1" action="/remove_course" method="POST">
                 
@@ -140,11 +140,11 @@
                     </div>
                     <input class="button" type="button" value="Rimuovi" onclick="RimuoviCorso()">
                 </section>
-
             </form>
+            {% endif %}
 
+            {% if courses %}
             <hr>
-
             <form id="form2" action="/update_course" method="POST">
                 <section>
                     <div>
@@ -158,6 +158,7 @@
                     <input class="button" type="button" value="Modifica" onclick="ModificaCorso()">
                 </section>
             </form>
+            {% endif %}
         </section>
     </div>
     <br>

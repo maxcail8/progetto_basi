@@ -6,20 +6,14 @@
       <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" afterPath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/add_other.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/add_other.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/add_trainer.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/add_trainer.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/administration.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/administration.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/base_table.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/calendar.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/calendar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/book_slot.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/book_slot.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_courses.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_others.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_others.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_rooms.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_trainers.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_trainers.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Palestra/templates/edit_weight_rooms.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/edit_weight_rooms.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/img/info.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/img/lock.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/info_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/info_user.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/private.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/private.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/signup.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/signup.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/update_course.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/update_course.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Palestra/templates/info.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/info.html" afterDir="false" />
     </list>
     <list id="0a2989ad-c0de-4b34-9cb8-465758d93318" name="Changes by matte" comment="" />
     <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="" />

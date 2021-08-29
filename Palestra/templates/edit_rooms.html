@@ -86,7 +86,6 @@
     <div id="operazioniDisp">
         <section id="sezione0" class="w3-container w3-card-4">
             <form id="form0" action="/add_room" method="POST">
-                
                 <section>
                         <div>
                             <label>Aggiungi una stanza</label>
@@ -95,11 +94,11 @@
                         </div>
                         <input class="button" type="button" value="Aggiungi" onclick="AggiungiStanza()">
                 </section>
-
             </form>
+
+            {% if rooms %}
             <hr>
             <form id="form1" action="/remove_room" method="POST">
-                
                 <section>
                     <div>
                         <label>Rimuovi una stanza</label>
@@ -111,11 +110,11 @@
                     </div>
                     <input class="button" type="button" value="Rimuovi" onclick="RimuoviStanza()">
                 </section>
-
             </form>
+            {% endif %}
 
+            {% if rooms %}
             <hr>
-
             <form id="form2" action="/update_room" method="POST">
                 <section>
                     <div>
@@ -131,6 +130,7 @@
                     <input class="button" type="button" value="Modifica" onclick="ModificaStanza()">
                 </section>
             </form>
+            {% endif %}
         </section>
     </div>
 {% endblock %}
