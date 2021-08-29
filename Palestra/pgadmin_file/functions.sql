@@ -82,10 +82,13 @@ CREATE FUNCTION trigger_personemq() RETURNS trigger AS $$
                                         +
                                         (SELECT COALESCE(SUM(sp.iscrittimax),0) 
                                         FROM salepesi sp JOIN salapesislot ss ON sp.id=ss.salapesi
-                                        WHERE s.id=ss.slot); 
-        UPDATE salapesislot ps SET iscrittimax = (SELECT sp.iscrittimax FROM salepesi sp WHERE sp.id=ps.salapesi);
-        UPDATE corsislot cs SET iscrittimax = (SELECT c.iscrittimax FROM corsi c WHERE c.id=cs.corso);
-        UPDATE informazioni SET personemaxslot = (SELECT COALESCE(MAX(personemax),0) FROM slot WHERE giorno > CURRENT_DATE);
+                                        WHERE s.id=ss.slot)
+                        WHERE giorno > CURRENT_DATE + 7; 
+        UPDATE salapesislot ps SET iscrittimax = (SELECT sp.iscrittimax FROM salepesi sp WHERE sp.id=ps.salapesi)
+                                WHERE slot IN (SELECT id FROM slot WHERE giorno > CURRENT_DATE + 7);
+        UPDATE corsislot cs SET iscrittimax = (SELECT c.iscrittimax FROM corsi c WHERE c.id=cs.corso)
+                                WHERE slot IN (SELECT id FROM slot WHERE giorno > CURRENT_DATE + 7);
+        UPDATE informazioni SET personemaxslot = (SELECT COALESCE(MAX(personemax),0) FROM slot WHERE giorno > CURRENT_DATE + 7);
         RETURN NULL;
     END;
 $$ LANGUAGE 'plpgsql';
@@ -125,6 +128,7 @@ EXECUTE FUNCTION trigger_iscrittimax_corso_stanza();
 Si occupa di gestire il caso in cui si voglia mettere un limite al numero massimo di persone che possono accedere ad uno slot 
 e abbassa il numero di persone iscrivibili ai corsi/sale di ciascuno slot.
 */
+
 DROP TRIGGER IF EXISTS t_personemaxslot ON informazioni CASCADE;
 DROP FUNCTION IF EXISTS trigger_personemaxslot();
 CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
@@ -136,6 +140,12 @@ CREATE FUNCTION trigger_personemaxslot() RETURNS trigger AS $$
     DECLARE corso_r corsi%rowtype;
     DECLARE sala_r salepesi%rowtype;
     BEGIN
+        UPDATE slot sl SET personemax = 1 + (SELECT COALESCE(SUM(iscrittimax),0) 
+                                        FROM corsislot WHERE slot=sl.id) 
+                                        + 
+                                        (SELECT COALESCE(SUM(iscrittimax),0)
+                                        FROM salapesislot WHERE slot=sl.id) 
+                        WHERE giorno >= CURRENT_DATE AND giorno <= CURRENT_DATE + 7;
         FOR s IN SELECT * FROM slot WHERE giorno > CURRENT_DATE + 7 ORDER BY giorno LOOP
             SELECT COUNT(DISTINCT(c.corso)) INTO totale_corsi FROM corsislot c WHERE c.slot = s.id;
             SELECT COUNT(DISTINCT(sp.salapesi)) INTO totale_sale FROM salapesislot sp WHERE sp.slot = s.id;
@@ -442,11 +452,30 @@ EXECUTE FUNCTION trigger_cancella_stanza_occupata();
 
 
 /*
-Testare sta roba!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-Istruttori
-Abbonamenti
+Controlla che prima di rimuovere un istruttore non sia resposabile di nessun corso.
 */
-DROP TRIGGER IF EXISTS cancella_abbonamento ON abbonamenti CASCADE;
+DROP TRIGGER IF EXISTS cancella_istruttore_occupato ON utenti CASCADE;
+DROP FUNCTION IF EXISTS trigger_cancella_istruttore_occupato();
+CREATE FUNCTION trigger_cancella_istruttore_occupato() RETURNS trigger AS $$
+    BEGIN
+        IF (EXISTS (SELECT * FROM corsi WHERE istruttore=OLD.id)) THEN
+            RETURN NULL;
+        END IF;
+        RETURN OLD;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER cancella_istruttore_occupato BEFORE DELETE ON utenti
+FOR EACH ROW
+EXECUTE FUNCTION trigger_cancella_istruttore_occupato();
+
+
+
+
+/*
+Quando viene eliminato un abbonamento, tutti gli abbonati con quel determinato abbonamento vengono spostati in non abbonati e le loro prenotazioni vengono salvate in prenotazioninonabbonati.
+*/
+/*DROP TRIGGER IF EXISTS cancella_abbonamento ON abbonamenti CASCADE;
 DROP FUNCTION IF EXISTS trigger_cancella_abbonamento();
 CREATE FUNCTION trigger_cancella_abbonamento() RETURNS trigger AS $$
     BEGIN
@@ -460,4 +489,4 @@ $$ LANGUAGE 'plpgsql';
 
 CREATE TRIGGER cancella_abbonamento BEFORE DELETE ON abbonamenti
 FOR EACH ROW
-EXECUTE FUNCTION trigger_cancella_abbonamento();
+EXECUTE FUNCTION trigger_cancella_abbonamento();*/

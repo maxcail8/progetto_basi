@@ -17,6 +17,7 @@
             </nav>
         </header>
         <h3>Scegli prenotazione</h3>
+        {% if reservations %}
         <div id="operazioniDisp">
             <section id="sezione0" class="w3-container w3-card-4">
                 <form id="form0" action="/cancel_reservation_conf" method="POST">
@@ -34,6 +35,7 @@
                 </form>
             </section>
         </div>
+        {% endif %}
 {% endblock %}   
 {% block pagescript %}       
     <script>

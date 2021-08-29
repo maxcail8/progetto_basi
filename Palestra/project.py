@@ -15,6 +15,7 @@ from sqlalchemy import *
 # other-import
 from werkzeug.utils import redirect
 from datetime import datetime
+from functools import wraps
 
 
 # Parametri applicazione
@@ -39,6 +40,17 @@ session = functions.session
 first_id_client = 100
 admin_email = 'admin@palestra.it'
 admin_pwd = hashlib.md5(("admin" + admin_email).encode()).hexdigest()
+
+
+# Decoratore admin_required
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user == functions.get_admin_user():
+            return redirect(url_for('wrong'))
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 # user_loader
@@ -318,334 +330,278 @@ def administration():
 
 @app.route('/edit_checks', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_checks():
-    if current_user == functions.get_admin_user():
-        functions.set_checks(request.form['controlliGiornalieri'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.set_checks(request.form['controlliGiornalieri'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_information_accessi', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_information_accessi():
-    if current_user == functions.get_admin_user():
-        functions.set_information_accessisettimana(request.form['accessiSettimana'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.set_information_accessisettimana(request.form['accessiSettimana'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_information_tempo', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_information_tempo():
-    if current_user == functions.get_admin_user():
-        functions.set_information_slotgiorno(request.form['tempoAllenamento'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.set_information_slotgiorno(request.form['tempoAllenamento'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_information_personemax', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_information_personemax():
-    if current_user == functions.get_admin_user():
-        functions.set_information_personemaxslot(request.form['personeMassime'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.set_information_personemaxslot(request.form['personeMassime'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_information_personemq', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_information_personemq():
-    if current_user == functions.get_admin_user():
-        functions.set_information_personemq(request.form['personeMq'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.set_information_personemq(request.form['personeMq'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_courses', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_courses():
-    if current_user == functions.get_admin_user():
-        trainers = functions.get_trainers()
-        rooms = functions.get_rooms()
-        courses = functions.get_courses()
-        courses2 = functions.get_courses()
-        return render_template("edit_courses.html", trainers=trainers, rooms=rooms, courses=courses, courses2=courses2)
-    else:
-        return redirect(url_for('wrong'))
+    trainers = functions.get_trainers()
+    rooms = functions.get_rooms()
+    courses = functions.get_courses()
+    courses2 = functions.get_courses()
+    return render_template("edit_courses.html", trainers=trainers, rooms=rooms, courses=courses, courses2=courses2)
 
 
 @app.route('/edit_trainers', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_trainers():
-    if current_user == functions.get_admin_user():
-        trainers = functions.get_trainers()
-        return render_template("edit_trainers.html", trainers=trainers)
-    else:
-        return redirect(url_for('wrong'))
+    trainers = functions.get_trainers()
+    return render_template("edit_trainers.html", trainers=trainers)
 
 
 @app.route('/edit_others', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_others():
-    if current_user == functions.get_admin_user():
-        others = functions.get_others()
-        return render_template("edit_others.html", others=others)
-    else:
-        return redirect(url_for('wrong'))
+    others = functions.get_others()
+    return render_template("edit_others.html", others=others)
 
 
 @app.route('/add_trainer', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_trainer():
-    if current_user == functions.get_admin_user():
-        return render_template("add_trainer.html")
-    else:
-        return redirect(url_for('wrong'))
+    return render_template("add_trainer.html")
 
 
 @app.route('/add_trainer_conf', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_trainer_conf():
-    if current_user == functions.get_admin_user():
-        new_id = functions.get_id_staff_increment()
-        pw = request.form['password'] + request.form['email']
-        user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
-                            nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
-                            datanascita=request.form['dataNascita'])
-        trainer = classes.Trainer(id=new_id)
-        session.add(user)
-        session.add(trainer)
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    new_id = functions.get_id_staff_increment()
+    pw = request.form['password'] + request.form['email']
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                        datanascita=request.form['dataNascita'])
+    trainer = classes.Trainer(id=new_id)
+    session.add(user)
+    session.add(trainer)
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/remove_trainer', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def remove_trainer():
-    if current_user == functions.get_admin_user():
-        functions.remove_user(request.form['idIstruttore'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.remove_user(request.form['idIstruttore'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/add_other', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_other():
-    if current_user == functions.get_admin_user():
-        return render_template("add_other.html")
-    else:
-        return redirect(url_for('wrong'))
+    return render_template("add_other.html")
 
 
 @app.route('/add_other_conf', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_other_conf():
-    if current_user == functions.get_admin_user():
-        new_id = functions.get_id_staff_increment()
-        pw = request.form['password'] + request.form['email']
-        user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
-                            nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
-                            datanascita=request.form['dataNascita'])
-        other = classes.Other(id=new_id)
-        session.add(user)
-        session.add(other)
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    new_id = functions.get_id_staff_increment()
+    pw = request.form['password'] + request.form['email']
+    user = classes.User(id=new_id, username=request.form['username'], password=hashlib.md5(pw.encode()).hexdigest(),
+                        nome=request.form['nome'], cognome=request.form['cognome'], email=request.form['email'],
+                        datanascita=request.form['dataNascita'])
+    other = classes.Other(id=new_id)
+    session.add(user)
+    session.add(other)
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/remove_other', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def remove_other():
-    if current_user == functions.get_admin_user():
-        functions.remove_user(request.form['idAltro'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.remove_user(request.form['idAltro'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/add_course', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_course():
-    if current_user == functions.get_admin_user():
-        new_id = functions.get_course_id_increment()
-        course = classes.Course(id=new_id, nome=request.form['nome'], iscrittimax=request.form['iscrittimax'],
-                                istruttore=request.form['idIstruttore'], stanza=request.form['idStanza'])
-        session.add(course)
-        session.commit()
-        functions.add_course_slot(new_id, request.form['primoGiorno'], request.form['slot'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    new_id = functions.get_course_id_increment()
+    course = classes.Course(id=new_id, nome=request.form['nome'], iscrittimax=request.form['iscrittimax'],
+                            istruttore=request.form['idIstruttore'], stanza=request.form['idStanza'])
+    session.add(course)
+    session.commit()
+    functions.add_course_slot(new_id, request.form['primoGiorno'], request.form['slot'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/remove_course', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def remove_course():
-    if current_user == functions.get_admin_user():
-        functions.remove_course(request.form['idCorso'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.remove_course(request.form['idCorso'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/update_course', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def update_course():
-    if current_user == functions.get_admin_user():
-        course = functions.get_course(request.form['idCorso'])
-        trainers = functions.get_trainers()
-        rooms = functions.get_rooms()
-        return render_template("update_course.html", course=course, trainers=trainers, rooms=rooms)
-    else:
-        return redirect(url_for('wrong'))
+    course = functions.get_course(request.form['idCorso'])
+    trainers = functions.get_trainers()
+    rooms = functions.get_rooms()
+    return render_template("update_course.html", course=course, trainers=trainers, rooms=rooms)
 
 
 @app.route('/update_course_conf', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def update_course_conf():
-    if current_user == functions.get_admin_user():
-        functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'],
-                                request.form['idIstruttore'], request.form['idStanza'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.update_course(request.form['sCorso'], request.form['nome'], request.form['iscrittiMax'],
+                            request.form['idIstruttore'], request.form['idStanza'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_rooms', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_rooms():
-    if current_user == functions.get_admin_user():
-        rooms = functions.get_rooms()
-        rooms2 = functions.get_rooms()
-        return render_template("edit_rooms.html", rooms=rooms, rooms2=rooms2)
-    else:
-        return redirect(url_for('wrong'))
+    rooms = functions.get_rooms()
+    rooms2 = functions.get_rooms()
+    return render_template("edit_rooms.html", rooms=rooms, rooms2=rooms2)
 
 
 @app.route('/add_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_room():
-    if current_user == functions.get_admin_user():
-        new_id = functions.get_room_id_increment()
-        room = classes.Room(id=new_id, nome=request.form['nome'], dimensione=request.form['dim'])
-        session.add(room)
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    new_id = functions.get_room_id_increment()
+    room = classes.Room(id=new_id, nome=request.form['nome'], dimensione=request.form['dim'])
+    session.add(room)
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/remove_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def remove_room():
-    if current_user == functions.get_admin_user():
-        functions.remove_room(request.form['idStanza'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.remove_room(request.form['idStanza'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/update_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def update_room():
-    if current_user == functions.get_admin_user():
-        functions.update_room(request.form['idStanza'], request.form['nome'], request.form['dim'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.update_room(request.form['idStanza'], request.form['nome'], request.form['dim'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/edit_weight_rooms', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def edit_weight_rooms():
-    if current_user == functions.get_admin_user():
-        weight_rooms = functions.get_weight_rooms()
-        weight_rooms2 = functions.get_weight_rooms()
-        return render_template("edit_weight_rooms.html", weight_rooms=weight_rooms, weight_rooms2=weight_rooms2)
-    else:
-        return redirect(url_for('wrong'))
+    weight_rooms = functions.get_weight_rooms()
+    weight_rooms2 = functions.get_weight_rooms()
+    return render_template("edit_weight_rooms.html", weight_rooms=weight_rooms, weight_rooms2=weight_rooms2)
 
 
 @app.route('/add_weight_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def add_weight_room():
-    if current_user == functions.get_admin_user():
-        new_id = functions.get_weight_room_id_increment()
-        pmq = functions.get_information().personemq
-        dimensione = request.form['dim']
-        iscrittimax = int(dimensione)/pmq
-        weight_room = classes.WeightRoom(id=new_id, dimensione=dimensione, iscrittimax=iscrittimax)
-        session.add(weight_room)
-        session.commit()
-        functions.add_weight_room_slot(new_id)
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    new_id = functions.get_weight_room_id_increment()
+    pmq = functions.get_information().personemq
+    dimensione = request.form['dim']
+    iscrittimax = int(dimensione)/pmq
+    weight_room = classes.WeightRoom(id=new_id, dimensione=dimensione, iscrittimax=iscrittimax)
+    session.add(weight_room)
+    session.commit()
+    functions.add_weight_room_slot(new_id)
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/remove_weight_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def remove_weight_room():
-    if current_user == functions.get_admin_user():
-        functions.remove_weight_room(request.form['idSala'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.remove_weight_room(request.form['idSala'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/update_weight_room', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def update_weight_room():
-    if current_user == functions.get_admin_user():
-        functions.update_weight_room(request.form['idSala'], request.form['dim'])
-        session.commit()
-        return redirect(url_for('confirm'))
-    else:
-        return redirect(url_for('wrong'))
+    functions.update_weight_room(request.form['idSala'], request.form['dim'])
+    session.commit()
+    return redirect(url_for('confirm'))
 
 
 @app.route('/contact_tracing', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def contact_tracing():
-    if current_user == functions.get_admin_user():
-        giorni = functions.get_last_seven_days()
-        clienti = functions.get_clients()
-        return render_template("contact_tracing.html", days=giorni, clients=clienti)
-    else:
-        return redirect(url_for('wrong'))
+    giorni = functions.get_last_seven_days()
+    clienti = functions.get_clients()
+    return render_template("contact_tracing.html", days=giorni, clients=clienti)
 
 
 @app.route('/contact_tracing_result', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def contact_tracing_result():
-    if current_user == functions.get_admin_user():
-        giorno = request.form['data']
-        infetto = request.form['idCliente']
-        contagiati = functions.get_infected(giorno, infetto)
-        return render_template("contact_tracing_result.html", contagiati=contagiati)
-    else:
-        return redirect(url_for('wrong'))
+    giorno = request.form['data']
+    infetto = request.form['idCliente']
+    contagiati = functions.get_infected(giorno, infetto)
+    return render_template("contact_tracing_result.html", contagiati=contagiati)

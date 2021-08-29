@@ -17,6 +17,7 @@
         </nav>
     </header>
     <h3>Contact tracing</h3>
+    {% if clients %}
     <div id="operazioniDisp">
         <section id="sezione0" class="w3-container w3-card-4">
             <form id="form0" action="/contact_tracing_result" method="POST">
@@ -39,6 +40,7 @@
             </form>
         </section>
     </div>
+    {% endif %}
 {% endblock %}
 {% block pagescript %}
     <script>

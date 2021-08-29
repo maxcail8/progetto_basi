@@ -2,6 +2,9 @@
 Massimo Cailotto, Matteo Minardi
 
 # Settaggio parametri applicazione
+Parametri USER
+utente: 'postgres'
+password: 'postgres'
 
 # Run applicazione
 # Installazioni ....
