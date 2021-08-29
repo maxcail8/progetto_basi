@@ -362,3 +362,102 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER check_data_fine_abbonamento BEFORE UPDATE ON controlli
 FOR EACH ROW
 EXECUTE FUNCTION trigger_check_data_fine_abbonamento();
+
+
+
+
+/*
+Nella rimozione di un corso si occupa di rimuovere anche le prenotazioni effettuate per quel corso in futuro.
+*/
+DROP TRIGGER IF EXISTS cancella_prenotazioni_corsi ON corsi CASCADE;
+DROP FUNCTION IF EXISTS trigger_cancella_prenotazioni_corsi();
+CREATE FUNCTION trigger_cancella_prenotazioni_corsi() RETURNS trigger AS $$
+    DECLARE sc sedutecorsi%rowtype;
+    DECLARE da_eliminare TIMESTAMP;
+    DECLARE c INT;
+    BEGIN
+        SELECT id INTO c FROM corsi WHERE id=OLD.id;
+        FOR sc IN SELECT * FROM sedutecorsi WHERE corso=c AND dataseduta > CURRENT_DATE LOOP
+            da_eliminare = sc.dataseduta;
+            DELETE FROM prenotazioni WHERE slot = (
+                SELECT id FROM SLOT WHERE giorno = da_eliminare::date AND orainizio = da_eliminare::time)
+                                            AND abbonato IN (SELECT abbonato FROM abbonatisedutecorsi WHERE seduta = sc.id);
+        END LOOP;
+        RETURN OLD;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER cancella_prenotazioni_corsi BEFORE DELETE ON corsi
+FOR EACH ROW
+EXECUTE FUNCTION trigger_cancella_prenotazioni_corsi();
+
+
+
+
+/*
+Nella rimozione di una sala pesi si occupa di rimuovere anche le prenotazioni effettuate successivamente per quella sala pesi
+*/
+DROP TRIGGER IF EXISTS cancella_prenotazioni_salepesi ON salepesi CASCADE;
+DROP FUNCTION IF EXISTS trigger_cancella_prenotazioni_salepesi();
+CREATE FUNCTION trigger_cancella_prenotazioni_salepesi() RETURNS trigger AS $$
+    DECLARE sc sedutesalepesi%rowtype;
+    DECLARE s INT;
+    BEGIN
+        SELECT id INTO s FROM salepesi WHERE id=OLD.id;
+        FOR sc IN SELECT * FROM sedutesalepesi WHERE salapesi=s AND dataseduta > CURRENT_DATE LOOP
+            DELETE FROM prenotazioni WHERE slot IN (SELECT id FROM SLOT WHERE giorno > CURRENT_DATE)
+                                            AND abbonato IN (SELECT abbonato FROM abbonatisedutesalepesi WHERE seduta = sc.id);
+        END LOOP;
+        RETURN OLD;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER cancella_prenotazioni_salepesi BEFORE DELETE ON salepesi
+FOR EACH ROW
+EXECUTE FUNCTION trigger_cancella_prenotazioni_salepesi();
+
+
+
+
+/*
+Controlla che prima di rimuovere una stanza non sia utilizzata da nessun corso.
+*/
+DROP TRIGGER IF EXISTS cancella_stanza_occupata ON stanze CASCADE;
+DROP FUNCTION IF EXISTS trigger_cancella_stanza_occupata();
+CREATE FUNCTION trigger_cancella_stanza_occupata() RETURNS trigger AS $$
+    BEGIN
+        IF (EXISTS (SELECT * FROM corsi WHERE stanza=OLD.id)) THEN
+            RETURN NULL;
+        END IF;
+        RETURN OLD;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER cancella_stanza_occupata BEFORE DELETE ON stanze
+FOR EACH ROW
+EXECUTE FUNCTION trigger_cancella_stanza_occupata();
+
+
+
+
+
+
+DROP TRIGGER IF EXISTS cancella_abbonamento ON abbonamenti CASCADE;
+DROP FUNCTION IF EXISTS trigger_cancella_abbonamento();
+CREATE FUNCTION trigger_cancella_abbonamento() RETURNS trigger AS $$
+    BEGIN
+        INSERT INTO nonabbonati (id) SELECT id FROM abbonati WHERE abbonamento = OLD.id;
+        INSERT INTO prenotazioninonabbonati 
+        RETURN OLD;
+    END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER cancella_abbonamento BEFORE DELETE ON abbonamenti
+FOR EACH ROW
+EXECUTE FUNCTION trigger_cancella_abbonamento();
+
+/*
+Testare sta roba!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Istruttori
+Abbonamenti
+*/

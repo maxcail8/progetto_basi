@@ -96,8 +96,8 @@ def create_user():
         if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id,
                                             datainizioabbonamento=functions.get_current_date(),
-                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
-                                            durata=null)
+                                            datafineabbonamento=functions.get_increment_date(7),
+                                            durata=7)
             session.add(subscriber)
         else:
             subscriber = classes.Subscriber(id=new_id, abbonamento=sub.id,
@@ -167,8 +167,8 @@ def subscribe():
         if request.form['abb'] == 'prova':
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id,
                                             datainizioabbonamento=functions.get_current_date(),
-                                            datafineabbonamento=functions.get_increment_date(int(request.form['durata'])),
-                                            durata=null)
+                                            datafineabbonamento=functions.get_increment_date(7),
+                                            durata=7)
             session.add(subscriber)
         else:
             subscriber = classes.Subscriber(id=user_id, abbonamento=sub.id,
@@ -188,12 +188,12 @@ def subscribe():
 def info_user():
     subscriber = functions.get_subscriber_by_id(current_user.id)
     if subscriber is not None:
-        reservations = functions.get_reservations(current_user.id)
+        reservations = functions.get_all_reservations(current_user.id)
         subscription = functions.get_subscription_by_id(subscriber.abbonamento)
         return render_template("info_user.html", subscription=subscription['tipo'], subscriber=subscriber,
                                reservations=reservations)
     else:
-        reservations = []
+        reservations = functions.get_all_ns_reservations(current_user.id)
         subscription = None
         return render_template("info_user.html", subscription=subscription, subscriber=subscriber,
                                reservations=reservations)
@@ -647,6 +647,10 @@ def contact_tracing_result():
         giorno = request.form['data']
         infetto = request.form['idCliente']
         contagiati = functions.get_infected(giorno, infetto)
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa")
+        print(contagiati)
         return render_template("contact_tracing_result.html", contagiati=contagiati)
     else:
         return redirect(url_for('wrong'))

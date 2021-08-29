@@ -238,7 +238,7 @@ def get_weightroomsitting_id(idSlot, idSala):
     return id_sitting
 
 
-# Funzione per ottenere le prenotazioni di un abbonato
+# Funzione per ottenere le prenotazioni cancellabili
 def get_reservations(idSub):
     reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio,
                                  classes.Slot.orafine).\
@@ -246,6 +246,25 @@ def get_reservations(idSub):
                     classes.Slot.giorno > func.current_date())).\
         order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
     return reservations
+
+
+# Funzione per ottenere le prenotazioni di un abbonato
+def get_all_reservations(idSub):
+    reservations = session.query(classes.Reservation.slot, classes.Slot.giorno, classes.Slot.orainizio,
+                                 classes.Slot.orafine).\
+        filter(and_(classes.Reservation.slot == classes.Slot.id, classes.Reservation.abbonato == idSub)).\
+        order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
+    return reservations
+
+
+# Funzione per ottenere le prenotazioni di un non abbonato
+def get_all_ns_reservations(idNSub):
+    nsreservations = session.query(classes.NSReservation.slot, classes.Slot.giorno, classes.Slot.orainizio,
+                                 classes.Slot.orafine).\
+        filter(and_(classes.NSReservation.slot == classes.Slot.id, classes.NSReservation.nonabbonato == idNSub,
+                    classes.Slot.giorno <= func.current_date())).\
+        order_by(classes.Slot.giorno, classes.Slot.orainizio).all()
+    return nsreservations
 
 
 def get_last_seven_days():
@@ -265,14 +284,24 @@ def get_infected(giorno, infetto):
             filter(and_(classes.NSReservation.nonabbonato == infetto, classes.NSReservation.slot == classes.Slot.id,
                         classes.Slot.giorno >= giorno))
     sub_infected = session.query(classes.User).\
-        filter(and_(classes.User.id == classes.Client.id, classes.Client.id != infetto,
-                    classes.Client.id == classes.Subscriber.id, classes.Client.id == classes.Reservation.abbonato,
-                    classes.Reservation.slot.in_(slots)))
+        filter(and_(classes.User.id != infetto, classes.User.id == classes.Subscriber.id,
+                    classes.User.id == classes.Reservation.abbonato, classes.Reservation.slot.in_(slots)))
     notsub_infected = session.query(classes.User).\
-        filter(and_(classes.User.id == classes.Client.id, classes.Client.id != infetto,
-                    classes.Client.id == classes.NotSubscriber.id,
-                    classes.Client.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
-    infected = sub_infected.union(notsub_infected)
+        filter(and_(classes.User.id != infetto, classes.User.id == classes.NotSubscriber.id,
+                    classes.User.id == classes.NSReservation.nonabbonato, classes.NSReservation.slot.in_(slots)))
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("Infetto")
+    print(infetto)
+    print(sub_infected.all())
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print(notsub_infected.all())
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
+    infected = sub_infected.union(notsub_infected).all()
     return infected
 
 

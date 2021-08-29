@@ -106,6 +106,9 @@
         </header>
         {% if subscriber %}
         <h3>Abbonamento: tipo "{{ subscription }}", scadenza: "{{ subscriber.datafineabbonamento }}"</h3>
+        {% else %}
+        <h3>Utente non abbonato</h3>
+        {% endif %}
         <h3>Prenotazioni effettuate</h3>
         <table>
             <tr>
@@ -123,8 +126,5 @@
             </tr>
             {% endfor %}
         </table>
-        {% else %}
-        <h3>Utente non abbonato</h3>
-        {% endif %}
     </body>
 </html>

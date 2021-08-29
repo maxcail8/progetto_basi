@@ -191,22 +191,16 @@
         var meseSelezionato = spanMese.textContent;
         var annoSelezionato = spanAnno.textContent;
 
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth()+1).padStart(2, '0'); //January is 0!
-        var yyyy = today.getFullYear();
-        today = yyyy + '-' + mm + '-' + dd;
-
         document.body.onload = function(){
             var tabella = document.getElementById("tabella");
-            tabella.innerHTML = CreaCalendario();
+            tabella.innerHTML = CreaCalendario();  //Aggiunta del calendario
             
             var nomeMese = document.getElementById("nomeMese");
-        
             nomeMese.innerHTML = mesi[meseSelezionato-1];
             CreaComboBox();
         }
 
+        //Funzione per creare le combo box con mesi e anni
         function CreaComboBox(){
             for(let i=0;i<mesi.length;i++){
                 if(meseSelezionato == i+1)
@@ -223,20 +217,22 @@
             }
         }
 
+        //Funzione per creare il calendario
         function CreaCalendario(){
             var cal = "<table><thead><tr><th colspan='7'><span id='nomeMese'></span></th></tr></thead><tr>";
             var con = 0;
 
-            for(;con<firstColumnDays;con++)
+            for(;con<firstColumnDays;con++)  //Creazione delle colonne precedenti al primo del mese
                 cal += "<td value=\"\" style='background-color:#00000041!important;'></td>";
-            for(i=0;con<42;con++,i++){
-                if(con%7==0)
+            for(i=0;con<42;con++,i++){  //Creazione del resto del calendario
+                if(con%7==0)  //Creazione nuova riga
                     cal += "<tr>";
-                if(i<lastDay){
+                if(i<lastDay){  //Creazione di un giorno del mese
                     cal += "<td ";
-                    value = DataCorretta(annoSelezionato, meseSelezionato, i+1);
+                    value = DataCorretta(annoSelezionato, meseSelezionato, i+1); //Imposto come value la data formato "yyyy-mm-dd" (utile successivamente nel database)
                     cal += "value =\"" + value + "\"";
                     
+                    //Creazione variabili per controllare la settimana prenotabile
                     var str = new String(value);
                     var v = new Date(value);
                     var o = new Date();
@@ -244,18 +240,18 @@
                     var settimana = new Date();
                     settimana.setDate(settimana.getDate() + 7);
                     
-                    if(v.getTime() >= oggi.getTime() && v.getTime() <= settimana.getTime()){
+                    if(v.getTime() >= oggi.getTime() && v.getTime() <= settimana.getTime()){  //Se prenotabile sfondo "bianco" e "verde" se giorno corrente
                         if(v.getDate() == oggi.getDate())
                             cal += " style='background-color:#228B22!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                         else
                             cal += " onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                     }
-                    else
+                    else //Se prenotabile sfondo "grigio"
                         cal += " style='background-color:#696969!important;' onclick=\"SubmitTestCalendar('" + str + "');\"><span>" + (i+1) + "</span><br>";
                     giornoSettimana = GiornoSettimana(annoSelezionato, meseSelezionato, i+1);
                     cal += giornoSettimana + "</td>";
                 }
-                else
+                else //Creazione del resto delle colonne successive all'ultimo del mese
                     cal += "<td value=\"\" style='background-color:#00000041!important;'></td>";
                 if(con%7==6)
                     cal += "</tr>";
@@ -265,6 +261,7 @@
             return cal;
         }
 
+        //Funzione che ritorna la data nel formato "yyyy-mm-dd"
         function DataCorretta(anno, mese, giorno){
             if(mese < 10)
                 mese = "0" + mese;
@@ -273,6 +270,7 @@
             return anno + "-" + mese + "-" + giorno;
         }
 
+        //Funzione che ritorna il giorno della settimana
         function GiornoSettimana(anno, mese, giorno){
             var data = new Date(anno, mese-1, giorno);
             var g = data.getDay();
@@ -305,12 +303,12 @@
             return giornoSet;
         }
 
+        //Funzione che controlla se il giorno selezionato è prenotabile
         function SubmitTestCalendar(value){
             var v = new Date(value);
             var oggi = new Date();
             var settimana = new Date();
             settimana.setDate(settimana.getDate() + 7);
-            console.log("oggi: " + oggi + ", settimana: " + settimana);
             if(v.getTime() > oggi.getTime() && v.getTime() <= settimana.getTime())
                 SubmitData(value);
             else
@@ -321,15 +319,6 @@
             opt = dataPassata.getElementsByTagName("option");
             opt[0].value = value;
             calendar.submit();
-        }
-
-        function GiorniMese(mese){
-            if(mese==2)
-                return 28;
-            else if(mese==4 || mese==6 || mese==9 || mese==11)
-                return 30;
-            else
-                return 31;
         }
 
         function SubmitChange(){

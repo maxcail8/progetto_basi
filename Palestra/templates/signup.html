@@ -155,7 +155,7 @@
                         <div id="divCheck">
                             <input id="abbonamento" type="checkbox" onchange="ControllaCheck()"/>Abbonati
                             <span id="span0" style="visibility: hidden;">
-                                <select id="select0" name="abb">
+                                <select id="select0" name="abb" onchange="ControllaProva()">
                                     <option value="null" selected hidden>Seleziona abbonamento</option>
                                     <option value="sala_pesi">Sala pesi</option>
                                     <option value="corsi">Corsi</option>
@@ -200,8 +200,10 @@
 
         document.body.onload = function(){
             ControllaCheck();
+            ControllaProva();
         }
 
+        //Funzione per controllare che i dati siano inseriti correttamente
         function ControllaConferma(){
             if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaAbbonamento() && ControllaPwd())
                 form0.submit();
@@ -209,6 +211,7 @@
                 alert("I dati non sono stati inseritit correttamente");
         }
 
+        //Funzione per controllare che le informazioni dell'abbonamento siano inserite correttamente
         function ControllaAbbonamento(){
             if(!cbxAbbonamento.checked){
                 selectAbbonamento.value = "null";
@@ -227,6 +230,7 @@
             }
         }
 
+        //Funzione per controllare che le due password inserite siano uguali, con output visivo per l'utente
         function ControllaPass(){
             var v1 = txtPwd.value.trim();
             var v2 = txtConf.value.trim();
@@ -249,6 +253,7 @@
             return txtPwd.value.trim() == txtConf.value.trim();
         }
 
+        //Funzione per visualizzare o nascondere le informazioni sull'abbonamento
         function ControllaCheck(){
             if(cbxAbbonamento.checked){
                 span0.style.visibility = "visible";
@@ -260,6 +265,14 @@
                 selectAbbonamento.value = "null";
                 selectDurata.value = "0";
             }
+        }
+
+        //Funzione nel caso abbonamento "prova"
+        function ControllaProva(){
+            if(selectAbbonamento.value == "prova" || selectAbbonamento.value == "null")
+                span1.style.visibility = "hidden";
+            else
+                span1.style.visibility = "visible";
         }
     </script>
 {% endblock %}

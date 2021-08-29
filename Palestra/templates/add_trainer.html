@@ -167,6 +167,7 @@
         var txtPwd = document.getElementById("pwd");
         var txtConf = document.getElementById("conf");
 
+        //Funzione per controllare che i dati siano inseriti correttamente
         function ControllaConferma(){
             if(txtNome.value.trim() != "" && txtCognome.value.trim() != "" && txtData.value.trim() != "" && txtEmail.value.trim() != "" && txtUsername.value.trim() != "" && txtPwd.value.trim() != "" && txtConf.value.trim() != "" && ControllaPwd())
                 form0.submit();
@@ -174,6 +175,7 @@
                 alert("I dati non sono stati inseritit correttamente");
         }
 
+        //Funzione per controllare che le due password inserite siano uguali, con output visivo per l'utente
         function ControllaPass(){
             var v1 = txtPwd.value.trim();
             var v2 = txtConf.value.trim();

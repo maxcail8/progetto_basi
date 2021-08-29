@@ -178,7 +178,7 @@
         var txtPersone = document.getElementById("txtPersone");
         var txtPersoneMq = document.getElementById("txtPersoneMq");
         
-        document.body.onload = function(){
+        document.body.onload = function(){  //Impostazione dei valori inziali presenti sul database
             txtControlli.value = spanControlli.textContent;
             txtAccessi.value = spanAccessi.textContent;
             txtSlot.value = spanSlot.textContent;
@@ -186,6 +186,7 @@
             txtPersoneMq.value = spanPersoneMq.textContent;
         }
 
+        //Funzione per controllare che i dati siano inseriti correttamente
         function Controlla(){
             if(txtAccessi.value > 0 && txtSlot.value > 0 && txtPersone.value > 0 && txtPersoneMq.value > 0)
                 return true;
