@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/creation.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/functions.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataBase_Palestra/population.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/project.py" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/project.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/cancel_reservation.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/cancel_reservation.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Palestra/templates/contact_tracing.html" beforeDir="false" afterPath="$PROJECT_DIR$/Palestra/templates/contact_tracing.html" afterDir="false" />
-    </list>
+    <list default="true" id="31a78ec6-d090-43f3-bb26-91fa9c557486" name="Default Changelist" comment="" />
     <list id="ae060175-8801-4a99-bf39-43002419b5e0" name="Changes by maxca" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
